@@ -54,7 +54,50 @@ It allows you to build modern Windows interfaces while keeping the simplicity an
    AutoHotkey 1.1+
    .NET Framework 4.0+
    WPF runtime (included in Windows)    
+
+## 🔧 Additional Files
+- **Program_WPF.cs**  
+  The C# entry point for the WPF application. It initializes the runtime and loads the XAML interface.
+
+- **Compile_WPF.bat**  
+  A Windows batch script that automates compilation using `csc.exe`.  
+  It references the required WPF libraries and generates the executable (`WPF_Runner.exe`).
+
+## ⚙️ Compilation Notes
+- **Program_WPF.cs**  
+  This is the C# entry point for the WPF application. It initializes the runtime and loads the XAML interface.
+
+- **Compile_WPF.bat**  
+  This batch script automates compilation using the .NET Framework compiler (`csc.exe`).  
+  ⚠️ **Important:** The path to `csc.exe` may vary depending on your system configuration.  
+  - On most Windows installations it is located under:  
+    `C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe`  
+  - If you have a different version of .NET installed, adjust the path in the BAT file accordingly.  
+  - Example modification inside the BAT script:  
+    ```bat
+    "C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe" ^
+    /target:winexe ^
+    /out:WPF_Runner.exe ^
+    /reference:"C:\Windows\Microsoft.NET\Framework\v4.0.30319\WPF\PresentationFramework.dll" ^
+    /reference:"C:\Windows\Microsoft.NET\Framework\v4.0.30319\WPF\PresentationCore.dll" ^
+    /reference:"C:\Windows\Microsoft.NET\Framework\v4.0.30319\WPF\WindowsBase.dll" ^
+    Program_WPF.cs
+    ```
+  - If compilation fails with **CS0006 errors**, double-check that the DLL references exist in your system and update the paths accordingly.
+
+## 📦 Precompiled Executable
+For users who prefer not to compile the project manually, a precompiled executable is provided.
+The file is uploaded in a .zip archive inside the release/ folder of this repository.
+It contains the compiled WPF runner (WPF_Runner.exe) built from Program_WPF.cs.
+This allows you to run the demo without configuring csc.exe or editing the batch script.
+
+⚠️ Note: The executable was compiled on Windows 7 (32-bit) with .NET Framework 4.0.
+
+If the .exe does not run on your system, this is likely the reason.
+However, compiling in 32-bit mode generally increases compatibility across different Windows versions and distributions.
+If you encounter issues, you can recompile using Compile_WPF.bat and adjust the path to your local csc.exe.
    
+
 ## **Credits**
 Created (vibe coded) by Vfpskin (Pablo Molina) 
 Logo and diagrams designed with Microsoft Copilot© 2026 — All rights reserved
