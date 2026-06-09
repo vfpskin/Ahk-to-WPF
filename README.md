@@ -1,4 +1,4 @@
-# AHK → WPF Integration
+# (UNDER CONSTRUCTION) AHK → WPF Integration (UNDER CONSTRUCTION) 
 
 This project shows how to connect **AutoHotkey 1.1** scripts with a **WPF interface** using the custom `XAMLGUI` engine and bridge WPF_Runner.exe.  
 It allows you to build modern Windows interfaces while keeping the simplicity and automation power of AHK.
