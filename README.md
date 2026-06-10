@@ -1,3 +1,5 @@
+![Logo](https://github.com/vfpskin/Ahk-to-WPF/raw/main/Assets/logo.png)
+
 # AHK → WPF
 
 This project shows how to connect **AutoHotkey 1.1** scripts with a **WPF interface** using the custom `XAMLGUI` engine and bridge `WPF_Runner.exe`.  
