@@ -18,6 +18,10 @@ WPF_Runner.exe
 release/*
 !release/WPF_Runner.zip
 
+# Screenshots and capture tools
+screenshots/
+*.exe
+
 # OS files
 Thumbs.db
 .DS_Store
