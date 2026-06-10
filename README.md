@@ -2,6 +2,8 @@
 
 # AHK → WPF
 
+[![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 This project shows how to connect **AutoHotkey 1.1** scripts with a **WPF interface** using the custom `XAMLGUI` engine and bridge `WPF_Runner.exe`.  
 It allows you to build modern Windows interfaces while keeping the simplicity and automation power of AHK.
 
@@ -84,7 +86,7 @@ It allows you to build modern Windows interfaces while keeping the simplicity an
 ## 📦 Precompiled Executable
 For users who prefer not to compile the project manually, a precompiled executable is provided in a `.zip` archive inside the `release/` folder:
 
-➡️ **[Download WPF_Runner.zip](https://github.com/vfpskin/Ahk-to-WPF/raw/main/release/WPF_Runner.zip)**
+➡️ **[Download WPF_Runner.zip](https://github.com/vfpskin/Ahk-to-WPF/releases/tag/v1.0.0)**
 
 It contains the compiled WPF runner (`WPF_Runner.exe`) built from `Program_WPF.cs`, so you can run the demos without configuring `csc.exe` or editing the batch script.
 
