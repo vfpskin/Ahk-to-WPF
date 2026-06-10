@@ -11,8 +11,12 @@ demos/*.ini
 *.txt
 *_backup.*
 
-# Build artifacts
-release/
+# Compiled executable (not tracked, provided as release ZIP)
+WPF_Runner.exe
+
+# Build artifacts (except the release ZIP)
+release/*
+!release/WPF_Runner.zip
 
 # OS files
 Thumbs.db
