@@ -1,0 +1,870 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AHK + WPF Quick Manual</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --panel: #171a22;
+      --panel-2: #1d2230;
+      --text: #e8ecf1;
+      --muted: #aab3c2;
+      --accent: #00a3ff;
+      --accent-2: #1ab2ff;
+      --border: #2a3142;
+      --code: #0b1020;
+      --ok: #00e676;
+      --warn: #ffca28;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(0,163,255,0.18), transparent 30%),
+        radial-gradient(circle at top right, rgba(26,178,255,0.12), transparent 25%),
+        linear-gradient(180deg, #0b0d12 0%, var(--bg) 100%);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 18px 56px;
+    }
+
+    header {
+      background: linear-gradient(135deg, rgba(0,163,255,0.18), rgba(26,178,255,0.06));
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 28px;
+      margin-bottom: 20px;
+      box-shadow: 0 16px 50px rgba(0,0,0,0.25);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(28px, 5vw, 42px);
+      letter-spacing: -0.03em;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      max-width: 75ch;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .pill {
+      border: 1px solid rgba(0,163,255,0.25);
+      background: rgba(0,163,255,0.08);
+      color: #dff4ff;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 13px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    section, .card {
+      background: rgba(23,26,34,0.92);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+    }
+
+    h2, h3 {
+      margin-top: 0;
+      letter-spacing: -0.02em;
+    }
+
+    h2 {
+      font-size: 22px;
+      margin-bottom: 14px;
+    }
+
+    h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: #f4f7fb;
+    }
+
+    p, li {
+      color: var(--text);
+    }
+
+    .muted { color: var(--muted); }
+
+    code, pre {
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    pre {
+      margin: 12px 0 0;
+      background: var(--code);
+      border: 1px solid #273049;
+      border-radius: 12px;
+      padding: 14px;
+      overflow: auto;
+      color: #d7e3f0;
+    }
+
+    code.inline {
+      background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 2px 6px;
+      border-radius: 6px;
+      color: #dff4ff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      overflow: hidden;
+      border-radius: 12px;
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--border);
+      padding: 11px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--panel-2);
+      color: #f5f9ff;
+      font-weight: 600;
+    }
+
+    tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .note {
+      border-left: 4px solid var(--accent);
+      background: rgba(0,163,255,0.07);
+      padding: 12px 14px;
+      border-radius: 10px;
+      color: #dff4ff;
+    }
+
+    .ok { color: var(--ok); }
+    .warn { color: var(--warn); }
+
+    ul {
+      margin: 10px 0 0 20px;
+      padding: 0;
+    }
+
+    .footer {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    a { color: #8fd3ff; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Quick Manual for AHK + WPF</h1>
+      <p class="subtitle">
+        Practical guide to controlling WPF controls from AutoHotkey 1.1 using the project engine.
+        The idea is simple: <code class="inline">AHK</code> handles the logic and <code class="inline">WPF</code> handles the UI.
+      </p>
+      <div class="pill-row">
+        <span class="pill">Events with <code>ui.OnEvent()</code></span>
+        <span class="pill">Updates with <code>ui.Update()</code></span>
+        <span class="pill">Rows with <code>AddItem</code> / <code>AddRow</code></span>
+        <span class="pill">Selection parsing in <code>ListView</code></span>
+        <span class="pill">Themes with <code>ui.SetTheme()</code></span>
+        <span class="pill">Focus with <code>ui.Focus()</code></span>
+      </div>
+    </header>
+
+    <div class="grid">
+      <section>
+        <h2>1. Core Concept</h2>
+        <p>
+          Every WPF control is identified by its <code class="inline">x:Name</code>. This is the name you use
+          from AHK to read states, change properties, or receive events.
+        </p>
+        <pre><code>ui := new XAMLGUI("Demo_Login.xaml")
+ui.OnEvent("BtnLogin", "Click", "Login_Event")
+ui.Show()</code></pre>
+      </section>
+
+      <section>
+        <h2>2. Main Syntax</h2>
+        <p>
+          The most important method is <code class="inline">ui.Update(control, property, value)</code>.
+          For lists, the engine understands actions like <code class="inline">AddItem</code>,
+          <code class="inline">ClearItems</code>, <code class="inline">RemoveSelected</code>, and <code class="inline">UpdateSelected</code>.
+        </p>
+        <pre><code>ui.Update("TxtUser", "Text", "admin")
+ui.Update("BtnLogin", "Content", "Login")
+ui.Update("TxtStatus", "Foreground", "#00FF00")
+ui.Focus("TxtUser")
+ui.Update("LvTasks", "AddItem", "1|Task 1|Daily|08:00|Active|Yes")
+ui.Update("LvTasks", "UpdateSelected", "1|Task 1|Weekly|10:30|Active|Yes")</code></pre>
+      </section>
+    </div>
+
+    <section>
+      <h2>3. What Each Method Does</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Usage</th>
+            <th>Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>ui.OnEvent()</code></td>
+            <td>Registers an event for a control.</td>
+            <td><code>ui.OnEvent("BtnLogin", "Click", "Login_Event")</code></td>
+          </tr>
+          <tr>
+            <td><code>ui.Update()</code></td>
+            <td>Changes a property or state of the control.</td>
+            <td><code>ui.Update("TxtUser", "Text", "admin")</code></td>
+          </tr>
+          <tr>
+            <td><code>ui.AddRow()</code></td>
+            <td>Shortcut to add a row to a <code>ListView</code> without manually building the pipe-separated string.</td>
+            <td><code>ui.AddRow("LvTasks", "1", "Task 1", "Daily", "08:00")</code></td>
+          </tr>
+          <tr>
+            <td><code>ui.Focus()</code></td>
+            <td>Sets focus to a specific control.</td>
+            <td><code>ui.Focus("TxtPass")</code></td>
+          </tr>
+          <tr>
+            <td><code>ui.SetResource()</code></td>
+            <td>Changes a global color resource.</td>
+            <td><code>ui.SetResource("Accent", "#00A3FF")</code></td>
+          </tr>
+          <tr>
+            <td><code>ui.SetTheme()</code></td>
+            <td>Applies a complete theme (e.g., "Dark", "Light").</td>
+            <td><code>ui.SetTheme("Dark")</code></td>
+          </tr>
+          <tr>
+            <td><code>ui.SetWindowProp()</code></td>
+            <td>Modifies the main window properties.</td>
+            <td><code>ui.SetWindowProp("Title", "My App")</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <div class="grid">
+      <section>
+        <h2>4. Most Used Properties</h2>
+        <ul>
+          <li><code class="inline">Text</code>: Text of a <code>TextBox</code> or textual content.</li>
+          <li><code class="inline">Content</code>: Text of buttons, labels, and other <code>ContentControl</code>s.</li>
+          <li><code class="inline">IsEnabled</code>: Enables or disables the control ("True" / "False").</li>
+          <li><code class="inline">Visibility</code>: <code>Visible</code>, <code>Hidden</code>, <code>Collapsed</code>.</li>
+          <li><code class="inline">Value</code>: For <code>Slider</code> and <code>ProgressBar</code>.</li>
+          <li><code class="inline">SelectedIndex</code>: Selected index in lists and combos.</li>
+          <li><code class="inline">Background</code>, <code class="inline">Foreground</code>, <code class="inline">BorderBrush</code>.</li>
+          <li><code class="inline">FontSize</code>, <code class="inline">FontWeight</code>, <code class="inline">Opacity</code>.</li>
+          <li><code class="inline">Width</code>, <code class="inline">Height</code>, <code class="inline">ToolTip</code>.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>5. Common Controls</h2>
+        <ul>
+          <li><code class="inline">TextBox</code>: Uses <code>Text</code>, <code>Enter</code>, <code>GotFocus</code>, <code>LostFocus</code>.</li>
+          <li><code class="inline">PasswordBox</code>: Uses <code>Enter</code>, value read via <code>state["Name"]</code>.</li>
+          <li><code class="inline">Button</code>: Uses <code>Click</code> and also <code>Enter</code>.</li>
+          <li><code class="inline">CheckBox</code> / <code class="inline">RadioButton</code>: <code>Checked</code> / <code>Unchecked</code>.</li>
+          <li><code class="inline">ComboBox</code>: <code>SelectionChanged</code>.</li>
+          <li><code class="inline">Slider</code> / <code class="inline">ProgressBar</code>: <code>Value</code>.</li>
+          <li><code class="inline">ListView</code>: <code>AddItem</code>, <code>AddRow</code>, <code>ClearItems</code>, <code>RemoveSelected</code>, <code>UpdateSelected</code>, <code>SelectionChanged</code>, <code>MouseDoubleClick</code>.</li>
+          <li><code class="inline">DataGrid</code>: <code>SelectedCellsChanged</code>, <code>CurrentCellChanged</code>, <code>BeginningEdit</code>, <code>CellEditEnding</code>, <code>RowEditEnding</code>.</li>
+        </ul>
+      </section>
+    </div>
+
+    <section>
+      <h2>6. ListView and DataGrid in Practice</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>ListView: Full CRUD Cycle (Add, Edit, Delete)</h3>
+          <p class="muted">
+            The most robust way to manage a ListView is to maintain an array of objects in AHK and rebuild the list when changes occur.
+            Use <code class="inline">ClearItems</code> followed by <code class="inline">AddItem</code> with pipe-separated values.
+          </p>
+          <pre><code>; 1. REBUILD LIST (Call after Add, Edit, or Delete)
+RebuildList() {
+    global ui, Contacts
+    ui.Update("ListaContactos", "ClearItems", "")
+    for i, c in Contacts {
+        ; Format: "index|Name|Phone|Email"
+        ui.Update("ListaContactos", "AddItem", i . "|" . c.Name . "|" . c.Phone . "|" . c.Email)
+    }
+}
+
+; 2. ADD OR EDIT
+Add_Click(state, ctrl, event) {
+    name := Trim(state["TxtName"])
+    if (EditingIdx > 0) {
+        Contacts[EditingIdx].Name := name ; Update existing
+        EditingIdx := 0
+        ui.Update("BtnAdd", "Content", "+ Add")
+    } else {
+        Contacts.Push({Name: name, Phone: state["TxtPhone"]}) ; Add new
+    }
+    RebuildList()
+}
+
+; 3. DELETE
+Delete_Click(state, ctrl, event) {
+    if (SelectedIdx > 0) {
+        Contacts.Remove(SelectedIdx)
+        SelectedIdx := 0
+        RebuildList()
+    }
+}</code></pre>
+        </div>
+
+        <div class="card">
+          <h3>ListView: Handling Selection & Parsing</h3>
+          <p class="muted">
+            When <code class="inline">SelectionChanged</code> triggers, <code class="inline">state["ListaContactos"]</code> returns the entire row as a pipe-separated string (e.g., <code>"1|John|555-1234|john@test.com"</code>).
+            Use <code class="inline">StrSplit</code> to extract the index or specific columns.
+          </p>
+          <pre><code>Lista_SelectionChanged(state, ctrl, event) {
+    global ui, SelectedIdx, EditingIdx
+    raw := state["ListaContactos"]
+
+    if (raw = "") {
+        SelectedIdx := 0
+        ui.Update("BtnEdit", "IsEnabled", "False")
+        ui.Update("BtnDelete", "IsEnabled", "False")
+        return
+    }
+
+    ; Split by "|" to get the index (first column)
+    campos := StrSplit(raw, "|")
+    SelectedIdx := campos[1] + 0 ; Convert to number
+
+    ; Enable buttons only if not currently editing
+    if (SelectedIdx > 0 && EditingIdx = 0) {
+        ui.Update("BtnEdit", "IsEnabled", "True")
+        ui.Update("BtnDelete", "IsEnabled", "True")
+    }
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>7. Callback Example</h2>
+      <p class="muted">In callbacks, <code class="inline">state</code> contains the current state of all controls.</p>
+      <pre><code>Login_Event(state, ctrl, event)
+{
+    user := state["TxtUser"]
+    pass := state["TxtPass"]
+
+    if (user = "admin" && pass = "1234")
+    {
+        ui.Update("TxtStatus", "Text", "Login successful")
+        MsgBox, 64, OK, User authorized
+    }
+    else
+    {
+        ui.Update("TxtStatus", "Text", "Login error")
+        MsgBox, 16, Error, Incorrect credentials
+    }
+}</code></pre>
+    </section>
+
+    <section>
+      <h2>8. Moving Focus with Enter</h2>
+      <p>
+        The WPF engine automatically sends the <code class="inline">Enter</code> event when you press Enter in a
+        <code class="inline">TextBox</code>, <code class="inline">PasswordBox</code>, or <code class="inline">Button</code>.
+        You can use it to navigate forms like this:
+      </p>
+      <pre><code>ui.OnEvent("TxtUser", "Enter", "Login_Enter")
+ui.OnEvent("TxtPass", "Enter", "Login_Enter")
+
+Login_Enter(state, ctrl, event)
+{
+    global ui
+    if (ctrl = "TxtUser")
+        ui.Focus("TxtPass")
+    else if (ctrl = "TxtPass")
+        ui.Focus("BtnLogin")
+}</code></pre>
+    </section>
+
+    <div class="grid">
+      <section>
+        <h2>9. Changing Control States</h2>
+        <pre><code>ui.Update("TxtUser", "Text", "admin")
+ui.Update("TxtPass", "Text", "1234")
+ui.Update("BtnLogin", "IsEnabled", "True")
+ui.Update("BtnLogin", "Visibility", "Visible")
+ui.Update("BtnLogin", "Background", "#00A3FF")
+ui.Update("TxtStatus", "Foreground", "#00E676")
+ui.Update("ProgCPU", "Value", 75)</code></pre>
+      </section>
+
+      <section>
+        <h2>10. Themes, Resources, and Window</h2>
+        <pre><code>ui.SetResource("Accent", "#00A3FF")
+ui.SetResource("BgCard", "#1E1E28")
+ui.SetTheme("Dark")
+ui.SetWindowProp("Title", "My App")
+ui.SetWindowProp("Opacity", "0.95")
+ui.SetWindowProp("WindowStyle", "None")
+ui.SetWindowProp("ResizeMode", "NoResize")</code></pre>
+      </section>
+    </div>
+
+    <section>
+      <h2>11. Custom Dashboard-Style Window</h2>
+      <p>
+        If you want a look like the <code class="inline">Dashboard_FIFA</code>, you can remove the native title bar and draw your own header
+        with minimize, maximize, and close buttons. The idea is to use <code class="inline">WindowStyle="None"</code> and
+        <code class="inline">ResizeMode="NoResize"</code> in the XAML, and then connect buttons like <code class="inline">BtnMinimize</code>,
+        <code class="inline">BtnMaximize</code>, and <code class="inline">BtnClose</code> from AHK.
+      </p>
+      <pre><code>&lt;Window WindowStyle="None" ResizeMode="NoResize" Padding="0,1,0,0"&gt;
+  &lt;Border x:Name="TitleBar"&gt;
+    &lt;Button x:Name="BtnMinimize" /&gt;
+    &lt;Button x:Name="BtnMaximize" /&gt;
+    &lt;Button x:Name="BtnClose" /&gt;
+  &lt;/Border&gt;
+&lt;/Window&gt;</code></pre>
+    </section>
+
+    <section>
+      <h2>12. Mental Mini-Template</h2>
+      <p class="note">
+        <strong>Read</strong> the state with <code class="inline">state["Control"]</code>, <strong>react</strong> in the callback,
+        and <strong>update</strong> the view with <code class="inline">ui.Update()</code>. If you want to move the focus cursor,
+        use <code class="inline">ui.Focus()</code>.
+      </p>
+      <ul>
+        <li><span class="ok">Read:</span> <code>state["TxtUser"]</code>, <code>state["TxtPass"]</code></li>
+        <li><span class="ok">Write:</span> <code>ui.Update("TxtStatus", "Text", "OK")</code></li>
+        <li><span class="ok">Move focus:</span> <code>ui.Focus("TxtPass")</code></li>
+        <li><span class="warn">Hide:</span> <code>ui.Update("BtnLogin", "Visibility", "Collapsed")</code></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>13. DataGrid: Advanced Events and Rendering</h2>
+      <p>
+        The <code class="inline">DataGrid</code> supports selection tracking, double-click actions, per-cell color rules,
+        and column alignment. The <code class="inline">Demo_DataGrid.ahk</code> demo showcases a full CRUD inventory dashboard.
+      </p>
+      <div class="grid">
+        <div class="card">
+          <h3>Selection and Cell Colors</h3>
+          <p class="muted">
+            <code class="inline">SelectionChanged</code> returns the full row as a pipe-separated string.
+            <code class="inline">AddColorItem</code> lets you highlight individual cells by passing color values per column.
+            Use <code class="inline">SetColAlignment</code> to center/right-align specific columns.
+          </p>
+          <pre><code>; Register events
+ui.OnEvent("GridInventory", "SelectionChanged", "OnGridSelection")
+ui.OnEvent("GridInventory", "MouseDoubleClick", "OnGridDoubleClick")
+
+; Parse selection row
+OnGridSelection(state, ctrl, event) {
+    rawRowData := state["GridInventory"]
+    if (rawRowData = "") {
+        SelectedRowIdx := -1
+        return
+    }
+    fields := StrSplit(rawRowData, "|")
+    targetID := fields[1] + 0
+}
+
+; Add items with per-cell colors
+for idx, item in InventoryList {
+    rowPacket := item.ID . "|" . item.Name . "|" . item.Category
+    ui.Update("GridInventory", "AddItem", rowPacket)
+    
+    cStock    := (item.Stock < 20) ? "#FADBD8" : ""
+    cCategory := (cat = "Furniture") ? "#FCF3CF" : ""
+    rowColor  := "||" . cCategory . "|" . cStock . "|"
+    
+    if (cStock != "" || cCategory != "")
+        ui.Update("GridInventory", "AddColorItem", rowColor)
+}
+
+; Column alignment
+ui.Update("GridInventory", "SetColAlignment", "ID|Center")
+ui.Update("GridInventory", "SetColAlignment", "Stock|Center")
+ui.Update("GridInventory", "SetColAlignment", "Price|Center")</code></pre>
+        </div>
+
+        <div class="card">
+          <h3>Double-Click and CRUD Operations</h3>
+          <p class="muted">
+            <code class="inline">MouseDoubleClick</code> provides <code class="inline">state["GridInventory_EventRowIndex"]</code>
+            (0-based index). Use it to trigger edit/delete modals. Data is persisted via custom INI file functions.
+          </p>
+          <pre><code>; Double-click handler
+OnGridDoubleClick(state, ctrl, event) {
+    clickIndex := state["GridInventory_EventRowIndex"]
+    if (clickIndex = "" || clickIndex < 0)
+        return
+    mappedIdx := clickIndex + 1
+    TriggerModalSplitOptions("Actions",
+        "Choose an action for '" . InventoryList[mappedIdx].Name . "'")
+}
+
+; Save/Load to INI
+SaveDatabase() {
+    IniWrite, % InventoryList.Length(), %ConfigFile%, Settings, TotalItems
+    for idx, item in InventoryList {
+        sec := "Product_" . idx
+        IniWrite, % item.ID, %ConfigFile%, %sec%, ID
+        IniWrite, % item.Name, %ConfigFile%, %sec%, Name
+    }
+}
+
+LoadDatabase() {
+    IniRead, totalItems, %ConfigFile%, Settings, TotalItems, 0
+    Loop, % totalItems {
+        sec := "Product_" . A_Index
+        IniRead, id, %ConfigFile%, %sec%, ID
+        item := {ID: id + 0, Name: name, Category: category}
+        InventoryList.Push(item)
+    }
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>14. Centralized Theme System</h2>
+      <p>
+        The project provides a reusable theme system with two files: <code class="inline">themes.ahk</code> (defines all color palettes)
+        and <code class="inline">ThemeManager.ahk</code> (manages applying and cycling themes). Add new themes by editing only
+        <code class="inline">themes.ahk</code> &mdash; no code changes needed.
+      </p>
+      <div class="grid">
+        <div class="card">
+          <h3>Setup and Usage</h3>
+          <pre><code>; 1. Include files
+#Include %A_ScriptDir%\..\themes.ahk
+#Include %A_ScriptDir%\..\ThemeManager.ahk
+
+; 2. Initialize at startup
+ui := new XAMLGUI("Demo.xaml")
+InitThemeManager(ui)
+
+; 3. Apply a theme by name
+ApplyTheme("Navy")
+
+; 4. Cycle to next theme (bind to a button)
+ui.OnEvent("BtnTheme", "Click", "CycleTheme")
+
+; 5. Get current state
+currentName := GetCurrentTheme()   ; returns e.g. "Teal"
+currentIdx  := GetThemeIndex()     ; returns 1-based index
+
+; 6. Persist theme preference
+SaveData() {
+    FileDelete, %config%
+    FileAppend, % GetCurrentTheme(), %config%
+}
+LoadData() {
+    FileRead, t, %config%
+    ApplyTheme(Trim(t))
+}</code></pre>
+        </div>
+
+        <div class="card">
+          <h3>Available Themes (9)</h3>
+          <p class="muted">
+            Each theme defines 19 color properties: WindowBg, SidebarBg, Surface, Surface2,
+            Border, Accent, AccentHover, AccentGlow, TextPrimary, TextSecondary, TextMuted,
+            RowHover, ScrollThumb, Success, SuccessHover, Danger, DangerHover, and the base fallback.
+          </p>
+          <table>
+            <thead><tr><th>Theme</th><th>Base</th><th>Style</th></tr></thead>
+            <tbody>
+              <tr><td>Navy</td><td>Dark</td><td>Dark blue, professional</td></tr>
+              <tr><td>Dark</td><td>Dark</td><td>Neutral dark, code-editor style</td></tr>
+              <tr><td>Light</td><td>Light</td><td>Clean white background</td></tr>
+              <tr><td>Blue</td><td>Blue</td><td>Light blue, fresh</td></tr>
+              <tr><td>Green</td><td>Green</td><td>Light green, natural</td></tr>
+              <tr><td>Purple</td><td>Purple</td><td>Light purple, creative</td></tr>
+              <tr><td>Red</td><td>Dark</td><td>Dark red, alert style</td></tr>
+              <tr><td>Orange</td><td>Dark</td><td>Dark orange, warm</td></tr>
+              <tr><td>Teal</td><td>Teal</td><td>Light teal, modern</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Adding a New Theme</h3>
+        <pre><code>; 1. Add name to ThemeOrder (controls cycle order)
+ThemeOrder := ["Navy", "Dark", ..., "MyTheme"]
+
+; 2. Add color dictionary to ThemeDefs
+ThemeDefs["MyTheme"] := {base:"Dark"
+    , WindowBg:"#1A1A2E", SidebarBg:"#16213E", Surface:"#0F3460"
+    , Surface2:"#1A4B8C", Border:"#2A4A6B", Accent:"#E94560"
+    , AccentHover:"#D63851", AccentGlow:"#FF6B6B"
+    , TextPrimary:"#E5F0F7", TextSecondary:"#97BCE1", TextMuted:"#6B8FB5"
+    , RowHover:"#152A45", ScrollThumb:"#2A4A6B"
+    , Success:"#1A7A4A", SuccessHover:"#166040", Danger:"#C0392B", DangerHover:"#A93226"}</code></pre>
+      </div>
+    </section>
+
+    <section>
+      <h2>15. Centralized Title Bar System</h2>
+      <p>
+        The <code class="inline">TitleBar.ahk</code> module provides a reusable title bar with Minimize, Maximize/Restore,
+        and Close buttons across all demos. Drag-to-move is enabled automatically by placing
+        <code class="inline">x:Name="TitleBar"</code> on the title bar <code class="inline">Border</code> in XAML.
+      </p>
+      <div class="grid">
+        <div class="card">
+          <h3>AHK API</h3>
+          <pre><code>#Include %A_ScriptDir%\..\TitleBar.ahk
+
+; Minimal setup
+InitTitleBar(ui, {title: "My App"})
+
+; Full configuration
+InitTitleBar(ui, {
+    title:     "Inventory Dashboard",
+    showTheme: true,        ; show theme toggle button (default: false)
+    showMin:   true,        ; show minimize button (default: true)
+    showMax:   true,        ; show maximize/restore button (default: true)
+    onClose:   "MySaveAndClose"  ; custom close handler (saves data)
+})
+
+; Custom close handler
+MySaveAndClose(state, ctrl, event) {
+    SaveDatabase()           ; your save logic
+    global ui
+    ui.Close()
+    ExitApp
+}
+
+; Standard handlers (used by default)
+; TitleBar_OnClose   -> ui.Close() + ExitApp
+; TitleBar_OnMinimize -> PostMessage SC_MINIMIZE
+; TitleBar_OnMaximize -> toggle maximize/restore</code></pre>
+        </div>
+
+        <div class="card">
+          <h3>XAML Requirements</h3>
+          <p class="muted">
+            Each demo must define these named elements in the title bar. Buttons you don't need can be hidden
+            via <code class="inline">Visibility="Collapsed"</code> &mdash; the AHK module shows them based on config.
+          </p>
+          <pre><code>&lt;!-- Standard title bar structure --&gt;
+&lt;Border x:Name="TitleBar" Height="40"
+        Background="{DynamicResource SidebarBg}"
+        BorderBrush="{DynamicResource Border}"
+        BorderThickness="0,0,0,1"&gt;
+    &lt;Grid&gt;
+        &lt;Grid.ColumnDefinitions&gt;
+            &lt;ColumnDefinition Width="*"/&gt;
+            &lt;ColumnDefinition Width="Auto"/&gt;
+        &lt;/Grid.ColumnDefinitions&gt;
+        &lt;TextBlock x:Name="LblTitle" Text="My App" /&gt;
+        &lt;StackPanel Grid.Column="1" Orientation="Horizontal"&gt;
+            &lt;Button x:Name="BtnTheme" Style="{StaticResource TitleBarThemeButton}"
+                    Content="Navy" Visibility="Collapsed"/&gt;
+            &lt;Button x:Name="BtnMinimize" Style="{StaticResource TitleBarButton}"
+                    Content="&#x2500;" Visibility="Collapsed"/&gt;
+            &lt;Button x:Name="BtnMaximize" Style="{StaticResource TitleBarButton}"
+                    Content="&#x25A1;" Visibility="Collapsed"/&gt;
+            &lt;Button x:Name="BtnClose" Style="{StaticResource TitleBarButton}"
+                    Content="&#x2715;"/&gt;
+        &lt;/StackPanel&gt;
+    &lt;/Grid&gt;
+&lt;/Border&gt;</code></pre>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Required WPF Styles</h3>
+        <p class="muted">
+          Add these styles to <code class="inline">Window.Resources</code> in each XAML file that uses the title bar system.
+        </p>
+        <pre><code>&lt;!-- TitleBar buttons --&gt;
+&lt;Style x:Key="TitleBarButton" TargetType="Button"&gt;
+    &lt;Setter Property="Width" Value="36"/&gt;
+    &lt;Setter Property="Height" Value="36"/&gt;
+    &lt;Setter Property="Background" Value="Transparent"/&gt;
+    &lt;Setter Property="Foreground" Value="{DynamicResource TextSecondary}"/&gt;
+    &lt;Setter Property="BorderThickness" Value="0"/&gt;
+    &lt;Setter Property="FontSize" Value="14"/&gt;
+    &lt;Setter Property="Template"&gt;
+        &lt;Setter.Value&gt;
+            &lt;ControlTemplate TargetType="Button"&gt;
+                &lt;Border x:Name="Bd" Background="{TemplateBinding Background}"
+                        CornerRadius="4"&gt;
+                    &lt;ContentPresenter HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"/&gt;
+                &lt;/Border&gt;
+                &lt;ControlTemplate.Triggers&gt;
+                    &lt;Trigger Property="IsMouseOver" Value="True"&gt;
+                        &lt;Setter TargetName="Bd" Property="Background"
+                                Value="{DynamicResource Danger}"/&gt;
+                        &lt;Setter Property="Foreground" Value="White"/&gt;
+                    &lt;/Trigger&gt;
+                &lt;/ControlTemplate.Triggers&gt;
+            &lt;/ControlTemplate&gt;
+        &lt;/Setter.Value&gt;
+    &lt;/Setter&gt;
+&lt;/Style&gt;
+
+&lt;!-- Theme button --&gt;
+&lt;Style x:Key="TitleBarThemeButton" TargetType="Button"&gt;
+    &lt;Setter Property="MinWidth" Value="52"/&gt;
+    &lt;Setter Property="Height" Value="28"/&gt;
+    &lt;Setter Property="Background" Value="{DynamicResource Surface2}"/&gt;
+    &lt;Setter Property="Foreground" Value="{DynamicResource TextSecondary}"/&gt;
+    &lt;Setter Property="BorderThickness" Value="0"/&gt;
+    &lt;Setter Property="FontSize" Value="11"/&gt;
+    &lt;Setter Property="Cursor" Value="Hand"/&gt;
+    &lt;Setter Property="Template"&gt;
+        &lt;Setter.Value&gt;
+            &lt;ControlTemplate TargetType="Button"&gt;
+                &lt;Border x:Name="Bd" Background="{TemplateBinding Background}"
+                        CornerRadius="4" Padding="{TemplateBinding Padding}"&gt;
+                    &lt;ContentPresenter HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"/&gt;
+                &lt;/Border&gt;
+                &lt;ControlTemplate.Triggers&gt;
+                    &lt;Trigger Property="IsMouseOver" Value="True"&gt;
+                        &lt;Setter TargetName="Bd" Property="Background"
+                                Value="{DynamicResource Accent}"/&gt;
+                        &lt;Setter Property="Foreground" Value="White"/&gt;
+                    &lt;/Trigger&gt;
+                &lt;/ControlTemplate.Triggers&gt;
+            &lt;/ControlTemplate&gt;
+        &lt;/Setter.Value&gt;
+    &lt;/Setter&gt;
+&lt;/Style&gt;</code></pre>
+        <p class="note">
+          <strong>Drag-to-move:</strong> The C# engine automatically walks the visual tree looking for a
+          <code class="inline">Border</code> with <code class="inline">x:Name="TitleBar"</code>. If found,
+          it attaches a <code class="inline">MouseLeftButtonDown</code> handler that calls
+          <code class="inline">DragMove()</code>. No additional code is needed.
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <h2>16. FIFA Dashboard (<code>Demo_Dashboard_FIFA.ahk</code>)</h2>
+      <p>
+        A full-featured sports dashboard that connects to a local SQLite database (<code>FIFA.db</code>) and displays
+        teams, stadiums, match schedules, and statistics through a WPF interface.
+      </p>
+      <div class="grid">
+        <div class="card">
+          <h3>Architecture</h3>
+          <p class="muted">
+            The demo lives in <code>demos/FIFA/</code> and uses three layers:
+          </p>
+          <ul>
+            <li><strong>Data:</strong> <code>FIFA.db</code> (SQLite) &mdash; contains teams, stadiums, and match data</li>
+            <li><strong>Logic:</strong> <code>FIFA_DB.ahk</code> + <code>Class_SQLiteDB.ahk</code> &mdash; SQL queries and data processing</li>
+            <li><strong>UI:</strong> <code>Dashboard_FIFA.xaml</code> &mdash; modern dark WPF layout with navigation sidebar</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Key Features</h3>
+          <ul>
+            <li>7 navigation tabs (Home, Countries, Groups, Fixture, Stats, Stadiums)</li>
+            <li>Live countdown to next match</li>
+            <li>Country search/filter</li>
+            <li>7 custom color themes (dashboard-specific, not using the centralized theme system)</li>
+            <li>Integrated <code>TitleBar</code> with <code>BtnTheme</code> (theme cycle), close/minimize buttons</li>
+            <li>Images from <code>demos/FIFA/Assets/</code></li>
+          </ul>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Technical Notes</h3>
+        <ul>
+          <li><strong>32-bit SQLite DLL is required</strong> &mdash; AHK 1.1 Unicode is 32-bit and cannot load a 64-bit <code>sqlite3.dll</code>. The correct DLL is at <code>demos/FIFA/Lib/sqlite3.dll</code>.</li>
+          <li><strong>#Include without explicit path fails</strong> when the working directory differs from the script directory. Always use <code>#Include %A_ScriptDir%\Lib\Class_SQLiteDB.ahk</code>.</li>
+          <li><strong>exePath depth:</strong> Since the script is in <code>demos/FIFA/</code>, pass <code>A_ScriptDir "\..\..\WPF_Runner.exe"</code> to the XAMLGUI constructor.</li>
+          <li>The FIFA themes are self-contained (7 entries in <code>Dashboard_FIFA.xaml</code>) and incompatible with the 19-key centralized palette.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>17. SystemInfo Dashboard (<code>Demo_SystemInfo.ahk</code>)</h2>
+      <p>
+        A system diagnostic dashboard that runs <code>systeminfo</code> and displays the results in a modern card-based
+        WPF layout with per-card PNG icons.
+      </p>
+      <div class="grid">
+        <div class="card">
+          <h3>How It Works</h3>
+          <ul>
+            <li>AHK runs <code>systeminfo &gt; file.txt</code> via <code>RunWait</code></li>
+            <li>Output is read with the <strong>OEM code page</strong> (<code>DllCall("GetOEMCP")</code>) to correctly decode accented characters from <code>cmd.exe</code> redirection</li>
+            <li>Spanish field names are mapped to English keys using <code>Chr()</code> for accented characters (<code>Chr(0xED)</code> for <code>í</code>, <code>Chr(0xF3)</code> for <code>ó</code>)</li>
+            <li>12 key fields populate dedicated cards; all remaining fields appear in the &quot;Extra Info&quot; card</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Layout</h3>
+          <ul>
+            <li><strong>6 cards:</strong> System, Processor, Memory, Storage, Network, Extra Info</li>
+            <li>Each card has a <strong>72&times;72 PNG icon</strong> on a white rounded square, with a <strong>26pt title</strong> to the right</li>
+            <li>Loading panel with detail text while <code>systeminfo</code> runs</li>
+            <li>Refresh button to re-run the command</li>
+            <li>Navy theme defaults defined in XAML <code>Window.Resources</code> (required because <code>ApplyTheme()</code> before <code>Show()</code> silently fails)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Technical Notes</h3>
+        <ul>
+          <li><strong>OEM vs ANSI code page:</strong> <code>cmd.exe &gt;</code> writes using the OEM code page (CP437 on this system), but <code>FileRead</code> defaults to ANSI (Windows-1252). This corrupts accented characters like <code>&oacute;</code> &rarr; <code>&cent;</code>. Fix: use <code>FileRead, *P%oemCP% %file%</code>.</li>
+          <li><strong>Spanish field names:</strong> On Spanish Windows, <code>systeminfo</code> outputs &quot;Nombre de host&quot;, &quot;Versi&oacute;n del sistema operativo&quot;, &quot;Memoria f&iacute;sica total&quot;, etc. A mapping table normalizes them to English keys.</li>
+          <li>Icons are loaded from <code>C:\AHK_WPF\Assets\</code> via relative path <code>../Assets/</code> from the XAML file.</li>
+          <li>JSON-like values from WPF events use <strong>Base64 encoding</strong> for safe transmission over <code>WM_COPYDATA</code>.</li>
+        </ul>
+      </div>
+    </section>
+
+    <p class="footer">
+      Saved for the project at <code>C:\AHK_WPF</code>. Open this file in your browser to consult it whenever needed.
+    </p>
+  </div>
+</body>
+</html>

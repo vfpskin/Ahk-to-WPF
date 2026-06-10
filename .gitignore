@@ -1,0 +1,20 @@
+# Runtime generated XAML cache
+**/Xaml_bin/
+
+# Log files
+*.log
+
+# Runtime user data (ignore INI files in demos/)
+demos/*.ini
+
+# Backup / duplicate files
+*.txt
+*_backup.*
+
+# Build artifacts
+release/
+
+# OS files
+Thumbs.db
+.DS_Store
+Desktop.ini

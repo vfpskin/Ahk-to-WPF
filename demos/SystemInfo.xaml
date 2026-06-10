@@ -1,0 +1,289 @@
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="System Information"
+        Width="1000" Height="640"
+        MinWidth="880" MinHeight="580"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        Background="{DynamicResource WindowBg}">
+    <Window.Resources>
+        <SolidColorBrush x:Key="WindowBg" Color="#0A1628"/>
+        <SolidColorBrush x:Key="SidebarBg" Color="#0F1D32"/>
+        <SolidColorBrush x:Key="Surface" Color="#112236"/>
+        <SolidColorBrush x:Key="Surface2" Color="#1A3050"/>
+        <SolidColorBrush x:Key="Border" Color="#2A4A6B"/>
+        <SolidColorBrush x:Key="Accent" Color="#1A78C2"/>
+        <SolidColorBrush x:Key="AccentHover" Color="#1565A8"/>
+        <SolidColorBrush x:Key="AccentGlow" Color="#2196F3"/>
+        <SolidColorBrush x:Key="TextPrimary" Color="#E5F0F7"/>
+        <SolidColorBrush x:Key="TextSecondary" Color="#97BCE1"/>
+        <SolidColorBrush x:Key="TextMuted" Color="#6B8FB5"/>
+        <SolidColorBrush x:Key="RowHover" Color="#152A45"/>
+        <SolidColorBrush x:Key="ScrollThumb" Color="#2A4A6B"/>
+        <SolidColorBrush x:Key="Success" Color="#1A7A4A"/>
+        <SolidColorBrush x:Key="SuccessHover" Color="#166040"/>
+        <SolidColorBrush x:Key="Danger" Color="#C0392B"/>
+        <SolidColorBrush x:Key="DangerHover" Color="#A93226"/>
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource Surface}"/>
+            <Setter Property="CornerRadius" Value="14"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource Border}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="18"/>
+        </Style>
+        <Style x:Key="CardHeader" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource Accent}"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Margin" Value="0,0,0,12"/>
+        </Style>
+        <Style x:Key="InfoLabel" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource TextMuted}"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Margin" Value="0,0,0,2"/>
+        </Style>
+        <Style x:Key="InfoValue" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource Accent}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="14,7"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <DockPanel>
+        <Border x:Name="TitleBar" DockPanel.Dock="Top" Height="40"
+                Background="{DynamicResource SidebarBg}"
+                BorderBrush="{DynamicResource Border}" BorderThickness="0,0,0,1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="LblTitle" Grid.Column="0"
+                           Text="System Information"
+                           Foreground="{DynamicResource TextPrimary}"
+                           FontWeight="SemiBold" FontSize="14"
+                           VerticalAlignment="Center" Margin="16,0,0,0"/>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,6,0">
+                    <Button x:Name="BtnTheme" Width="40" Height="40" Background="Transparent" BorderThickness="0"
+                            Foreground="{DynamicResource TextSecondary}" Content="T" Visibility="Collapsed"/>
+                    <Button x:Name="BtnMinimize" Width="40" Height="40" Background="Transparent" BorderThickness="0"
+                            Foreground="{DynamicResource TextPrimary}" Content="-" FontSize="18"/>
+                    <Button x:Name="BtnMaximize" Width="40" Height="40" Background="Transparent" BorderThickness="0"
+                            Foreground="{DynamicResource TextPrimary}" Content="O" FontSize="14"/>
+                    <Button x:Name="BtnClose" Width="40" Height="40" Background="Transparent" BorderThickness="0"
+                            Foreground="{DynamicResource TextPrimary}" Content="X" FontSize="16"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+        <Grid>
+            <Grid x:Name="LoadingPanel" Background="{DynamicResource WindowBg}">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="+" FontSize="48" Foreground="{DynamicResource Accent}"
+                               HorizontalAlignment="Center" Margin="0,0,0,16"/>
+                    <TextBlock Text="Loading system information..." Foreground="{DynamicResource TextSecondary}"
+                               FontSize="18" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                    <TextBlock x:Name="TxtLoadingDetail" Text="Running systeminfo command..."
+                               Foreground="{DynamicResource TextMuted}" FontSize="12" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+            <ScrollViewer x:Name="ContentPanel" Visibility="Collapsed"
+                          Background="{DynamicResource WindowBg}"
+                          VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="20">
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="0" Width="72" Height="72" Background="White" CornerRadius="8">
+                                    <Image Source="../Assets/System.png" Width="72" Height="72"/>
+                                </Border>
+                                <TextBlock Grid.Column="1" Text="System" Foreground="{DynamicResource Accent}" FontSize="26" FontWeight="Bold" VerticalAlignment="Center" Margin="16,0,0,0"/>
+                            </Grid>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="160"/><ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource InfoLabel}" Text="Host Name"/>
+                                <TextBlock Grid.Row="0" Grid.Column="1" Style="{StaticResource InfoValue}" x:Name="TxtHostName"/>
+                                <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource InfoLabel}" Text="OS Name"/>
+                                <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource InfoValue}" x:Name="TxtOSName"/>
+                                <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource InfoLabel}" Text="OS Version"/>
+                                <TextBlock Grid.Row="2" Grid.Column="1" Style="{StaticResource InfoValue}" x:Name="TxtOSVersion"/>
+                                <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource InfoLabel}" Text="Manufacturer"/>
+                                <TextBlock Grid.Row="3" Grid.Column="1" Style="{StaticResource InfoValue}" x:Name="TxtManufacturer"/>
+                                <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource InfoLabel}" Text="Model"/>
+                                <TextBlock Grid.Row="4" Grid.Column="1" Style="{StaticResource InfoValue}" x:Name="TxtModel"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/><ColumnDefinition Width="16"/><ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Style="{StaticResource Card}">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Width="72" Height="72" Background="White" CornerRadius="8">
+                                        <Image Source="../Assets/Processor.png" Width="72" Height="72"/>
+                                    </Border>
+                                    <TextBlock Grid.Column="1" Text="Processor" Foreground="{DynamicResource Accent}" FontSize="26" FontWeight="Bold" VerticalAlignment="Center" Margin="16,0,0,0"/>
+                                </Grid>
+                                <TextBlock Style="{StaticResource InfoLabel}" Text="Processor"/>
+                                <TextBlock Style="{StaticResource InfoValue}" x:Name="TxtProcessor"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="2" Style="{StaticResource Card}">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Width="72" Height="72" Background="White" CornerRadius="8">
+                                        <Image Source="../Assets/Memory.png" Width="72" Height="72"/>
+                                    </Border>
+                                    <TextBlock Grid.Column="1" Text="Memory" Foreground="{DynamicResource Accent}" FontSize="26" FontWeight="Bold" VerticalAlignment="Center" Margin="16,0,0,0"/>
+                                </Grid>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="140"/><ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource InfoLabel}" Text="Total"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Style="{StaticResource InfoValue}" x:Name="TxtTotalRAM"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource InfoLabel}" Text="Available"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource InfoValue}" x:Name="TxtAvailableRAM"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource InfoLabel}" Text="In Use"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="1" Style="{StaticResource InfoValue}" x:Name="TxtUsedRAM"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/><ColumnDefinition Width="16"/><ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Style="{StaticResource Card}">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Width="72" Height="72" Background="White" CornerRadius="8">
+                                        <Image Source="../Assets/Disk.png" Width="72" Height="72"/>
+                                    </Border>
+                                    <TextBlock Grid.Column="1" Text="Storage" Foreground="{DynamicResource Accent}" FontSize="26" FontWeight="Bold" VerticalAlignment="Center" Margin="16,0,0,0"/>
+                                </Grid>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="140"/><ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource InfoLabel}" Text="Boot Device"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Style="{StaticResource InfoValue}" x:Name="TxtBootDevice"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource InfoLabel}" Text="Windows Dir"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource InfoValue}" x:Name="TxtWindowsDir"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="2" Style="{StaticResource Card}">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Width="72" Height="72" Background="White" CornerRadius="8">
+                                        <Image Source="../Assets/Network.png" Width="72" Height="72"/>
+                                    </Border>
+                                    <TextBlock Grid.Column="1" Text="Network" Foreground="{DynamicResource Accent}" FontSize="26" FontWeight="Bold" VerticalAlignment="Center" Margin="16,0,0,0"/>
+                                </Grid>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100"/><ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource InfoLabel}" Text="Domain"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Style="{StaticResource InfoValue}" x:Name="TxtDomain"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource InfoLabel}" Text="Network Cards"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource InfoValue}" x:Name="TxtNetworkCards"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="0" Width="72" Height="72" Background="White" CornerRadius="8">
+                                    <Image Source="../Assets/Extra_info.png" Width="72" Height="72"/>
+                                </Border>
+                                <TextBlock Grid.Column="1" Text="Extra Info" Foreground="{DynamicResource Accent}" FontSize="26" FontWeight="Bold" VerticalAlignment="Center" Margin="16,0,0,0"/>
+                            </Grid>
+                            <ScrollViewer MaxHeight="320" VerticalScrollBarVisibility="Auto">
+                                <TextBlock x:Name="TxtExtraInfo"
+                                           Foreground="{DynamicResource TextSecondary}"
+                                           FontSize="12" FontFamily="Consolas"
+                                           TextWrapping="Wrap"/>
+                            </ScrollViewer>
+                        </StackPanel>
+                    </Border>
+                    <Border Background="{DynamicResource Surface2}" CornerRadius="10" Padding="14,10"
+                            BorderBrush="{DynamicResource Border}" BorderThickness="1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="O" Foreground="{DynamicResource Success}" FontSize="10"
+                                       VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBlock Grid.Column="1" x:Name="TxtStatus" Foreground="{DynamicResource TextSecondary}"
+                                       FontSize="12" VerticalAlignment="Center"/>
+                            <Button Grid.Column="2" x:Name="BtnRefresh" Content="Refresh"/>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </DockPanel>
+</Window>

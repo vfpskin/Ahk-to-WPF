@@ -1,0 +1,446 @@
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Contact list"
+        Width="720"
+        Height="580"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        Background="{DynamicResource WindowBg}">
+
+    <Window.Resources>
+        <!-- Color palette -->
+        <SolidColorBrush x:Key="WindowBg"      Color="#0A1628"/>
+        <SolidColorBrush x:Key="SidebarBg"     Color="#0F1D32"/>
+        <SolidColorBrush x:Key="Surface"       Color="#112236"/>
+        <SolidColorBrush x:Key="Surface2"      Color="#1A3050"/>
+        <SolidColorBrush x:Key="Border"        Color="#2A4A6B"/>
+        <SolidColorBrush x:Key="Accent"        Color="#1A78C2"/>
+        <SolidColorBrush x:Key="AccentHover"   Color="#1565A8"/>
+        <SolidColorBrush x:Key="AccentGlow"    Color="#2196F3"/>
+        <SolidColorBrush x:Key="TextPrimary"   Color="#E5F0F7"/>
+        <SolidColorBrush x:Key="TextSecondary" Color="#97BCE1"/>
+        <SolidColorBrush x:Key="TextMuted"     Color="#6B8FB5"/>
+        <SolidColorBrush x:Key="Danger"        Color="#C0392B"/>
+        <SolidColorBrush x:Key="DangerHover"   Color="#A93226"/>
+        <SolidColorBrush x:Key="Success"       Color="#1A7A4A"/>
+        <SolidColorBrush x:Key="SuccessHover"  Color="#166040"/>
+        <SolidColorBrush x:Key="RowHover"      Color="#152A45"/>
+        <SolidColorBrush x:Key="ScrollThumb"   Color="#2A4A6B"/>
+
+        <!-- SweetAlert fixed colors -->
+        <SolidColorBrush x:Key="ColorSuccess" Color="#A5DC86"/>
+        <SolidColorBrush x:Key="ColorError"   Color="#F27474"/>
+        <SolidColorBrush x:Key="ColorWarning" Color="#F8BB86"/>
+        <SolidColorBrush x:Key="ColorInfo"    Color="#3FC3EE"/>
+
+        <!-- TextBox style -->
+        <Style TargetType="TextBox">
+            <Setter Property="Background"      Value="{DynamicResource Surface}"/>
+            <Setter Property="Foreground"      Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="BorderBrush"     Value="{DynamicResource Border}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding"         Value="10,7"/>
+            <Setter Property="CaretBrush"      Value="White"/>
+        </Style>
+
+        <!-- Base Button style -->
+        <Style TargetType="Button">
+            <Setter Property="Background"      Value="{DynamicResource Accent}"/>
+            <Setter Property="Foreground"      Value="White"/>
+            <Setter Property="FontWeight"      Value="SemiBold"/>
+            <Setter Property="FontSize"        Value="13"/>
+            <Setter Property="Padding"         Value="18,8"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="6"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource AccentHover}"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.4"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- TitleBar Buttons -->
+        <Style x:Key="TitleBarButton" TargetType="Button">
+            <Setter Property="Width"           Value="36"/>
+            <Setter Property="Height"          Value="36"/>
+            <Setter Property="Padding"         Value="0"/>
+            <Setter Property="Margin"          Value="0"/>
+            <Setter Property="Background"      Value="Transparent"/>
+            <Setter Property="Foreground"      Value="{DynamicResource TextSecondary}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontSize"        Value="14"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource Danger}"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- TitleBar Buttons Theme -->
+        <Style x:Key="TitleBarThemeButton" TargetType="Button">
+            <Setter Property="MinWidth"        Value="52"/>
+            <Setter Property="Height"          Value="28"/>
+            <Setter Property="Padding"         Value="10,0"/>
+            <Setter Property="Margin"          Value="0,0,4,0"/>
+            <Setter Property="Background"      Value="{DynamicResource Surface2}"/>
+            <Setter Property="Foreground"      Value="{DynamicResource TextSecondary}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontSize"        Value="11"/>
+            <Setter Property="FontWeight"      Value="SemiBold"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource Accent}"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Grid Column Header -->
+        <Style TargetType="GridViewColumnHeader">
+            <Setter Property="Background"      Value="{DynamicResource Surface2}"/>
+            <Setter Property="Foreground"      Value="{DynamicResource AccentGlow}"/>
+            <Setter Property="FontWeight"      Value="SemiBold"/>
+            <Setter Property="FontSize"        Value="11"/>
+            <Setter Property="Padding"         Value="12,10"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="GridViewColumnHeader">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{DynamicResource Border}"
+                                BorderThickness="0,0,1,1"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ListView  -->
+        <Style TargetType="ListView">
+            <Setter Property="Background"      Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground"      Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="FontSize"        Value="13"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+        </Style>
+
+        <!-- ListView Rows -->
+        <Style TargetType="ListViewItem">
+            <Setter Property="Foreground"      Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="Padding"         Value="12,8"/>
+            <Setter Property="Margin"          Value="0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListViewItem">
+                        <Border x:Name="Bd"
+                                Background="Transparent"
+                                BorderBrush="{DynamicResource Border}"
+                                BorderThickness="0,0,0,1"
+                                Padding="{TemplateBinding Padding}">
+                            <GridViewRowPresenter
+                                Columns="{Binding View.Columns, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                Content="{TemplateBinding Content}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource RowHover}"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource Accent}"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsSelected" Value="True"/>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource AccentHover}"/>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Dark Scrollbar -->
+        <Style TargetType="ScrollBar">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Width"      Value="8"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Grid Background="Transparent">
+                            <Track x:Name="PART_Track" IsDirectionReversed="True">
+                                <Track.Thumb>
+                                    <Thumb>
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Border Background="{DynamicResource ScrollThumb}"
+                                                        CornerRadius="4"
+                                                        Margin="1"/>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+    <DockPanel>
+        <!-- TopBar -->
+        <Border x:Name="TitleBar" DockPanel.Dock="Top"
+                Height="40"
+                ClipToBounds="True"
+                Background="{DynamicResource SidebarBg}"
+                BorderBrush="{DynamicResource Border}"
+                BorderThickness="0,0,0,1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="LblTitle" Text="Contact List"
+                           Foreground="{DynamicResource TextPrimary}"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center"
+                           Margin="16,0,0,0"/>
+                <StackPanel Grid.Column="1"
+                            Orientation="Horizontal"
+                            VerticalAlignment="Center"
+                            Margin="0,0,4,0">
+                    <Button x:Name="BtnTheme"
+                            Style="{StaticResource TitleBarThemeButton}"
+                            Content="Navy"/>
+                    <Button x:Name="BtnMinimize"
+                            Style="{StaticResource TitleBarButton}"
+                            Content="─" Visibility="Collapsed"/>
+                    <Button x:Name="BtnMaximize"
+                            Style="{StaticResource TitleBarButton}"
+                            Content="□" Visibility="Collapsed"/>
+                    <Button x:Name="BtnClose"
+                            Style="{StaticResource TitleBarButton}"
+                            Content="&#x2715;"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Main -->
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Input Panel -->
+            <Border Grid.Row="0"
+                    Background="{DynamicResource Surface}"
+                    BorderBrush="{DynamicResource Border}"
+                    BorderThickness="1"
+                    CornerRadius="10"
+                    Padding="18">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="8"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="NAME"
+                               Foreground="{DynamicResource TextSecondary}"
+                               FontSize="10" FontWeight="Bold" Margin="0,0,0,5"/>
+                    <TextBlock Grid.Row="0" Grid.Column="1" Text="PHONE"
+                               Foreground="{DynamicResource TextSecondary}"
+                               FontSize="10" FontWeight="Bold" Margin="0,0,0,5"/>
+                    <TextBlock Grid.Row="0" Grid.Column="2" Text="EMAIL"
+                               Foreground="{DynamicResource TextSecondary}"
+                               FontSize="10" FontWeight="Bold" Margin="0,0,0,5"/>
+
+                    <TextBox x:Name="TxtName"   Grid.Row="2" Grid.Column="0" Height="38" Margin="0,0,10,0"/>
+                    <TextBox x:Name="TxtPhone" Grid.Row="2" Grid.Column="1" Height="38" Margin="0,0,10,0"/>
+                    <TextBox x:Name="TxtEmail"    Grid.Row="2" Grid.Column="2" Height="38" Margin="0,0,10,0"/>
+                    <Button x:Name="BtnAdd" Grid.Row="2" Grid.Column="3"
+                            Content="+ Add" Height="38" Padding="16,0"/>
+                </Grid>
+            </Border>
+
+            <!-- ListView -->
+            <Border Grid.Row="2"
+                    Background="{DynamicResource Surface}"
+                    BorderBrush="{DynamicResource Border}"
+                    BorderThickness="1"
+                    CornerRadius="10"
+                    ClipToBounds="True">
+                <ListView x:Name="ContactList" Margin="0">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Width="40"  DisplayMemberBinding="{Binding [0]}" Header="#"/>
+                            <GridViewColumn Width="180" DisplayMemberBinding="{Binding [1]}" Header="Name"/>
+                            <GridViewColumn Width="150" DisplayMemberBinding="{Binding [2]}" Header="Phone"/>
+                            <GridViewColumn Width="270" DisplayMemberBinding="{Binding [3]}" Header="Email"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Border>
+
+            <!-- Footer -->
+            <Border Grid.Row="4"
+                    Background="{DynamicResource Surface}"
+                    BorderBrush="{DynamicResource Border}"
+                    BorderThickness="1"
+                    CornerRadius="10"
+                    Padding="18,12">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="LblTotal" Text="0 contacts"
+                               Foreground="{DynamicResource TextSecondary}"
+                               FontSize="12"
+                               VerticalAlignment="Center"/>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <Button x:Name="BtnEdit" Content="&#x270E; Edit" Height="34"
+                                Padding="16,0" Margin="0,0,10,0"
+                                Background="{DynamicResource Success}" IsEnabled="False"/>
+                        <Button x:Name="BtnDelete" Content="&#x2715; Delete" Height="34"
+                                Padding="16,0"
+                                Background="{DynamicResource Danger}" IsEnabled="False"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </DockPanel>
+
+    <!-- OVERLAY ALERT -->
+    <Grid x:Name="SweetAlertOverlay" Visibility="Collapsed" Background="#B2000000">
+        <Border Margin="30" CornerRadius="12"
+                Background="{DynamicResource Surface}"
+                BorderBrush="{DynamicResource Border}"
+                BorderThickness="1"
+                HorizontalAlignment="Center" VerticalAlignment="Center"
+                MinWidth="280" MaxWidth="420">
+            <Border.Effect>
+                <DropShadowEffect Color="Black" BlurRadius="25" ShadowDepth="5" Opacity="0.6"/>
+            </Border.Effect>
+
+            <StackPanel Margin="30">
+                <Grid x:Name="SA_IconContainer" Height="80" Margin="0,0,0,15"
+                      HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Grid x:Name="SA_IcoInfo" Visibility="Collapsed">
+                        <Ellipse Width="60" Height="60" Stroke="{StaticResource ColorInfo}" StrokeThickness="3" Fill="Transparent"/>
+                        <TextBlock Text="i" Foreground="{StaticResource ColorInfo}" FontSize="36"
+                                   FontFamily="Arial" FontWeight="Bold"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-2,0,0"/>
+                    </Grid>
+                    <Grid x:Name="SA_IcoSuccess" Visibility="Collapsed">
+                        <Ellipse Width="60" Height="60" Stroke="{StaticResource ColorSuccess}" StrokeThickness="3" Fill="Transparent"/>
+                        <Path Data="M 0,12 L 8,20 L 24,0" Width="24" Height="20"
+                              Stroke="{StaticResource ColorSuccess}" StrokeThickness="4"
+                              StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round"
+                              HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,2,0,0"/>
+                    </Grid>
+                    <Grid x:Name="SA_IcoError" Visibility="Collapsed">
+                        <Ellipse Width="60" Height="60" Stroke="{StaticResource ColorError}" StrokeThickness="3" Fill="Transparent"/>
+                        <Path Data="M 0,0 L 22,22 M 22,0 L 0,22" Width="22" Height="22"
+                              Stroke="{StaticResource ColorError}" StrokeThickness="4"
+                              StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Grid>
+                    <Grid x:Name="SA_IcoWarning" Visibility="Collapsed">
+                        <Ellipse Width="60" Height="60" Stroke="{StaticResource ColorWarning}" StrokeThickness="3" Fill="Transparent"/>
+                        <TextBlock Text="!" Foreground="{StaticResource ColorWarning}" FontSize="36"
+                                   FontFamily="Arial" FontWeight="Bold"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-2,0,0"/>
+                    </Grid>
+                </Grid>
+
+                <TextBlock x:Name="SA_TxtTitle" Text="Title" FontSize="22" FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextPrimary}"
+                           HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"
+                           Margin="0,0,0,10"/>
+
+                <TextBlock x:Name="SA_TxtMessage" Text="Message" FontSize="14"
+                           Foreground="{DynamicResource TextSecondary}"
+                           HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"
+                           Margin="0,0,0,25"/>
+
+                <StackPanel x:Name="SA_PanelButtons" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button x:Name="BtnSA_OK" Content="OK" Foreground="White" BorderThickness="0"
+                            Padding="35,10" Margin="5" Visibility="Collapsed" MinWidth="100" MinHeight="40"
+                            Background="{DynamicResource Accent}"/>
+                    <Button x:Name="BtnSA_Yes" Content="Yes" Foreground="White" BorderThickness="0"
+                            Padding="30,10" Margin="5" Visibility="Collapsed" MinWidth="100" MinHeight="40"
+                            Background="{DynamicResource Danger}"/>
+                    <Button x:Name="BtnSA_No" Content="No" Foreground="White" BorderThickness="0"
+                            Padding="30,10" Margin="5" Visibility="Collapsed" MinWidth="100" MinHeight="40"
+                            Background="{DynamicResource Surface2}"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+    </Grid>
+</Window>
