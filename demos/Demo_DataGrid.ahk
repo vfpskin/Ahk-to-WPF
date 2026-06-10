@@ -7,7 +7,7 @@ SetBatchLines, -1
 ; ======================================================================
 ; INVENTORY DATA DASHBOARD DEMO - DATAGRID CRUD APPLICATION
 ; ======================================================================
-global ui := new XAMLGUI("Demo_DataGrid.xaml")
+global ui := new XAMLGUI(A_ScriptDir "\Demo_DataGrid.xaml")
 
 ; Global Data Stores
 global InventoryList   := []    ; Array storing item objects: {ID, Name, Category, Stock, Price}

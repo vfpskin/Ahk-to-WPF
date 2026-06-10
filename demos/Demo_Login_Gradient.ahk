@@ -8,7 +8,7 @@ SetBatchLines, -1
 ; Demonstrates PasswordBox, rounded styles, shadows,
 ; and user validation by reading the "state" returned by WPF.
 
-global ui := new XAMLGUI("Demo_Login_Gradient.xaml")
+global ui := new XAMLGUI(A_ScriptDir "\Demo_Login_Gradient.xaml")
 
 ; Initialize title bar (card-style, no min/max buttons)
 InitTitleBar(ui, {title: "Welcome Back", showMin: false, showMax: false})

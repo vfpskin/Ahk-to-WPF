@@ -9,7 +9,7 @@ SetBatchLines, -1
 ; dragged (thanks to x:Name="TitleBar" in XAML) and how to
 ; update progress bars in real-time from AHK.
 
-global ui := new XAMLGUI("Demo_Widget.xaml")
+global ui := new XAMLGUI(A_ScriptDir "\Demo_Widget.xaml")
 
 ; Initialize title bar (no min/max buttons for widget)
 InitTitleBar(ui, {title: "SYSTEM MONITOR", showMin: false, showMax: false, onClose: "Widget_OnClose"})

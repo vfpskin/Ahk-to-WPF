@@ -178,7 +178,7 @@
                                      VerticalAlignment="Center"
                                      Fill="White">
                               <Rectangle.OpacityMask>
-                                  <ImageBrush ImageSource="D:/MOLINA PABLO/PROYECTOS/AKH_WPF/Assets/login.png"/>
+                                  <ImageBrush ImageSource="../Assets/login.png"/>
                               </Rectangle.OpacityMask>
                           </Rectangle>
                    </Grid>

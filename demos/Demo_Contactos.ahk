@@ -9,7 +9,7 @@ SetBatchLines, -1
 ; ======================================================================
 ; DEMO: Contact List
 ; ======================================================================
-global ui := new XAMLGUI("Demo_Contactos.xaml")
+global ui := new XAMLGUI(A_ScriptDir "\Demo_Contactos.xaml")
 
 ; Global Variables
 global Contacts    := []    ; Array of objects {Name, Phone, Email}

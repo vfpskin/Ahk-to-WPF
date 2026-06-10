@@ -7,7 +7,7 @@ SetBatchLines, -1
 #SINGLEINSTANCE FORCE
 
 ; --- DEMO: SweetAlert Showcase ---
-global ui := new XAMLGUI("Demo_Alerts.xaml")
+global ui := new XAMLGUI(A_ScriptDir "\Demo_Alerts.xaml")
 
 ; Initialize theme system
 InitThemeManager(ui, ["Dark", "Light", "Blue", "Green", "Purple", "Red", "Orange", "Teal"])
