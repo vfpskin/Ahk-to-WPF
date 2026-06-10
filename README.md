@@ -1,6 +1,6 @@
-# (UNDER CONSTRUCTION) AHK → WPF Integration (UNDER CONSTRUCTION) 
+# AHK → WPF
 
-This project shows how to connect **AutoHotkey 1.1** scripts with a **WPF interface** using the custom `XAMLGUI` engine and bridge WPF_Runner.exe.  
+This project shows how to connect **AutoHotkey 1.1** scripts with a **WPF interface** using the custom `XAMLGUI` engine and bridge `WPF_Runner.exe`.  
 It allows you to build modern Windows interfaces while keeping the simplicity and automation power of AHK.
 
 ---
@@ -12,6 +12,8 @@ It allows you to build modern Windows interfaces while keeping the simplicity an
 - Focus control with `ui.Focus()`
 - Theme and resource management (`ui.SetTheme()`, `ui.SetResource()`)
 - Custom window styling (Dashboard-style header)
+- **FIFA Dashboard** — 7-tab management interface with SQLite database, custom themes, and player/stadium/match CRUD via DataGrid
+- **SystemInfo Dashboard** — Real-time system information reader parsing `systeminfo` with a 6-card modern layout (System, Processor, Memory, Storage, Network, Extra Info)
 
 ---
 
@@ -86,16 +88,17 @@ It allows you to build modern Windows interfaces while keeping the simplicity an
   - If compilation fails with **CS0006 errors**, double-check that the DLL references exist in your system and update the paths accordingly.
 
 ## 📦 Precompiled Executable
-For users who prefer not to compile the project manually, a precompiled executable is provided.
-The file is uploaded in a .zip archive inside the release/ folder of this repository.
-It contains the compiled WPF runner (WPF_Runner.exe) built from Program_WPF.cs.
-This allows you to run the demo without configuring csc.exe or editing the batch script.
+For users who prefer not to compile the project manually, a precompiled executable is provided in a `.zip` archive inside the `release/` folder:
+
+➡️ **[Download WPF_Runner.zip](https://github.com/vfpskin/Ahk-to-WPF/raw/main/release/WPF_Runner.zip)**
+
+It contains the compiled WPF runner (`WPF_Runner.exe`) built from `Program_WPF.cs`, so you can run the demos without configuring `csc.exe` or editing the batch script.
 
 ⚠️ Note: The executable was compiled on Windows 7 (32-bit) with .NET Framework 4.0.
 
-If the .exe does not run on your system, this is likely the reason.
+If the `.exe` does not run on your system, this is likely the reason.
 However, compiling in 32-bit mode generally increases compatibility across different Windows versions and distributions.
-If you encounter issues, you can recompile using Compile_WPF.bat and adjust the path to your local csc.exe.
+If you encounter issues, you can recompile using `Compile_WPF.bat` and adjust the path to your local `csc.exe`.
    
 
 ## **Credits**
