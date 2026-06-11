@@ -21,15 +21,14 @@ Login_Event(state, ctrl, event)
 
     if (user = "admin" && pass = "1234")
     {
-        ui.Update("TxtStatus", "Text", "Welcome!")
-        ui.Update("TxtStatus", "Foreground", "#6BCB77")
-        Sleep, 800
+        ui.Update("WelcomeOverlay", "Visibility", "Visible")
+        Sleep, 2500
         ui.Close()
         ExitApp
     }
     else
     {
-        ui.Update("TxtStatus", "Text", "Invalid credentials")
+        ui.Update("TxtStatus", "Text", "Invalid credentials. Hint: admin / 1234")
         ui.Update("TxtStatus", "Foreground", "#FF6B6B")
     }
 }
