@@ -164,9 +164,13 @@
                         </LinearGradientBrush>
                     </Border.Background>
                 </Border>
-                <TextBlock Text="Welcome" Foreground="Black" FontSize="48"
-                           FontWeight="Bold" HorizontalAlignment="Center"
-                           VerticalAlignment="Center"/>
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock x:Name="OverlayTitle" Text="Welcome" Foreground="Black" FontSize="48"
+                               FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="OverlayHint" Text="" Foreground="#CC000000" FontSize="14"
+                               HorizontalAlignment="Center" Margin="0,20,0,0" Visibility="Collapsed"
+                               TextWrapping="Wrap" MaxWidth="280"/>
+                </StackPanel>
             </Grid>
         </Grid>
     </Border>

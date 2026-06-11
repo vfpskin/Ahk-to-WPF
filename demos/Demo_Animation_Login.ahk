@@ -21,13 +21,19 @@ Login_Event(state, ctrl, event)
 
     if (user = "admin" && pass = "1234")
     {
+        ui.Update("OverlayTitle", "Text", "Welcome")
+        ui.Update("OverlayHint", "Visibility", "Collapsed")
         ui.Update("WelcomeOverlay", "Visibility", "Visible")
         SetTimer, CerrarBienvenida, -1300
     }
     else
     {
-        ui.Update("TxtStatus", "Text", "Invalid credentials. Hint: admin / 1234")
-        ui.Update("TxtStatus", "Foreground", "#FF6B6B")
+        ui.Update("TxtStatus", "Text", "")
+        ui.Update("OverlayTitle", "Text", "Login Failed")
+        ui.Update("OverlayHint", "Text", "Hint: admin / 1234")
+        ui.Update("OverlayHint", "Visibility", "Visible")
+        ui.Update("WelcomeOverlay", "Visibility", "Visible")
+        SetTimer, CerrarFail, -3500
     }
 }
 
@@ -35,3 +41,11 @@ CerrarBienvenida:
     global ui
     ui.Close()
     ExitApp
+
+CerrarFail:
+    global ui
+    ui.Update("WelcomeOverlay", "Visibility", "Collapsed")
+    ui.Update("OverlayHint", "Visibility", "Collapsed")
+    ui.Update("TxtStatus", "Text", "Invalid credentials. Hint: admin / 1234")
+    ui.Update("TxtStatus", "Foreground", "#FF6B6B")
+    return
