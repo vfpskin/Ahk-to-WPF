@@ -141,8 +141,8 @@
                             <Setter Property="Background">
                                 <Setter.Value>
                                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                        <GradientStop Offset="0" Color="#004B8D"/>
-                                        <GradientStop Offset="1" Color="#7B2D8E"/>
+                                        <GradientStop Offset="0" Color="#4A0E4E"/>
+                                        <GradientStop Offset="1" Color="#1A1A2E"/>
                                     </LinearGradientBrush>
                                 </Setter.Value>
                             </Setter>
@@ -153,10 +153,10 @@
                                             <Storyboard RepeatBehavior="Forever" AutoReverse="True">
                                                 <ColorAnimation
                                                     Storyboard.TargetProperty="Background.(GradientBrush.GradientStops)[0].Color"
-                                                    To="#E8485B" Duration="0:0:3"/>
+                                                    To="#7B2D8E" Duration="0:0:3"/>
                                                 <ColorAnimation
                                                     Storyboard.TargetProperty="Background.(GradientBrush.GradientStops)[1].Color"
-                                                    To="#F3A712" Duration="0:0:3"/>
+                                                    To="#0F0F23" Duration="0:0:3"/>
                                             </Storyboard>
                                         </BeginStoryboard>
                                     </Trigger.EnterActions>
