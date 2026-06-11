@@ -136,26 +136,34 @@
             <!-- Welcome overlay -->
             <Grid x:Name="WelcomeOverlay" Grid.RowSpan="3" Visibility="Collapsed">
                 <Border CornerRadius="16">
-                    <Border.Background>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                            <GradientStop Offset="0" Color="#004B8D"/>
-                            <GradientStop Offset="1" Color="#7B2D8E"/>
-                        </LinearGradientBrush>
-                    </Border.Background>
-                    <Border.Triggers>
-                        <EventTrigger RoutedEvent="Border.Loaded">
-                            <BeginStoryboard>
-                                <Storyboard RepeatBehavior="Forever" AutoReverse="True">
-                                    <ColorAnimation
-                                        Storyboard.TargetProperty="Background.(GradientBrush.GradientStops)[0].Color"
-                                        To="#E8485B" Duration="0:0:3"/>
-                                    <ColorAnimation
-                                        Storyboard.TargetProperty="Background.(GradientBrush.GradientStops)[1].Color"
-                                        To="#F3A712" Duration="0:0:3"/>
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
-                    </Border.Triggers>
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                        <GradientStop Offset="0" Color="#004B8D"/>
+                                        <GradientStop Offset="1" Color="#7B2D8E"/>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsVisible" Value="True">
+                                    <Trigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                                <ColorAnimation
+                                                    Storyboard.TargetProperty="Background.(GradientBrush.GradientStops)[0].Color"
+                                                    To="#E8485B" Duration="0:0:3"/>
+                                                <ColorAnimation
+                                                    Storyboard.TargetProperty="Background.(GradientBrush.GradientStops)[1].Color"
+                                                    To="#F3A712" Duration="0:0:3"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.EnterActions>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
                     <TextBlock Text="Welcome" Foreground="White" FontSize="48"
                                FontWeight="Bold" HorizontalAlignment="Center"
                                VerticalAlignment="Center"/>
