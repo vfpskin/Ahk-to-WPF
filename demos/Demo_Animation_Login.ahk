@@ -22,7 +22,7 @@ Login_Event(state, ctrl, event)
     if (user = "admin" && pass = "1234")
     {
         ui.Update("WelcomeOverlay", "Visibility", "Visible")
-        SetTimer, CerrarBienvenida, -2500
+        SetTimer, CerrarBienvenida, -1300
     }
     else
     {

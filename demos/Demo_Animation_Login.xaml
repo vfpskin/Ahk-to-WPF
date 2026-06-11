@@ -133,41 +133,40 @@
                        Foreground="#55FFFFFF" FontSize="11"
                        HorizontalAlignment="Center" Margin="0,0,0,14"/>
 
-            <!-- Welcome overlay -->
+            <!-- Welcome overlay (black bg, gradient rises from bottom revealing "Welcome") -->
             <Grid x:Name="WelcomeOverlay" Grid.RowSpan="3" Visibility="Collapsed">
-                <Border CornerRadius="16">
+                <Border CornerRadius="16" Background="#FF000000"/>
+                <Border x:Name="RisingGradient" RenderTransformOrigin="0,1">
+                    <Border.RenderTransform>
+                        <ScaleTransform ScaleY="0"/>
+                    </Border.RenderTransform>
                     <Border.Style>
                         <Style TargetType="Border">
-                            <Setter Property="Background">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                        <GradientStop Offset="0" Color="#4A0E4E"/>
-                                        <GradientStop Offset="1" Color="#1A1A2E"/>
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
                             <Style.Triggers>
-                                <Trigger Property="IsVisible" Value="True">
-                                    <Trigger.EnterActions>
+                                <DataTrigger Binding="{Binding Visibility, RelativeSource={RelativeSource AncestorType=Grid}}" Value="Visible">
+                                    <DataTrigger.EnterActions>
                                         <BeginStoryboard>
-                                            <Storyboard RepeatBehavior="Forever" AutoReverse="True">
-                                                <ColorAnimation
-                                                    Storyboard.TargetProperty="Background.(GradientBrush.GradientStops)[0].Color"
-                                                    To="#7B2D8E" Duration="0:0:3"/>
-                                                <ColorAnimation
-                                                    Storyboard.TargetProperty="Background.(GradientBrush.GradientStops)[1].Color"
-                                                    To="#0F0F23" Duration="0:0:3"/>
+                                            <Storyboard>
+                                                <DoubleAnimation
+                                                    Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleY)"
+                                                    From="0" To="1" Duration="0:0:0.8"/>
                                             </Storyboard>
                                         </BeginStoryboard>
-                                    </Trigger.EnterActions>
-                                </Trigger>
+                                    </DataTrigger.EnterActions>
+                                </DataTrigger>
                             </Style.Triggers>
                         </Style>
                     </Border.Style>
-                    <TextBlock Text="Welcome" Foreground="White" FontSize="48"
-                               FontWeight="Bold" HorizontalAlignment="Center"
-                               VerticalAlignment="Center"/>
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Offset="0" Color="#00E5FF"/>
+                            <GradientStop Offset="1" Color="#FFD700"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
                 </Border>
+                <TextBlock Text="Welcome" Foreground="Black" FontSize="48"
+                           FontWeight="Bold" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
             </Grid>
         </Grid>
     </Border>
