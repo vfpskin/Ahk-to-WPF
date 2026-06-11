@@ -127,7 +127,7 @@
                 </StackPanel>
             </Grid>
 
-            <TextBlock Grid.Row="2" Text="AHK → WPF Engine"
+            <TextBlock Grid.Row="2" Text="AHK - WPF Engine"
                        Foreground="#55FFFFFF" FontSize="11"
                        HorizontalAlignment="Center" Margin="0,0,0,14"/>
         </Grid>
