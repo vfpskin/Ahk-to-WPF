@@ -22,9 +22,7 @@ Login_Event(state, ctrl, event)
     if (user = "admin" && pass = "1234")
     {
         ui.Update("WelcomeOverlay", "Visibility", "Visible")
-        Sleep, 2500
-        ui.Close()
-        ExitApp
+        SetTimer, CerrarBienvenida, -2500
     }
     else
     {
@@ -32,3 +30,8 @@ Login_Event(state, ctrl, event)
         ui.Update("TxtStatus", "Foreground", "#FF6B6B")
     }
 }
+
+CerrarBienvenida:
+    global ui
+    ui.Close()
+    ExitApp
