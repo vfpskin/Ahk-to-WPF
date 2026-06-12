@@ -9,6 +9,7 @@ demos/*.ini
 
 # Backup / duplicate files
 *.txt
+*.ex1
 *_backup.*
 
 # Compiled executable (not tracked, provided as release ZIP)

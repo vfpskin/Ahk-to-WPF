@@ -10,12 +10,14 @@ It allows you to build modern Windows interfaces while keeping the simplicity an
 ---
 
 ## 🚀 Features
-- Event handling with `ui.OnEvent()`
-- Dynamic UI updates using `ui.Update()`
+- Event handling with `ui.OnEvent()` — supports 15+ control types including Button, TextBox, PasswordBox, CheckBox, RadioButton, ToggleButton, RepeatButton, Slider, ScrollBar, DatePicker, Calendar, ComboBox, ListView, DataGrid, TabControl, Hyperlink
+- Dynamic UI updates using `ui.Update()` — over 25 supported properties (Text, Content, Value, Margin, Visibility, Background, Foreground, FontSize, and more)
 - Full CRUD operations in `ListView` and `DataGrid`
 - Focus control with `ui.Focus()`
-- Theme and resource management (`ui.SetTheme()`, `ui.SetResource()`)
-- Custom window styling (Dashboard-style header)
+- Theme and resource management (`ui.SetTheme()`, `ui.SetResource()`) — 9 built-in themes
+- Custom window styling (Dashboard-style header, drag-to-move, minimize/maximize/close)
+- Modern control templates for ToggleButton (switch), CheckBox, RadioButton, ProgressBar, Slider, ScrollBar
+- **All Controls Demo** — comprehensive 5-tab demo covering 15+ controls with bidirectional AHK ↔ WPF communication
 - **FIFA Dashboard** — 7-tab management interface with SQLite database, custom themes, and player/stadium/match CRUD via DataGrid
 - **SystemInfo Dashboard** — Real-time system information reader parsing `systeminfo` with a 6-card modern layout (System, Processor, Memory, Storage, Network, Extra Info)
 
@@ -90,12 +92,20 @@ For users who prefer not to compile the project manually, a precompiled executab
 
 It contains the compiled WPF runner (`WPF_Runner.exe`) built from `Program_WPF.cs`, so you can run the demos without configuring `csc.exe` or editing the batch script.
 
-⚠️ Note: The executable was compiled on Windows 7 (32-bit) with .NET Framework 4.0.
+⚠️ Note: The executable is compiled as **AnyCPU** with the 32-bit .NET Framework 4.x compiler (`csc.exe`). It runs natively on both 32-bit and 64-bit Windows systems with .NET Framework 4.0 or later.
 
-If the `.exe` does not run on your system, this is likely the reason.
-However, compiling in 32-bit mode generally increases compatibility across different Windows versions and distributions.
-If you encounter issues, you can recompile using `compile_WPF_Runner.bat` and adjust the path to your local `csc.exe`.
+If the `.exe` does not run on your system, recompile using `compile_WPF_Runner.bat` and adjust the `csc.exe` path to match your .NET installation.
    
+    
+## 🎮 Demos Included
+All demos are in the `demos/` folder. Run any `.ahk` file to launch its WPF interface.
+
+| Demo | File | Description |
+|------|------|-------------|
+| **All Controls** | `Demo_AllControls.ahk` | 5-tab comprehensive demo with 15+ controls, theme cycling, circle positioning |
+| **Login Animation** | `Demo_Animation_Login.ahk` | Animated overlay login with fade effects |
+| **FIFA Dashboard** | `Demo_Dashboard_FIFA.ahk` | Full sports management dashboard with SQLite |
+| **SystemInfo** | `Demo_SystemInfo.ahk` | Real-time system info reader with 6-card layout |
 
 ## **Credits**
 Created (vibe coded) by Vfpskin (Pablo Molina) 

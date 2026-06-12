@@ -286,7 +286,8 @@ ui.Update("LvTasks", "UpdateSelected", "1|Task 1|Weekly|10:30|Active|Yes")</code
           <li><code class="inline">Content</code>: Text of buttons, labels, and other <code>ContentControl</code>s.</li>
           <li><code class="inline">IsEnabled</code>: Enables or disables the control ("True" / "False").</li>
           <li><code class="inline">Visibility</code>: <code>Visible</code>, <code>Hidden</code>, <code>Collapsed</code>.</li>
-          <li><code class="inline">Value</code>: For <code>Slider</code> and <code>ProgressBar</code>.</li>
+          <li><code class="inline">Value</code>: For <code>Slider</code>, <code>ProgressBar</code>, and <code>ScrollBar</code>.</li>
+          <li><code class="inline">Margin</code>: Sets the outer margin as <code>"left,top"</code> or <code>"left,top,right,bottom"</code>.</li>
           <li><code class="inline">SelectedIndex</code>: Selected index in lists and combos.</li>
           <li><code class="inline">Background</code>, <code class="inline">Foreground</code>, <code class="inline">BorderBrush</code>.</li>
           <li><code class="inline">FontSize</code>, <code class="inline">FontWeight</code>, <code class="inline">Opacity</code>.</li>
@@ -297,20 +298,60 @@ ui.Update("LvTasks", "UpdateSelected", "1|Task 1|Weekly|10:30|Active|Yes")</code
       <section>
         <h2>5. Common Controls</h2>
         <ul>
-          <li><code class="inline">TextBox</code>: Uses <code>Text</code>, <code>Enter</code>, <code>GotFocus</code>, <code>LostFocus</code>.</li>
-          <li><code class="inline">PasswordBox</code>: Uses <code>Enter</code>, value read via <code>state["Name"]</code>.</li>
-          <li><code class="inline">Button</code>: Uses <code>Click</code> and also <code>Enter</code>.</li>
-          <li><code class="inline">CheckBox</code> / <code class="inline">RadioButton</code>: <code>Checked</code> / <code>Unchecked</code>.</li>
-          <li><code class="inline">ComboBox</code>: <code>SelectionChanged</code>.</li>
-          <li><code class="inline">Slider</code> / <code class="inline">ProgressBar</code>: <code>Value</code>.</li>
-          <li><code class="inline">ListView</code>: <code>AddItem</code>, <code>AddRow</code>, <code>ClearItems</code>, <code>RemoveSelected</code>, <code>UpdateSelected</code>, <code>SelectionChanged</code>, <code>MouseDoubleClick</code>.</li>
-          <li><code class="inline">DataGrid</code>: <code>SelectedCellsChanged</code>, <code>CurrentCellChanged</code>, <code>BeginningEdit</code>, <code>CellEditEnding</code>, <code>RowEditEnding</code>.</li>
+          <li><code class="inline">TextBox</code>: TextChanged, Enter, GotFocus, LostFocus. Read/write via <code>Text</code>.</li>
+          <li><code class="inline">PasswordBox</code>: PasswordChanged (mapped as TextChanged), Enter, GotFocus, LostFocus. Read via <code>state["Name"]</code>.</li>
+          <li><code class="inline">Button</code>: Click, Enter.</li>
+          <li><code class="inline">RepeatButton</code>: Click (fires repeatedly while held). Delay and Interval configurable.</li>
+          <li><code class="inline">ToggleButton</code>: Checked / Unchecked. Read IsChecked via <code>state["Name"]</code>.</li>
+          <li><code class="inline">CheckBox</code> / <code class="inline">RadioButton</code>: Checked / Unchecked.</li>
+          <li><code class="inline">ComboBox</code>: SelectionChanged.</li>
+          <li><code class="inline">Slider</code>: ValueChanged (value 0-100).</li>
+          <li><code class="inline">ScrollBar</code>: ValueChanged (horizontal and vertical). Supports read/write Value.</li>
+          <li><code class="inline">ProgressBar</code>: Read/write Value (0-100).</li>
+          <li><code class="inline">DatePicker</code>: DateChanged. Read SelectedDate from state.</li>
+          <li><code class="inline">Calendar</code>: DateChanged (on selection). Read SelectedDate from state.</li>
+          <li><code class="inline">ListView</code>: AddItem, AddRow, ClearItems, RemoveSelected, UpdateSelected, SelectionChanged, MouseDoubleClick.</li>
+          <li><code class="inline">DataGrid</code>: SelectedCellsChanged, CurrentCellChanged, BeginningEdit, CellEditEnding, RowEditEnding.</li>
         </ul>
       </section>
     </div>
 
     <section>
-      <h2>6. ListView and DataGrid in Practice</h2>
+      <h2>6. Bridge Events Reference</h2>
+      <p class="muted">
+        Complete list of events fired by each WPF control and mapped to AHK via <code class="inline">ui.OnEvent()</code>.
+      </p>
+      <table>
+        <thead>
+          <tr><th>Control</th><th>Event Name</th><th>Fires When</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Button</td><td><code>Click</code>, <code>Enter</code></td><td>Click or Enter key</td></tr>
+          <tr><td>RepeatButton</td><td><code>Click</code></td><td>Repeatedly while held (Delay/Interval in XAML)</td></tr>
+          <tr><td>TextBox</td><td><code>TextChanged</code>, <code>Enter</code>, <code>GotFocus</code>, <code>LostFocus</code></td><td>Text changes, Enter key, focus events</td></tr>
+          <tr><td>PasswordBox</td><td><code>TextChanged</code>, <code>Enter</code>, <code>GotFocus</code>, <code>LostFocus</code></td><td>Password changes, Enter key, focus events</td></tr>
+          <tr><td>CheckBox</td><td><code>Checked</code>, <code>Unchecked</code></td><td>Toggled on/off</td></tr>
+          <tr><td>RadioButton</td><td><code>Checked</code>, <code>Unchecked</code></td><td>Selection changes</td></tr>
+          <tr><td>ToggleButton</td><td><code>Checked</code>, <code>Unchecked</code></td><td>Switch toggled on/off</td></tr>
+          <tr><td>Slider</td><td><code>ValueChanged</code></td><td>Thumb dragged or track clicked</td></tr>
+          <tr><td>ScrollBar</td><td><code>ValueChanged</code></td><td>Thumb dragged or arrows clicked (H + V)</td></tr>
+          <tr><td>DatePicker</td><td><code>DateChanged</code></td><td>Date selected or typed</td></tr>
+          <tr><td>Calendar</td><td><code>DateChanged</code></td><td>Date clicked in the calendar grid</td></tr>
+          <tr><td>ComboBox</td><td><code>SelectionChanged</code>, <code>Enter</code></td><td>Item selected, Enter key</td></tr>
+          <tr><td>TabControl</td><td><code>TabChanged</code></td><td>Tab selected</td></tr>
+          <tr><td>ListView</td><td><code>SelectionChanged</code>, <code>MouseDoubleClick</code>, <code>Click</code>, <code>RightClick</code></td><td>Row selection, double-click, click, right-click</td></tr>
+          <tr><td>DataGrid</td><td><code>SelectionChanged</code>, <code>MouseDoubleClick</code></td><td>Row selection, double-click</td></tr>
+          <tr><td>Hyperlink (styled as Button)</td><td><code>Click</code></td><td>Click (use Button with underlined TextBlock template)</td></tr>
+        </tbody>
+      </table>
+      <p class="note" style="margin-top:12px">
+        All events send a <code>state</code> dictionary containing the current value of every named control in the window.
+        Use <code>state["ControlName"]</code> inside your callback to read the control's current value.
+      </p>
+    </section>
+
+    <section>
+      <h2>7. ListView and DataGrid in Practice</h2>
       <div class="grid">
         <div class="card">
           <h3>ListView: Full CRUD Cycle (Add, Edit, Delete)</h3>
@@ -383,7 +424,7 @@ Delete_Click(state, ctrl, event) {
     </section>
 
     <section>
-      <h2>7. Callback Example</h2>
+      <h2>8. Callback Example</h2>
       <p class="muted">In callbacks, <code class="inline">state</code> contains the current state of all controls.</p>
       <pre><code>Login_Event(state, ctrl, event)
 {
@@ -404,7 +445,7 @@ Delete_Click(state, ctrl, event) {
     </section>
 
     <section>
-      <h2>8. Moving Focus with Enter</h2>
+      <h2>9. Moving Focus with Enter</h2>
       <p>
         The WPF engine automatically sends the <code class="inline">Enter</code> event when you press Enter in a
         <code class="inline">TextBox</code>, <code class="inline">PasswordBox</code>, or <code class="inline">Button</code>.
@@ -425,7 +466,7 @@ Login_Enter(state, ctrl, event)
 
     <div class="grid">
       <section>
-        <h2>9. Changing Control States</h2>
+        <h2>10. Changing Control States</h2>
         <pre><code>ui.Update("TxtUser", "Text", "admin")
 ui.Update("TxtPass", "Text", "1234")
 ui.Update("BtnLogin", "IsEnabled", "True")
@@ -436,7 +477,7 @@ ui.Update("ProgCPU", "Value", 75)</code></pre>
       </section>
 
       <section>
-        <h2>10. Themes, Resources, and Window</h2>
+        <h2>11. Themes, Resources, and Window</h2>
         <pre><code>ui.SetResource("Accent", "#00A3FF")
 ui.SetResource("BgCard", "#1E1E28")
 ui.SetTheme("Dark")
@@ -448,7 +489,7 @@ ui.SetWindowProp("ResizeMode", "NoResize")</code></pre>
     </div>
 
     <section>
-      <h2>11. Custom Dashboard-Style Window</h2>
+      <h2>12. Custom Dashboard-Style Window</h2>
       <p>
         If you want a look like the <code class="inline">Dashboard_FIFA</code>, you can remove the native title bar and draw your own header
         with minimize, maximize, and close buttons. The idea is to use <code class="inline">WindowStyle="None"</code> and
@@ -465,7 +506,7 @@ ui.SetWindowProp("ResizeMode", "NoResize")</code></pre>
     </section>
 
     <section>
-      <h2>12. Mental Mini-Template</h2>
+      <h2>13. Mental Mini-Template</h2>
       <p class="note">
         <strong>Read</strong> the state with <code class="inline">state["Control"]</code>, <strong>react</strong> in the callback,
         and <strong>update</strong> the view with <code class="inline">ui.Update()</code>. If you want to move the focus cursor,
@@ -480,7 +521,7 @@ ui.SetWindowProp("ResizeMode", "NoResize")</code></pre>
     </section>
 
     <section>
-      <h2>13. DataGrid: Advanced Events and Rendering</h2>
+      <h2>14. DataGrid: Advanced Events and Rendering</h2>
       <p>
         The <code class="inline">DataGrid</code> supports selection tracking, double-click actions, per-cell color rules,
         and column alignment. The <code class="inline">Demo_DataGrid.ahk</code> demo showcases a full CRUD inventory dashboard.
@@ -567,7 +608,7 @@ LoadDatabase() {
     </section>
 
     <section>
-      <h2>14. Centralized Theme System</h2>
+      <h2>15. Centralized Theme System</h2>
       <p>
         The project provides a reusable theme system with two files: <code class="inline">themes.ahk</code> (defines all color palettes)
         and <code class="inline">ThemeManager.ahk</code> (manages applying and cycling themes). Add new themes by editing only
@@ -645,7 +686,7 @@ ThemeDefs["MyTheme"] := {base:"Dark"
     </section>
 
     <section>
-      <h2>15. Centralized Title Bar System</h2>
+      <h2>16. Centralized Title Bar System</h2>
       <p>
         The <code class="inline">TitleBar.ahk</code> module provides a reusable title bar with Minimize, Maximize/Restore,
         and Close buttons across all demos. Drag-to-move is enabled automatically by placing
@@ -784,7 +825,7 @@ MySaveAndClose(state, ctrl, event) {
     </section>
 
     <section>
-      <h2>16. FIFA Dashboard (<code>Demo_Dashboard_FIFA.ahk</code>)</h2>
+      <h2>17. FIFA Dashboard (<code>Demo_Dashboard_FIFA.ahk</code>)</h2>
       <p>
         A full-featured sports dashboard that connects to a local SQLite database (<code>FIFA.db</code>) and displays
         teams, stadiums, match schedules, and statistics through a WPF interface.
@@ -825,7 +866,7 @@ MySaveAndClose(state, ctrl, event) {
     </section>
 
     <section>
-      <h2>17. SystemInfo Dashboard (<code>Demo_SystemInfo.ahk</code>)</h2>
+      <h2>18. SystemInfo Dashboard (<code>Demo_SystemInfo.ahk</code>)</h2>
       <p>
         A system diagnostic dashboard that runs <code>systeminfo</code> and displays the results in a modern card-based
         WPF layout with per-card PNG icons.
@@ -858,6 +899,73 @@ MySaveAndClose(state, ctrl, event) {
           <li><strong>Spanish field names:</strong> On Spanish Windows, <code>systeminfo</code> outputs &quot;Nombre de host&quot;, &quot;Versi&oacute;n del sistema operativo&quot;, &quot;Memoria f&iacute;sica total&quot;, etc. A mapping table normalizes them to English keys.</li>
           <li>Icons are loaded from <code>C:\AHK_WPF\Assets\</code> via relative path <code>../Assets/</code> from the XAML file.</li>
           <li>JSON-like values from WPF events use <strong>Base64 encoding</strong> for safe transmission over <code>WM_COPYDATA</code>.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>19. All Controls Demo (<code>Demo_AllControls.ahk</code>)</h2>
+      <p>
+        A comprehensive 5-tab demonstration showcasing 15+ WPF controls with bidirectional AHK &harr; WPF communication.
+        Every interaction updates a live status bar showing exactly what the AHK callback received and what it updated.
+      </p>
+      <div class="grid">
+        <div class="card">
+          <h3>Tab 1 &mdash; Buttons &amp; Toggles</h3>
+          <ul>
+            <li><strong>ToggleButton</strong> switch-style (track + thumb, accent color). Fires Checked/Unchecked.</li>
+            <li><strong>RepeatButton</strong> with configurable Delay/Interval. Counts clicks in AHK.</li>
+            <li><strong>CheckBox</strong> with modern rounded-square template and white checkmark path.</li>
+            <li><strong>RadioButtons</strong> (3 options, grouped) with dot-in-circle template.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Tab 2 &mdash; Input &amp; Text</h3>
+          <ul>
+            <li><strong>RichTextBox</strong> (read-only) with multi-color formatted FlowDocument.</li>
+            <li><strong>Hyperlink</strong> styled as a button with underlined text; opens URL in browser via AHK.</li>
+            <li><strong>TextBox</strong> with live TextChanged status reading.</li>
+            <li><strong>PasswordBox</strong> with char-count display on PasswordChanged.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Tab 3 &mdash; Tabs &amp; Nav</h3>
+          <ul>
+            <li><strong>Inner TabControl</strong> with distinct Settings (checkboxes) and Info (version/status) tabs.</li>
+            <li><strong>Page Navigation</strong> via &quot;Dashboard&quot; / &quot;Reports&quot; buttons toggling Visibility.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Tab 4 &mdash; Progress &amp; Values</h3>
+          <ul>
+            <li><strong>ProgressBar</strong> with Set 75%, +10, -10 buttons. Syncs with Slider.</li>
+            <li><strong>Slider</strong> with modern thin-track + round-thumb template.</li>
+            <li><strong>ScrollBar + Circle Position</strong>: H + V scrollbars move a circle inside a 220x220 box.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Tab 5 &mdash; Dates &amp; Status</h3>
+          <ul>
+            <li><strong>DatePicker</strong> (left) and <strong>Calendar</strong> (right) side by side.</li>
+            <li>Selected date shown in the tab's built-in StatusBar.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Theme System</h3>
+          <ul>
+            <li>9 themes: Navy, Dark, Light, Blue, Green, Purple, Red, Orange, Teal.</li>
+            <li>All color references use <code class="inline">DynamicResource</code> for live switching.</li>
+            <li>Modern templates for ToggleButton, CheckBox, RadioButton, ProgressBar, Slider, ScrollBar.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Technical Notes</h3>
+        <ul>
+          <li>Uses <code class="inline">DynamicResource</code> for all theme colors (Foreground, Background, Border, Accent, etc.)</li>
+          <li>WindowStyle=&quot;None&quot; + AllowsTransparency with custom title bar and drag-to-move.</li>
+          <li>Bridge supports Margin updates (<code class="inline">"left,top"</code> or <code class="inline">"left,top,right,bottom"</code>) for dynamic positioning.</li>
+          <li>All Unicode characters in XAML must use ASCII equivalents to avoid encoding corruption with non-UTF8-BOM writes.</li>
         </ul>
       </div>
     </section>

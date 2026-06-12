@@ -220,6 +220,13 @@ public class WpfRunner
             return;
         }
 
+        var rpt = fe as RepeatButton;
+        if (rpt != null)
+        {
+            rpt.Click += (s, ev) => SendEventToAhk(name, "Click");
+            return;
+        }
+
         var tbx = fe as TextBox;
         if (tbx != null)
         {
@@ -240,6 +247,9 @@ public class WpfRunner
         var pwx = fe as PasswordBox;
         if (pwx != null)
         {
+            pwx.PasswordChanged += (s, ev) => SendEventToAhk(name, "TextChanged");
+            pwx.LostFocus += (s, ev) => SendEventToAhk(name, "LostFocus");
+            pwx.GotFocus += (s, ev) => SendEventToAhk(name, "GotFocus");
             pwx.KeyDown += (s, ev) =>
             {
                 if (ev.Key == Key.Return || ev.Key == Key.Enter)
@@ -295,6 +305,13 @@ public class WpfRunner
             return;
         }
 
+        var scr = fe as ScrollBar;
+        if (scr != null)
+        {
+            scr.ValueChanged += (s, ev) => SendEventToAhk(name, "ValueChanged");
+            return;
+        }
+
         var sel = fe as Selector;
         if (sel != null && !(fe is ComboBox))
         {
@@ -321,6 +338,21 @@ public class WpfRunner
                 if (ev.Source is TabControl)
                     SendEventToAhk(name, "TabChanged");
             };
+            return;
+        }
+
+        var dp = fe as DatePicker;
+        if (dp != null)
+        {
+            dp.SelectedDateChanged += (s, ev) => SendEventToAhk(name, "DateChanged");
+            return;
+        }
+
+        var wpfCal = fe as System.Windows.Controls.Calendar;
+        if (wpfCal != null)
+        {
+            wpfCal.SelectedDatesChanged += (s, ev) => SendEventToAhk(name, "DateChanged");
+            return;
         }
     }
 
@@ -1116,6 +1148,10 @@ public class WpfRunner
                 {
                     val = (((RadioButton)ctrl).IsChecked == true) ? "1" : "0";
                 }
+                else if (ctrl is ToggleButton)
+                {
+                    val = (((ToggleButton)ctrl).IsChecked == true) ? "1" : "0";
+                }
                 else if (ctrl is ComboBox)
                 {
                     ComboBox cob = (ComboBox)ctrl;
@@ -1127,6 +1163,14 @@ public class WpfRunner
                 else if (ctrl is Slider)
                 {
                     val = ((Slider)ctrl).Value.ToString(CultureInfo.InvariantCulture);
+                }
+                else if (ctrl is ScrollBar)
+                {
+                    val = ((ScrollBar)ctrl).Value.ToString(CultureInfo.InvariantCulture);
+                }
+                else if (ctrl is ProgressBar)
+                {
+                    val = ((ProgressBar)ctrl).Value.ToString(CultureInfo.InvariantCulture);
                 }
                 else if (ctrl is ListView)
                 {
@@ -1141,6 +1185,11 @@ public class WpfRunner
                 {
                     DatePicker dp = (DatePicker)ctrl;
                     val = (dp.SelectedDate != null) ? dp.SelectedDate.Value.ToString("yyyy-MM-dd") : "";
+                }
+                else if (ctrl is System.Windows.Controls.Calendar)
+                {
+                    var wpfCal = (System.Windows.Controls.Calendar)ctrl;
+                    val = (wpfCal.SelectedDate != null) ? wpfCal.SelectedDate.Value.ToString("yyyy-MM-dd") : "";
                 }
                 else if (ctrl is TextBlock)
                 {
@@ -1319,6 +1368,7 @@ public class WpfRunner
                 {
                     if (fe is Slider) ((Slider)fe).Value = dblVal;
                     else if (fe is ProgressBar) ((ProgressBar)fe).Value = dblVal;
+                    else if (fe is ScrollBar) ((ScrollBar)fe).Value = dblVal;
                 }
                 break;
 
@@ -1550,6 +1600,31 @@ public class WpfRunner
                 else if (val.Equals("Thin", StringComparison.OrdinalIgnoreCase)) fw = FontWeights.Thin;
                 if (fe is Control) ((Control)fe).FontWeight = fw;
                 if (fe is TextBlock) ((TextBlock)fe).FontWeight = fw;
+                break;
+            }
+
+            case "Margin":
+            {
+                string[] parts = val.Split(',');
+                if (parts.Length == 1)
+                {
+                    double m;
+                    if (double.TryParse(parts[0].Trim(), out m))
+                        fe.Margin = new Thickness(m);
+                }
+                else if (parts.Length == 2)
+                {
+                    double left, top;
+                    if (double.TryParse(parts[0].Trim(), out left) && double.TryParse(parts[1].Trim(), out top))
+                        fe.Margin = new Thickness(left, top, 0, 0);
+                }
+                else if (parts.Length == 4)
+                {
+                    double left, top, right, bottom;
+                    if (double.TryParse(parts[0].Trim(), out left) && double.TryParse(parts[1].Trim(), out top) &&
+                        double.TryParse(parts[2].Trim(), out right) && double.TryParse(parts[3].Trim(), out bottom))
+                        fe.Margin = new Thickness(left, top, right, bottom);
+                }
                 break;
             }
 

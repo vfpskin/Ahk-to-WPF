@@ -1,0 +1,676 @@
+﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="All Controls Demo"
+        Width="680" Height="620"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent">
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="WindowBg" Color="#1E1E1E"/>
+        <SolidColorBrush x:Key="Surface" Color="#2D2D2D"/>
+        <SolidColorBrush x:Key="TextPrimary" Color="#F0F0F0"/>
+        <SolidColorBrush x:Key="TextSecondary" Color="#AAAAAA"/>
+        <SolidColorBrush x:Key="Border" Color="#404040"/>
+        <SolidColorBrush x:Key="Accent" Color="#5B9BD5"/>
+        <SolidColorBrush x:Key="AccentHover" Color="#4A87C0"/>
+        <SolidColorBrush x:Key="Success" Color="#A5DC86"/>
+        <SolidColorBrush x:Key="Warning" Color="#F8BB86"/>
+
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource Accent}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="14,6"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Name="Bd" Background="{TemplateBinding Background}"
+                                CornerRadius="5" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource AccentHover}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ToggleButton">
+            <Setter Property="Width" Value="48"/>
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border x:Name="Track" Width="48" Height="24"
+                                CornerRadius="12"
+                                Background="#555555"
+                                BorderThickness="0">
+                            <Ellipse x:Name="Thumb" Width="20" Height="20"
+                                     Fill="#FFFFFF"
+                                     HorizontalAlignment="Left"
+                                     Margin="2,0,0,0"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Track" Property="Background" Value="{DynamicResource Accent}"/>
+                                <Setter TargetName="Thumb" Property="HorizontalAlignment" Value="Right"/>
+                                <Setter TargetName="Thumb" Property="Margin" Value="0,0,2,0"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Track" Property="Background" Value="{DynamicResource AccentHover}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="RepeatButton">
+            <Setter Property="Background" Value="#8E44AD"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="14,6"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Border Name="Bd" Background="{TemplateBinding Background}"
+                                CornerRadius="5" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#A569BD"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="CheckBox">
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="Margin" Value="0,4"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border x:Name="CheckBorder" Width="18" Height="18"
+                                    CornerRadius="4" BorderThickness="1.5"
+                                    Background="#1A1A1A"
+                                    BorderBrush="{DynamicResource Border}">
+                                <Path x:Name="CheckMark"
+                                      Data="M4,9 L7,12 L13,5"
+                                      Stroke="#FFFFFF" StrokeThickness="2"
+                                      StrokeLineJoin="Round"
+                                      Visibility="Collapsed"/>
+                            </Border>
+                            <ContentPresenter Grid.Column="1" Margin="8,0,0,0"
+                                              VerticalAlignment="Center"
+                                              RecognizesAccessKey="True"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="CheckBorder" Property="Background" Value="{DynamicResource Accent}"/>
+                                <Setter TargetName="CheckBorder" Property="BorderBrush" Value="{DynamicResource Accent}"/>
+                                <Setter TargetName="CheckMark" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="CheckBorder" Property="BorderBrush" Value="{DynamicResource Accent}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="RadioButton">
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="Margin" Value="0,4"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border x:Name="RadioBorder" Width="18" Height="18"
+                                    CornerRadius="9" BorderThickness="1.5"
+                                    Background="#1A1A1A"
+                                    BorderBrush="{DynamicResource Border}">
+                                <Ellipse x:Name="RadioDot" Width="8" Height="8"
+                                         Fill="#FFFFFF" Visibility="Collapsed"/>
+                            </Border>
+                            <ContentPresenter Grid.Column="1" Margin="8,0,0,0"
+                                              VerticalAlignment="Center"
+                                              RecognizesAccessKey="True"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="RadioBorder" Property="Background" Value="{DynamicResource Accent}"/>
+                                <Setter TargetName="RadioBorder" Property="BorderBrush" Value="{DynamicResource Accent}"/>
+                                <Setter TargetName="RadioDot" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="RadioBorder" Property="BorderBrush" Value="{DynamicResource Accent}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="SectionTitle">
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondary}"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Margin" Value="0,12,0,4"/>
+        </Style>
+
+        <Style TargetType="ProgressBar">
+            <Setter Property="Foreground" Value="{DynamicResource Success}"/>
+            <Setter Property="Background" Value="#333333"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ProgressBar">
+                        <Border x:Name="PART_Track" CornerRadius="10"
+                                Background="{TemplateBinding Background}" BorderThickness="0">
+                            <Border x:Name="PART_Indicator" CornerRadius="10"
+                                    Background="{TemplateBinding Foreground}"
+                                    HorizontalAlignment="Left"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="Slider">
+            <Setter Property="Foreground" Value="{DynamicResource Accent}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Slider">
+                        <Border Background="Transparent" Height="24">
+                            <Track x:Name="PART_Track">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Style="{x:Null}" Background="#444"
+                                                  Command="Slider.DecreaseLarge">
+                                        <RepeatButton.Template>
+                                            <ControlTemplate TargetType="RepeatButton">
+                                                <Border Background="{TemplateBinding Background}"
+                                                        Height="4" CornerRadius="2" VerticalAlignment="Center"/>
+                                            </ControlTemplate>
+                                        </RepeatButton.Template>
+                                    </RepeatButton>
+                                </Track.DecreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb x:Name="Thumb" Width="18" Height="18"
+                                           BorderThickness="0">
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Ellipse Fill="{Binding RelativeSource={RelativeSource AncestorType=Slider}, Path=Foreground}"
+                                                         Stroke="#333" StrokeThickness="2"/>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Style="{x:Null}" Background="#222"
+                                                  Command="Slider.IncreaseLarge">
+                                        <RepeatButton.Template>
+                                            <ControlTemplate TargetType="RepeatButton">
+                                                <Border Background="{TemplateBinding Background}"
+                                                        Height="4" CornerRadius="2" VerticalAlignment="Center"/>
+                                            </ControlTemplate>
+                                        </RepeatButton.Template>
+                                    </RepeatButton>
+                                </Track.IncreaseRepeatButton>
+                            </Track>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ScrollBar">
+            <Setter Property="Background" Value="#333333"/>
+            <Setter Property="Foreground" Value="{DynamicResource Accent}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Border Background="{TemplateBinding Background}" BorderThickness="0">
+                            <Track x:Name="PART_Track">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton x:Name="DecBtn" Style="{x:Null}" Background="Transparent"
+                                                  Command="ScrollBar.LineLeftCommand">
+                                        <RepeatButton.Template>
+                                            <ControlTemplate TargetType="RepeatButton">
+                                                <Border Background="{TemplateBinding Background}"/>
+                                            </ControlTemplate>
+                                        </RepeatButton.Template>
+                                    </RepeatButton>
+                                </Track.DecreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb x:Name="Thumb" BorderThickness="0">
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Border CornerRadius="5"
+                                                        Background="{Binding RelativeSource={RelativeSource AncestorType=ScrollBar}, Path=Foreground}"
+                                                        Margin="1"/>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton x:Name="IncBtn" Style="{x:Null}" Background="Transparent"
+                                                  Command="ScrollBar.LineRightCommand">
+                                        <RepeatButton.Template>
+                                            <ControlTemplate TargetType="RepeatButton">
+                                                <Border Background="{TemplateBinding Background}"/>
+                                            </ControlTemplate>
+                                        </RepeatButton.Template>
+                                    </RepeatButton>
+                                </Track.IncreaseRepeatButton>
+                            </Track>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Orientation" Value="Vertical">
+                                <Setter TargetName="DecBtn" Property="Command" Value="ScrollBar.LineUpCommand"/>
+                                <Setter TargetName="IncBtn" Property="Command" Value="ScrollBar.LineDownCommand"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Border CornerRadius="12" Background="{DynamicResource WindowBg}">
+        <Border.Effect>
+            <DropShadowEffect Color="Black" BlurRadius="20" ShadowDepth="4" Opacity="0.6"/>
+        </Border.Effect>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Title Bar -->
+            <Border x:Name="TitleBar" Grid.Row="0" Height="44"
+                    Background="Transparent">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="LblTitle" Text="All Controls Demo"
+                               Foreground="{DynamicResource TextPrimary}" FontSize="16" FontWeight="Bold"
+                               VerticalAlignment="Center" Margin="16,0,0,0"/>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,8,0">
+                        <Button x:Name="BtnTheme" Content="Theme"
+                                ToolTip="Cycle theme"/>
+                        <Button x:Name="BtnClose" Content="&#x2715;" FontSize="14"
+                                Width="30" Height="30" Padding="0"
+                                Margin="6,0,0,0"
+                                ToolTip="Close"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- TabControl - main navigation -->
+            <TabControl x:Name="MainTabs" Grid.Row="1" Margin="12,0,12,8"
+                        Background="{DynamicResource Surface}"
+                        BorderBrush="{DynamicResource Border}"
+                        Foreground="{DynamicResource TextPrimary}"
+                        FontSize="12">
+                <TabControl.Resources>
+                    <Style TargetType="TabItem">
+                        <Setter Property="Background" Value="{DynamicResource Surface}"/>
+                        <Setter Property="Foreground" Value="{DynamicResource TextSecondary}"/>
+                        <Setter Property="BorderBrush" Value="{DynamicResource Border}"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="TabItem">
+                                    <Border Name="Bd" Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="0,0,0,2"
+                                            Padding="14,8">
+                                        <ContentPresenter ContentSource="Header"
+                                                          HorizontalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="Bd" Property="Background" Value="#333333"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource Accent}"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </TabControl.Resources>
+
+                <!-- Tab 1: Buttons & Toggles -->
+                <TabItem Header="Buttons &amp; Toggles">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="16,12">
+                        <StackPanel>
+                            <TextBlock Style="{DynamicResource SectionTitle}" Text="TOGGLEBUTTON"/>
+                            <WrapPanel>
+                                <ToggleButton x:Name="TglFeature"/>
+                                <TextBlock Text="Enable Feature"
+                                           Foreground="{DynamicResource TextSecondary}"
+                                           VerticalAlignment="Center" Margin="8,0,12,0"/>
+                                <TextBlock x:Name="TxtToggleState" Text="OFF"
+                                           Foreground="{DynamicResource TextSecondary}"
+                                           VerticalAlignment="Center"/>
+                            </WrapPanel>
+
+                            <TextBlock Style="{DynamicResource SectionTitle}" Text="REPEATBUTTON"/>
+                            <WrapPanel>
+                                <RepeatButton x:Name="BtnRepeat" Content="Hold to Count" Width="150" Height="34" Delay="200" Interval="100"/>
+                                <TextBlock x:Name="TxtRepeatCount" Text="Count: 0"
+                                           Foreground="{DynamicResource TextSecondary}"
+                                           VerticalAlignment="Center" Margin="12,0,0,0"/>
+                            </WrapPanel>
+
+                            <TextBlock Style="{DynamicResource SectionTitle}" Text="CHECKBOX"/>
+                            <CheckBox x:Name="ChkRemember" Content="Remember me" IsChecked="False"/>
+                            <TextBlock x:Name="TxtCheckState" Text="Unchecked"
+                                       Foreground="{DynamicResource TextSecondary}" Margin="24,0,0,0"/>
+
+                            <TextBlock Style="{DynamicResource SectionTitle}" Text="RADIOBUTTON"/>
+                            <StackPanel>
+                                <RadioButton x:Name="RadioA" Content="Option A" GroupName="DemoGroup"/>
+                                <RadioButton x:Name="RadioB" Content="Option B" GroupName="DemoGroup" IsChecked="True"/>
+                                <RadioButton x:Name="RadioC" Content="Option C" GroupName="DemoGroup"/>
+                            </StackPanel>
+                            <TextBlock x:Name="TxtRadioState" Text="Selected: Option B"
+                                       Foreground="{DynamicResource TextSecondary}" Margin="24,0,0,0"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <!-- Tab 2: Input & Text -->
+                <TabItem Header="Input &amp; Text">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="16,12">
+                        <StackPanel>
+                            <TextBlock Style="{DynamicResource SectionTitle}" Text="RICHTEXTBOX (display only)"/>
+                            <Border Background="#1A1A1A" CornerRadius="5" BorderBrush="{DynamicResource Border}" BorderThickness="1" Height="100">
+                                <RichTextBox x:Name="RichDoc" IsReadOnly="True" Background="Transparent"
+                                             Foreground="{DynamicResource TextPrimary}" BorderThickness="0">
+                                    <FlowDocument>
+                                        <Paragraph FontSize="14" FontWeight="Bold">
+                                            <Run Text="Welcome to the Controls Demo!" Foreground="{DynamicResource Accent}"/>
+                                        </Paragraph>
+                                        <Paragraph FontSize="12">
+                                            <Run Text="This RichTextBox displays " Foreground="{DynamicResource TextPrimary}"/>
+                                            <Run Text="formatted text" FontWeight="Bold" Foreground="{DynamicResource Warning}"/>
+                                            <Run Text=" with multiple " Foreground="{DynamicResource TextPrimary}"/>
+                                            <Run Text="colors" Foreground="#A5DC86" FontStyle="Italic"/>
+                                            <Run Text=" and styles." Foreground="{DynamicResource TextPrimary}"/>
+                                        </Paragraph>
+                                        <Paragraph FontSize="11" Foreground="{DynamicResource TextSecondary}">
+                                            <Run Text="Bridge note: RichTextBox content cannot be read/written via AHK Update.
+Set IsReadOnly for static display, or use a regular TextBox for editable text."/>
+                                        </Paragraph>
+                                    </FlowDocument>
+                                </RichTextBox>
+                            </Border>
+
+                            <TextBlock Style="{DynamicResource SectionTitle}" Text="HYPERLINK"/>
+                            <WrapPanel>
+                                <Button x:Name="LinkGitHub"
+                                        Background="Transparent" Foreground="{DynamicResource Accent}"
+                                        FontSize="13" Padding="0" Cursor="Hand"
+                                        BorderThickness="0">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <TextBlock Text="{TemplateBinding Content}"
+                                                       Foreground="{TemplateBinding Foreground}"
+                                                       TextDecorations="Underline"/>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                    Visit project on GitHub
+                                </Button>
+                                <TextBlock Text="  (click opens URL in browser)"
+                                           Foreground="{DynamicResource TextSecondary}" FontSize="11"
+                                           VerticalAlignment="Center"/>
+                            </WrapPanel>
+
+                            <TextBlock Style="{DynamicResource SectionTitle}" Text="TEXTBOX (AHK - WPF)"/>
+                            <TextBox x:Name="TxtInput" Height="34" FontSize="13"
+                                     Background="#1A1A1A" Foreground="{DynamicResource TextPrimary}"
+                                     BorderBrush="{DynamicResource Border}" BorderThickness="1"
+                                     Padding="8,0" AcceptsReturn="False"
+                                     Text="Type here (live status)"/>
+
+                            <TextBlock Style="{DynamicResource SectionTitle}" Text="PASSWORDBOX (AHK - WPF)"/>
+                            <PasswordBox x:Name="PassInput" Height="34" FontSize="13"
+                                         Background="#1A1A1A" Foreground="{DynamicResource TextPrimary}"
+                                         BorderBrush="{DynamicResource Border}" BorderThickness="1"
+                                         Padding="8,0"
+                                         PasswordChar="&#x25CF;"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <!-- Tab 3: Tabs & Navigation -->
+                <TabItem Header="Tabs &amp; Nav">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="16,12">
+                        <StackPanel>
+                            <TextBlock Style="{DynamicResource SectionTitle}" Text="TABCONTROL (inner) - distinct content per tab"/>
+                            <TabControl x:Name="InnerTabs" Height="130"
+                                        Background="#1A1A1A" BorderBrush="{DynamicResource Border}"
+                                        Foreground="{DynamicResource TextPrimary}">
+                                <TabItem Header="Settings">
+                                    <Grid Margin="12,8">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <CheckBox Content="Enable notifications" IsChecked="True"
+                                                  Foreground="{DynamicResource TextPrimary}" Margin="0,0,0,6"/>
+                                        <CheckBox Grid.Row="1" Content="Auto-save changes" IsChecked="False"
+                                                  Foreground="{DynamicResource TextPrimary}"/>
+                                    </Grid>
+                                </TabItem>
+                                <TabItem Header="Info">
+                                    <StackPanel Margin="12,8">
+                                        <TextBlock Text="Version: 1.2.3"
+                                                   Foreground="{DynamicResource Success}" FontWeight="Bold"/>
+                                        <TextBlock Text="Last update: 2026-06-12"
+                                                   Foreground="{DynamicResource TextSecondary}" Margin="0,4,0,0"/>
+                                        <TextBlock Text="Status: All systems OK"
+                                                   Foreground="{DynamicResource Warning}" Margin="0,4,0,0"/>
+                                    </StackPanel>
+                                </TabItem>
+                            </TabControl>
+                            <TextBlock x:Name="TxtTabState" Text="Selected: Settings"
+                                       Foreground="{DynamicResource TextSecondary}" Margin="0,4,0,0"/>
+
+                            <TextBlock Style="{DynamicResource SectionTitle}" Text="PAGE NAVIGATION (toggle panels)"/>
+                            <Border Background="#1A1A1A" CornerRadius="5" BorderBrush="{DynamicResource Border}" BorderThickness="1" Height="80">
+                                <Grid Margin="12,8">
+                                    <Border x:Name="PagePanel1" Background="#1A3A5C" CornerRadius="6"
+                                            Visibility="Visible">
+                                        <TextBlock Text="Dashboard Panel" FontSize="16" FontWeight="Bold"
+                                                   Foreground="#FFFFFF" HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    <Border x:Name="PagePanel2" Background="#3A1A1A" CornerRadius="6"
+                                            Visibility="Collapsed">
+                                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <TextBlock Text="Reports Panel" FontSize="16" FontWeight="Bold"
+                                                       Foreground="#FFFFFF" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Charts &amp; analytics"
+                                                       Foreground="#CCFFFFFF" FontSize="12"
+                                                       HorizontalAlignment="Center" Margin="0,4,0,0"/>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                            <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                                <Button x:Name="BtnPage1" Content="Dashboard" Width="90" Margin="0,0,8,0"/>
+                                <Button x:Name="BtnPage2" Content="Reports" Width="90"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <!-- Tab 4: Progress & Values -->
+                <TabItem Header="Progress &amp; Values">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="16,12">
+                        <StackPanel>
+                            <TextBlock Style="{DynamicResource SectionTitle}" Text="PROGRESSBAR"/>
+                            <WrapPanel>
+                                <ProgressBar x:Name="ProgBar" Width="300" Height="20"
+                                             Minimum="0" Maximum="100" Value="35"/>
+                                <TextBlock x:Name="TxtProgValue" Text="35%"
+                                           Foreground="{DynamicResource TextSecondary}"
+                                           VerticalAlignment="Center" Margin="12,0,0,0"/>
+                            </WrapPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                <Button x:Name="BtnProgSet" Content="Set 75%" Width="90" Margin="0,0,8,0"/>
+                                <Button x:Name="BtnProgInc" Content="+10" Width="60" Margin="0,0,8,0"/>
+                                <Button x:Name="BtnProgDec" Content="-10" Width="60"/>
+                            </StackPanel>
+
+                            <TextBlock Style="{DynamicResource SectionTitle}" Text="SLIDER"/>
+                            <WrapPanel>
+                                <Slider x:Name="SldValue" Width="300" Minimum="0" Maximum="100" Value="50"
+                                        IsSnapToTickEnabled="True" TickFrequency="1"/>
+                                <TextBlock x:Name="TxtSliderValue" Text="50"
+                                           Foreground="{DynamicResource TextSecondary}"
+                                           VerticalAlignment="Center" Margin="12,0,0,0"/>
+                            </WrapPanel>
+
+                            <TextBlock Style="{DynamicResource SectionTitle}" Text="SCROLLBAR + CIRCLE POSITION"/>
+                            <Grid Margin="0,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="30"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Row="0" Grid.Column="0" Width="220" Height="220"
+                                        CornerRadius="6" Background="#1A1A1A"
+                                        BorderBrush="{DynamicResource Border}" BorderThickness="1">
+                                    <Grid>
+                                        <Ellipse x:Name="CircleDot" Width="20" Height="20"
+                                                 Fill="{DynamicResource Accent}"
+                                                 HorizontalAlignment="Left" VerticalAlignment="Top"
+                                                 Margin="100,100,0,0"/>
+                                    </Grid>
+                                </Border>
+
+                                <ScrollBar x:Name="ScrVert" Grid.Row="0" Grid.Column="1"
+                                           Width="22" Height="220" Margin="8,0,0,0"
+                                           HorizontalAlignment="Left"
+                                           Minimum="0" Maximum="100" Value="50"
+                                           Orientation="Vertical"/>
+
+                                <ScrollBar x:Name="ScrValue" Grid.Row="1" Grid.Column="0"
+                                           Width="220" Height="22" Margin="0,8,0,0"
+                                           HorizontalAlignment="Left"
+                                           Minimum="0" Maximum="100" Value="50"
+                                           Orientation="Horizontal"/>
+
+                                <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                                            Orientation="Horizontal" Margin="0,6,0,0">
+                                    <TextBlock x:Name="TxtScrollValue" Text="X:50"
+                                               Foreground="{DynamicResource TextSecondary}" FontSize="11"/>
+                                    <TextBlock x:Name="TxtScrollVertValue" Text=" Y:50"
+                                               Foreground="{DynamicResource TextSecondary}" FontSize="11"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <!-- Tab 5: Dates & Status -->
+                <TabItem Header="Dates &amp; Status">
+                    <DockPanel Margin="16,12" LastChildFill="True">
+                        <StackPanel DockPanel.Dock="Bottom" Margin="0,8,0,0">
+                            <TextBlock Style="{DynamicResource SectionTitle}" Text="STATUSBAR"/>
+                            <Border Background="{DynamicResource Surface}" CornerRadius="5"
+                                    BorderBrush="{DynamicResource Border}"
+                                    BorderThickness="1" Height="28">
+                                <StatusBar x:Name="StatusBar" Background="Transparent"
+                                           Foreground="{DynamicResource TextSecondary}" FontSize="12">
+                                    <StatusBarItem x:Name="StatusLeft" Content="Ready"/>
+                                    <Separator/>
+                                    <StatusBarItem x:Name="StatusRight" Content="AHK - WPF"/>
+                                </StatusBar>
+                            </Border>
+                        </StackPanel>
+
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                    <TextBlock Style="{DynamicResource SectionTitle}" Text="DATEPICKER"/>
+                                    <DatePicker x:Name="DatePick" SelectedDate="2026-06-15"
+                                                Background="{DynamicResource Surface}"
+                                                Foreground="{DynamicResource TextPrimary}"
+                                                BorderBrush="{DynamicResource Border}"
+                                                FontSize="12"/>
+                                    <TextBlock x:Name="TxtDateValue" Text="2026-06-15"
+                                               Foreground="{DynamicResource TextSecondary}"
+                                               Margin="0,4,0,0"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                    <TextBlock Style="{DynamicResource SectionTitle}" Text="CALENDAR"/>
+                                    <Calendar x:Name="CalMain"
+                                              Background="{DynamicResource Surface}"
+                                              Foreground="{DynamicResource TextPrimary}"
+                                              BorderBrush="{DynamicResource Border}"
+                                              BorderThickness="1"
+                                              FontSize="16"
+                                              HorizontalAlignment="Stretch"/>
+                                </StackPanel>
+                            </Grid>
+                        </ScrollViewer>
+                    </DockPanel>
+                </TabItem>
+            </TabControl>
+
+            <!-- Bottom status bar -->
+            <Border Grid.Row="2" Background="{DynamicResource Surface}"
+                    BorderBrush="{DynamicResource Border}"
+                    BorderThickness="0,1,0,0" Height="30">
+                <TextBlock x:Name="TxtLastAction" Text="Ready. Interact with any control to see AHK - WPF communication."
+                           Foreground="{DynamicResource TextSecondary}" FontSize="11"
+                           VerticalAlignment="Center" Margin="12,0"/>
+            </Border>
+        </Grid>
+    </Border>
+</Window>
