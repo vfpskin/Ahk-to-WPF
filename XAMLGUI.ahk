@@ -140,7 +140,18 @@ class XAMLGUI
     {
         if !FileExist(this.exePath)
         {
-            MsgBox, 16, Error, % "No se encontró WPF_Runner.exe:`n" this.exePath
+            _msg := "WPF_Runner.exe not found"
+            . "`n`nWPF_Runner.exe is required to run AHK + WPF demos."
+            . "`n`nExpected location:"
+            . "`n" this.exePath
+            . "`n`nHow to get it:"
+            . "`n`n1) Compile it manually:"
+            . "`n   Run compile_WPF_Runner.bat"
+            . "`n   (requires .NET Framework 4.x, included with Windows)"
+            . "`n`n2) Download from GitHub Releases:"
+            . "`n   https://github.com/vfpskin/Ahk-to-WPF/releases"
+            . "`n`nPlace WPF_Runner.exe in the project root next to XAMLGUI.ahk."
+            MsgBox, 16, Error, % _msg
             return false
         }
 
