@@ -1636,6 +1636,30 @@ public class WpfRunner
                 break;
             }
 
+            case "StrokeDashOffset":
+            {
+                double offset;
+                if (double.TryParse(val, out offset))
+                {
+                    var shape = fe as System.Windows.Shapes.Shape;
+                    if (shape != null)
+                        shape.StrokeDashOffset = offset;
+                }
+                break;
+            }
+
+            case "Data":
+            {
+                try
+                {
+                    var path = fe as System.Windows.Shapes.Path;
+                    if (path != null)
+                        path.Data = System.Windows.Media.Geometry.Parse(val);
+                }
+                catch { }
+                break;
+            }
+
             case "Width":
                 if (val.Equals("Auto", StringComparison.OrdinalIgnoreCase))
                     fe.Width = double.NaN;
