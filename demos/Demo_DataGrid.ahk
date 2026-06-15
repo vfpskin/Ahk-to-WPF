@@ -136,11 +136,10 @@ OnGridSelection(state, ctrl, event)
 {
     global ui, SelectedRowIdx, ActiveEditIdx
     
-    ; The new engine stores the selected row directly in the control name
-    rawRowData := state["GridInventory"]
+    ; Use the direct selected index from the DataGrid (more reliable than searching by ID)
+    rawIdx := state["GridInventory_SelectedIndex"]
     
-    ; If row is empty (no selection), disable everything and exit
-    if (rawRowData = "")
+    if (rawIdx = "" || rawIdx < 0)
     {
         SelectedRowIdx := -1
         if (ActiveEditIdx <= 0)
@@ -151,25 +150,7 @@ OnGridSelection(state, ctrl, event)
         return
     }
     
-    ; Since data comes pipe-separated (e.g. "101|Intel Core i7|..."),
-    ; we use the first element (ID) or calculate its relative position.
-    ; To sync with our InventoryList Array, we search for the selected ID:
-    StringSplit, fields, rawRowData, |
-    targetID := fields1 + 0
-    
-    ; Search for the actual (1-based) index in our internal list matching the ID
-    foundIdx := -1
-    global InventoryList
-    for idx, item in InventoryList
-    {
-        if (item.ID = targetID)
-        {
-            foundIdx := idx - 1 ; Lo convertimos a 0-based para el resto del script
-            break
-        }
-    }
-    
-    SelectedRowIdx := foundIdx
+    SelectedRowIdx := rawIdx + 0
     
     ; If actively editing, don't alter the buttons below
     if (ActiveEditIdx > 0)

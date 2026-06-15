@@ -387,7 +387,11 @@ public class WpfRunner
 
     private static void WireDataGridEvents(DataGrid grid, string name)
     {
-        grid.SelectionChanged += (s, ev) => SendEventToAhk(name, "SelectionChanged");
+        grid.SelectionChanged += (s, ev) =>
+        {
+            var extra = new Dictionary<string, string> { { name + "_SelectedIndex", grid.SelectedIndex.ToString() } };
+            SendEventToAhk(name, "SelectionChanged", extra);
+        };
         grid.SelectedCellsChanged += (s, ev) =>
             SendEventToAhk(name, "SelectedCellsChanged", BuildDataGridCellContext(grid, name));
         grid.CurrentCellChanged += (s, ev) =>
@@ -1082,6 +1086,19 @@ public class WpfRunner
     {
         _window.PreviewKeyDown += (s, e) =>
         {
+            // ── Tetris / game keys ──────────────────────────────────
+            switch (e.Key)
+            {
+                case Key.Left:  SendEventToAhk("_Window", "KeyLeft");  e.Handled = true; return;
+                case Key.Right: SendEventToAhk("_Window", "KeyRight"); e.Handled = true; return;
+                case Key.Down:  SendEventToAhk("_Window", "KeyDown");  e.Handled = true; return;
+                case Key.Up:    SendEventToAhk("_Window", "KeyUp");    e.Handled = true; return;
+                case Key.Space: SendEventToAhk("_Window", "KeySpace"); e.Handled = true; return;
+                case Key.P:     SendEventToAhk("_Window", "KeyP");     e.Handled = true; return;
+                case Key.R:     SendEventToAhk("_Window", "KeyR");     e.Handled = true; return;
+            }
+
+            // ── Enter key (existing logic) ──────────────────────────
             if (e.Key != Key.Enter && e.Key != Key.Return) return;
 
             var fe = Keyboard.FocusedElement as FrameworkElement;
@@ -1313,12 +1330,21 @@ public class WpfRunner
             else if (k == "Val")  val  = FromBase64(v);
         }
 
+        if (cmd == "SyncUpdate")
+        {
+            bool isSpecial = ctrl == "_Resource" || ctrl == "_Theme" || ctrl == "_Window" || ctrl == "_Batch";
+            if (!isSpecial && !_controls.ContainsKey(ctrl)) return;
+
+            _window.Dispatcher.Invoke((Action)(() => ApplyUpdate(ctrl, prop, val)));
+            return;
+        }
+
         if (cmd != "Update") return;
 
-        bool isSpecial = ctrl == "_Resource" || ctrl == "_Theme" || ctrl == "_Window";
-        if (!isSpecial && !_controls.ContainsKey(ctrl)) return;
+        bool isSpecial2 = ctrl == "_Resource" || ctrl == "_Theme" || ctrl == "_Window" || ctrl == "_Batch";
+        if (!isSpecial2 && !_controls.ContainsKey(ctrl)) return;
 
-        _window.Dispatcher.Invoke((Action)(() => ApplyUpdate(ctrl, prop, val)));
+        _window.Dispatcher.BeginInvoke((Action)(() => ApplyUpdate(ctrl, prop, val)));
     }
 
     private static void ApplyUpdate(string ctrl, string prop, string val)
@@ -1326,6 +1352,20 @@ public class WpfRunner
         if (ctrl == "_Resource") { ApplyResource(prop, val); return; }
         if (ctrl == "_Theme")    { ApplyTheme(val); return; }
         if (ctrl == "_Window")   { ApplyWindowProp(prop, val); return; }
+        if (ctrl == "_Batch")
+        {
+            if (prop == "Cells")
+            {
+                var lines = val.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var line in lines)
+                {
+                    var parts = line.Split('|');
+                    if (parts.Length >= 3)
+                        ApplyUpdate(parts[0], parts[1], parts[2]);
+                }
+            }
+            return;
+        }
 
         if (!_controls.ContainsKey(ctrl)) return;
         var fe = _controls[ctrl];

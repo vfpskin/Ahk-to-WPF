@@ -285,6 +285,33 @@ class XAMLGUI
         return this._SendCopyData(this.wpfHwnd, packet)
     }
 
+    ; Synchronous update: uses Dispatcher.Invoke so WPF processes it immediately
+    ; before AHK continues. Use for flash effects and score updates.
+    UpdateSync(ctrlName, propName, value)
+    {
+        if !this.wpfHwnd
+            return false
+
+        packet := "Cmd=SyncUpdate`n"
+        packet .= "Ctrl=" ctrlName "`n"
+        packet .= "Prop=" propName "`n"
+        packet .= "Val=" this._B64Enc(value)
+
+        return this._SendCopyData(this.wpfHwnd, packet)
+    }
+
+    ; Batch update: sends multiple updates in a single message
+    ; updates is an array of objects: [{ctrl, prop, val}, ...]
+    BatchUpdate(updates)
+    {
+        if !this.wpfHwnd
+            return false
+        data := ""
+        for i, u in updates
+            data .= u.ctrl "|" u.prop "|" u.val "`n"
+        return this.Update("_Batch", "Cells", RTrim(data, "`n"))
+    }
+
     ; Atajo: ui.AddRow("Lista", "1", "Juan", "555")
     AddRow(ctrlName, parts*)
     {
@@ -481,6 +508,13 @@ class XAMLGUI
                 %cb%(state, ctrlName, eventName)
             else
                 FileAppend, % "Failed: " cb " is not a valid function.`n", % A_Temp "\AHK_Receiver.log"
+        }
+        else if (this.events.HasKey("_Window") && this.events["_Window"].HasKey(eventName))
+        {
+            cb := this.events["_Window"][eventName]
+            FileAppend, % "Success: Firing Window callback " cb "`n", % A_Temp "\AHK_Receiver.log"
+            if IsFunc(cb)
+                %cb%(state, ctrlName, eventName)
         }
 
         if (ctrlName = "_Window" && eventName = "Closed")
