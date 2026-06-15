@@ -102,10 +102,19 @@ All demos are in the `demos/` folder. Run any `.ahk` file to launch its WPF inte
 
 | Demo | File | Description |
 |------|------|-------------|
-| **All Controls** | `Demo_AllControls.ahk` | 5-tab comprehensive demo with 15+ controls, theme cycling, circle positioning |
-| **Login Animation** | `Demo_Animation_Login.ahk` | Animated overlay login with fade effects |
-| **FIFA Dashboard** | `Demo_Dashboard_FIFA.ahk` | Full sports management dashboard with SQLite |
-| **SystemInfo** | `Demo_SystemInfo.ahk` | Real-time system info reader with 6-card layout |
+| **Modern Login** | `Demo_Login.ahk` | User/password validation, themed card UI, PasswordBox support |
+| **Modern Login (Gradient)** | `Demo_Login_Gradient.ahk` | Login with gradient background and icon |
+| **Animation Login** | `Demo_Animation_Login.ahk` | Animated gradient login with smooth transitions |
+| **Alerts Showcase** | `Demo_Alerts.ahk` | SweetAlert-style notifications (success, error, warning, info, confirm) |
+| **Contact List** | `Demo_Contactos.ahk` | CRUD ListView with inline edit, search, and real-time clock widget |
+| **Inventory DataGrid** | `Demo_DataGrid.ahk` | Full CRUD DataGrid with products, categories, stock control |
+| **All Controls** | `Demo_AllControls.ahk` | Interactive showcase of every supported WPF control |
+| **Circular ProgressBar** | `Circular ProgressBar_UC.ahk` | Custom animated circular progress bar control |
+| **Floating Widget** | `Demo_Widget.ahk` | Draggable system monitor with CPU/RAM/disk progress bars |
+| **SystemInfo Dashboard** | `Demo_SystemInfo.ahk` | Real-time system info (processor, memory, storage, network) in a 6-card layout |
+| **Tetris** | `Tetris.ahk` | Classic Tetris game with ghost piece, line-clear flash, keyboard controls |
+| **HeatMap** | `HeatMap.ahk` | Interactive heatmap visualization |
+| **FIFA Dashboard** | `FIFA/Demo_Dashboard_FIFA.ahk` | 7-tab tournament manager with SQLite database, custom themes, full CRUD |
 
 ## **Credits**
 Created (vibe coded) by Vfpskin (Pablo Molina) 
