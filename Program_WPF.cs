@@ -2,6 +2,7 @@
 // ListView/DataGrid: eventos Click, MouseDoubleClick, RightClick, Enter + CRUD completo
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Data;
 using System.Globalization;
 using System.IO;
@@ -387,11 +388,7 @@ public class WpfRunner
 
     private static void WireDataGridEvents(DataGrid grid, string name)
     {
-        grid.SelectionChanged += (s, ev) =>
-        {
-            var extra = new Dictionary<string, string> { { name + "_SelectedIndex", grid.SelectedIndex.ToString() } };
-            SendEventToAhk(name, "SelectionChanged", extra);
-        };
+        grid.SelectionChanged += (s, ev) => SendEventToAhk(name, "SelectionChanged");
         grid.SelectedCellsChanged += (s, ev) =>
             SendEventToAhk(name, "SelectedCellsChanged", BuildDataGridCellContext(grid, name));
         grid.CurrentCellChanged += (s, ev) =>
@@ -1086,19 +1083,6 @@ public class WpfRunner
     {
         _window.PreviewKeyDown += (s, e) =>
         {
-            // ── Tetris / game keys ──────────────────────────────────
-            switch (e.Key)
-            {
-                case Key.Left:  SendEventToAhk("_Window", "KeyLeft");  e.Handled = true; return;
-                case Key.Right: SendEventToAhk("_Window", "KeyRight"); e.Handled = true; return;
-                case Key.Down:  SendEventToAhk("_Window", "KeyDown");  e.Handled = true; return;
-                case Key.Up:    SendEventToAhk("_Window", "KeyUp");    e.Handled = true; return;
-                case Key.Space: SendEventToAhk("_Window", "KeySpace"); e.Handled = true; return;
-                case Key.P:     SendEventToAhk("_Window", "KeyP");     e.Handled = true; return;
-                case Key.R:     SendEventToAhk("_Window", "KeyR");     e.Handled = true; return;
-            }
-
-            // ── Enter key (existing logic) ──────────────────────────
             if (e.Key != Key.Enter && e.Key != Key.Return) return;
 
             var fe = Keyboard.FocusedElement as FrameworkElement;
@@ -1219,7 +1203,13 @@ public class WpfRunner
                 }
                 else if (ctrl is DataGrid)
                 {
-                    try { val = GetDataGridSelectedRowText((DataGrid)ctrl); } catch { val = ""; }
+                    try
+                    {
+                        var dg = (DataGrid)ctrl;
+                        val = GetDataGridSelectedRowText(dg);
+                        state[name + "_SelectedIndex"] = dg.SelectedIndex.ToString();
+                    }
+                    catch { val = ""; }
                 }
 
                 state[name] = val ?? "";
@@ -1258,27 +1248,29 @@ public class WpfRunner
             string packet = sb.ToString().TrimEnd();
             byte[] data   = Encoding.Unicode.GetBytes(packet + "\0");
 
-            var cds = new COPYDATASTRUCT();
-            cds.dwData = IntPtr.Zero;
-            cds.cbData = data.Length;
-
-            var handle = GCHandle.Alloc(data, GCHandleType.Pinned);
-            try
+            // Send on background thread so UI thread is never blocked
+            byte[] capturedData = data;
+            ThreadPool.QueueUserWorkItem(_ =>
             {
-                cds.lpData = handle.AddrOfPinnedObject();
-                if (_receiverHwnd != IntPtr.Zero)
-                    SendMessage(_receiverHwnd, WM_COPYDATA, IntPtr.Zero, ref cds);
-                else
+                try
                 {
-                    IntPtr hw = FindWindow(null, "AhkWpfReceiver_" + _instanceId);
-                    if (hw != IntPtr.Zero)
-                        SendMessage(hw, WM_COPYDATA, IntPtr.Zero, ref cds);
+                    var cds = new COPYDATASTRUCT();
+                    cds.dwData = IntPtr.Zero;
+                    cds.cbData = capturedData.Length;
+                    var handle = GCHandle.Alloc(capturedData, GCHandleType.Pinned);
+                    try
+                    {
+                        cds.lpData = handle.AddrOfPinnedObject();
+                        IntPtr targetHwnd = _receiverHwnd;
+                        if (targetHwnd == IntPtr.Zero)
+                            targetHwnd = FindWindow(null, "AhkWpfReceiver_" + _instanceId);
+                        if (targetHwnd != IntPtr.Zero)
+                            SendMessage(targetHwnd, WM_COPYDATA, IntPtr.Zero, ref cds);
+                    }
+                    finally { handle.Free(); }
                 }
-            }
-            finally
-            {
-                handle.Free();
-            }
+                catch { }
+            });
         }
         catch { }
     }
@@ -1330,42 +1322,20 @@ public class WpfRunner
             else if (k == "Val")  val  = FromBase64(v);
         }
 
-        if (cmd == "SyncUpdate")
-        {
-            bool isSpecial = ctrl == "_Resource" || ctrl == "_Theme" || ctrl == "_Window" || ctrl == "_Batch";
-            if (!isSpecial && !_controls.ContainsKey(ctrl)) return;
-
-            _window.Dispatcher.Invoke((Action)(() => ApplyUpdate(ctrl, prop, val)));
-            return;
-        }
-
         if (cmd != "Update") return;
 
-        bool isSpecial2 = ctrl == "_Resource" || ctrl == "_Theme" || ctrl == "_Window" || ctrl == "_Batch";
-        if (!isSpecial2 && !_controls.ContainsKey(ctrl)) return;
+        bool isSpecial = ctrl == "_Resource" || ctrl == "_Theme" || ctrl == "_Window" || ctrl == "_Batch";
+        if (!isSpecial && !_controls.ContainsKey(ctrl)) return;
 
-        _window.Dispatcher.BeginInvoke((Action)(() => ApplyUpdate(ctrl, prop, val)));
+        _window.Dispatcher.Invoke((Action)(() => ApplyUpdate(ctrl, prop, val)));
     }
 
     private static void ApplyUpdate(string ctrl, string prop, string val)
     {
+        if (ctrl == "_Batch")   { ApplyBatch(prop, val); return; }
         if (ctrl == "_Resource") { ApplyResource(prop, val); return; }
         if (ctrl == "_Theme")    { ApplyTheme(val); return; }
         if (ctrl == "_Window")   { ApplyWindowProp(prop, val); return; }
-        if (ctrl == "_Batch")
-        {
-            if (prop == "Cells")
-            {
-                var lines = val.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var line in lines)
-                {
-                    var parts = line.Split('|');
-                    if (parts.Length >= 3)
-                        ApplyUpdate(parts[0], parts[1], parts[2]);
-                }
-            }
-            return;
-        }
 
         if (!_controls.ContainsKey(ctrl)) return;
         var fe = _controls[ctrl];
@@ -1470,11 +1440,36 @@ public class WpfRunner
                         }
                     }
 
-                    // Force DataGrid to process pending changes and create visual containers
+                    // Apply directly to the last added row only (no full refresh — too slow for bulk)
+                    var lastRow = dg.ItemContainerGenerator.ContainerFromIndex(rIdx) as DataGridRow;
+                    if (lastRow != null)
+                    {
+                        for (int c = 0; c < dg.Columns.Count; c++)
+                        {
+                            string cellKey = rIdx + "|" + c;
+                            CellStyleInfo info;
+                            if (styles.TryGetValue(cellKey, out info) && info.Background != null)
+                            {
+                                var cell = GetDataGridCell(lastRow, c);
+                                if (cell != null)
+                                {
+                                    cell.Background = info.Background;
+                                    cell.Foreground = info.Foreground;
+                                }
+                            }
+                        }
+                    }
+                }
+                break;
+
+            case "RefreshGrid":
+                {
+                    var dg = fe as DataGrid;
+                    if (dg == null) break;
                     dg.Items.Refresh();
                     dg.UpdateLayout();
-
-                    // Apply directly to visual cells (now containers are guaranteed to exist)
+                    var refreshStyles = dg.Tag as Dictionary<string, CellStyleInfo>;
+                    if (refreshStyles == null) break;
                     for (int v = 0; v < dg.Items.Count; v++)
                     {
                         var row = dg.ItemContainerGenerator.ContainerFromIndex(v) as DataGridRow;
@@ -1483,7 +1478,7 @@ public class WpfRunner
                         {
                             string cellKey = v + "|" + c;
                             CellStyleInfo info;
-                            if (styles.TryGetValue(cellKey, out info) && info.Background != null)
+                            if (refreshStyles.TryGetValue(cellKey, out info) && info.Background != null)
                             {
                                 var cell = GetDataGridCell(row, c);
                                 if (cell != null)
@@ -1741,6 +1736,36 @@ public class WpfRunner
                 break;
             }
 
+            case "SetColVisibility":
+            {
+                var dg = fe as DataGrid;
+                if (dg != null)
+                {
+                    var parts = val.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (parts.Length >= 2)
+                    {
+                        string colKey = parts[0].Trim();
+                        bool visible = parts[1].Trim() == "1";
+                        var names = GetDataGridColumnNames(dg);
+                        DataGridColumn target = null;
+                        int colIdx;
+                        if (int.TryParse(colKey, out colIdx) && colIdx >= 0 && colIdx < dg.Columns.Count)
+                            target = dg.Columns[colIdx];
+                        else
+                        {
+                            for (int i = 0; i < names.Count; i++)
+                            {
+                                if (names[i].Equals(colKey, StringComparison.OrdinalIgnoreCase))
+                                { target = dg.Columns[i]; break; }
+                            }
+                        }
+                        if (target != null)
+                            target.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
+                    }
+                }
+                break;
+            }
+
             case "Resource":
             case "Color":
                 ApplyResource(ctrl, val);
@@ -1790,6 +1815,22 @@ public class WpfRunner
         var style = new Style(typeof(TextBlock));
         style.Setters.Add(new Setter(TextBlock.TextAlignmentProperty, alignment));
         textCol.ElementStyle = style;
+    }
+
+    private static void ApplyBatch(string prop, string val)
+    {
+        if (prop != "Cells") return;
+        var lines = val.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+        foreach (var line in lines)
+        {
+            int first = line.IndexOf('|');
+            if (first < 0) continue;
+            int second = line.IndexOf('|', first + 1);
+            if (second < 0) continue;
+            ApplyUpdate(line.Substring(0, first),
+                        line.Substring(first + 1, second - first - 1),
+                        line.Substring(second + 1));
+        }
     }
 
     private static void ApplyResource(string resourceKey, string colorValue)
