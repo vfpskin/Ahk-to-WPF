@@ -1402,7 +1402,9 @@ public class WpfRunner
                     var dg = fe as DataGrid;
                     if (dg != null) { AddDataGridItem(dg, val, true); break; }
                     var lv = fe as ListView;
-                    if (lv != null) AddListViewItem(lv, val, false);
+                    if (lv != null) { AddListViewItem(lv, val, false); break; }
+                    var cb = fe as ComboBox;
+                    if (cb != null) { cb.Items.Add(val); break; }
                 }
                 break;
 
