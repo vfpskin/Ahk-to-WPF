@@ -1092,6 +1092,50 @@ MySaveAndClose(state, ctrl, event) {
       </div>
     </section>
 
+    <section>
+      <h2>21. ComboBox Demo (<code>Demo_ComboBox.ahk</code>)</h2>
+      <div class="card-grid" style="grid-template-columns:1fr">
+        <div class="card">
+          <h3>Controls Overview</h3>
+          <p>Lives at <code>C:\AHK_WPF\demos\Demo_ComboBox.ahk</code> + <code>Demo_ComboBox.xaml</code>.</p>
+          <ul>
+            <li><strong>ComboStatic</strong> &mdash; Items defined in XAML (10 countries). Demonstrates <code>SelectionChanged</code> event with <code>_SelectedIndex</code> and <code>_Text</code> in the state dictionary.</li>
+            <li><strong>ComboDynamic</strong> &mdash; Starts empty, populated via <code>AddItem</code> from AHK. Add fruits or colors, clear all items.</li>
+            <li><strong>ComboFruits</strong> &mdash; Pre-populated with 7 fruits via <code>AddItem</code> at startup. Add new fruits, clear all, or set <code>SelectedIndex</code> programmatically.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>ComboBox Commands</h3>
+          <table>
+            <thead><tr><th>Command</th><th>Description</th><th>Example</th></tr></thead>
+            <tbody>
+              <tr><td><code>AddItem</code></td><td>Adds a string item to the ComboBox.</td><td><code>ui.Update("Combo", "AddItem", "Apple")</code></td></tr>
+              <tr><td><code>ClearItems</code></td><td>Removes all items and resets selection to -1.</td><td><code>ui.Update("Combo", "ClearItems", "")</code></td></tr>
+              <tr><td><code>SelectedIndex</code></td><td>Sets the selected index (0-based). -1 clears selection.</td><td><code>ui.Update("Combo", "SelectedIndex", "2")</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <h3>State Values</h3>
+          <p>When a <code>SelectionChanged</code> event fires, the state dictionary includes:</p>
+          <ul>
+            <li><code>state["ComboName"]</code> &mdash; The selected index (0-based, as string), or <code>-1</code>.</li>
+            <li><code>state["ComboName_SelectedIndex"]</code> &mdash; Same as above (duplicate for consistency with DataGrid).</li>
+            <li><code>state["ComboName_Text"]</code> &mdash; The display text of the selected item.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Implementation Details</h3>
+          <ul>
+            <li><strong>Theme-aware:</strong> All ComboBoxes use <code>DynamicResource</code> for background, border, foreground, and dropdown colors. The <strong>Theme</strong> button cycles through all available themes.</li>
+            <li><strong>Styled ComboBox:</strong> The <code>DemoCombo</code> style replaces the default WPF template with a dark themed border, custom toggle arrow, and hover/accent effects. <code>ComboBoxItem</code> style adds hover and selection highlights.</li>
+            <li><strong>Item tracking:</strong> AHK maintains parallel arrays (<code>_dynItems</code>, <code>_fruitItems</code>) to track item text and counts. The total item counter sums static (10) + dynamic + fruit items.</li>
+            <li><strong>ClearItems engine support:</strong> <code>Program_WPF.cs</code> handles <code>ClearItems</code> on ComboBox by calling <code>Items.Clear()</code> + <code>SelectedIndex = -1</code>.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
     <p class="footer">
       Saved for the project at <code>C:\AHK_WPF</code>. Open this file in your browser to consult it whenever needed.
     </p>

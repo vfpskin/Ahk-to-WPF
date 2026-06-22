@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 cd /d "%~dp0"
 
-echo Compilando WPF_Runner.exe con soporte para Enter event y TextBlock Click...
+echo Compilando WPF_Runner.exe con soporte para Enter event, TextBlock Click, DataGrid ComboBox...
 echo.
 
 set CSC_PATH=C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe
@@ -30,12 +30,11 @@ if %ERRORLEVEL% equ 0 (
     echo ========================================
     echo   Compilacion EXITOSA
     echo ========================================
-    echo Nuevas funcionalidades:
-    echo   - Enter event en TextBox
-    echo   - Enter event en PasswordBox
-    echo   - Enter event en ComboBox
-    echo   - Enter event en Button
-    echo   - Click event en TextBlock
+    echo Funcionalidades incluidas:
+    echo   - Eventos: Click, TextChanged, SelectionChanged, Enter, etc.
+    echo   - DataGrid: AddItem, AddColorItem, Clear, RefreshGrid, SetColVisibility
+    echo   - ListView: AddItem, AddRow, ClearItems, RemoveSelected, UpdateSelected
+    echo   - ComboBox: AddItem, ClearItems, _SelectedIndex, _Text
     echo.
     dir WPF_Runner.exe
 ) else (

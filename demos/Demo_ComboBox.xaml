@@ -1,0 +1,359 @@
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ComboBox Demo" Width="750" Height="600"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource WindowBg}"
+        SnapsToDevicePixels="True" UseLayoutRounding="True">
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="WindowBg" Color="#0A1628"/>
+        <SolidColorBrush x:Key="CardBg" Color="#112236"/>
+        <SolidColorBrush x:Key="CardBorder" Color="#2A4A6B"/>
+        <SolidColorBrush x:Key="Surface" Color="#112236"/>
+        <SolidColorBrush x:Key="Surface2" Color="#1A3050"/>
+        <SolidColorBrush x:Key="Accent" Color="#1A78C2"/>
+        <SolidColorBrush x:Key="AccentHover" Color="#1565A8"/>
+        <SolidColorBrush x:Key="TextPrimary" Color="#E5F0F7"/>
+        <SolidColorBrush x:Key="TextSecondary" Color="#97BCE1"/>
+        <SolidColorBrush x:Key="TextMuted" Color="#6B8FB5"/>
+        <SolidColorBrush x:Key="ScrollThumb" Color="#2A4A6B"/>
+        <SolidColorBrush x:Key="RowHover" Color="#152A45"/>
+        <SolidColorBrush x:Key="Success" Color="#1A7A4A"/>
+        <SolidColorBrush x:Key="SuccessHover" Color="#166040"/>
+        <SolidColorBrush x:Key="Danger" Color="#C0392B"/>
+        <SolidColorBrush x:Key="DangerHover" Color="#A93226"/>
+
+        <Style x:Key="ToolBtn" TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource Surface2}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,4"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource AccentHover}"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource Accent}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ToolBtnGreen" TargetType="Button" BasedOn="{StaticResource ToolBtn}">
+            <Setter Property="Background" Value="{DynamicResource Success}"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource SuccessHover}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="ToolBtnRed" TargetType="Button" BasedOn="{StaticResource ToolBtn}">
+            <Setter Property="Background" Value="{DynamicResource Danger}"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource DangerHover}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="DemoCombo" TargetType="ComboBox">
+            <Setter Property="Background" Value="{DynamicResource Surface}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="MinWidth" Value="160"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <Border x:Name="Border" Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="4">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <ContentPresenter Grid.Column="0" Margin="{TemplateBinding Padding}"
+                                                      Content="{TemplateBinding SelectionBoxItem}"
+                                                      ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                                      ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                                      VerticalAlignment="Center"
+                                                      IsHitTestVisible="False"/>
+                                    <ToggleButton x:Name="ToggleButton" Grid.Column="1"
+                                                  IsChecked="{Binding Path=IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}"
+                                                  Background="Transparent" BorderThickness="0"
+                                                  Width="20" Height="20" Margin="0,0,4,0"
+                                                  IsHitTestVisible="False" Focusable="False" ClickMode="Press">
+                                        <Path Data="M 0,0 L 5,5 L 10,0"
+                                              Fill="{DynamicResource TextSecondary}"
+                                              Stroke="{DynamicResource TextSecondary}"
+                                              StrokeThickness="0.5"
+                                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </ToggleButton>
+                                </Grid>
+                            </Border>
+                            <Popup x:Name="Popup" IsOpen="{Binding Path=IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}"
+                                   Placement="Bottom" StaysOpen="False"
+                                   AllowsTransparency="True"
+                                   PopupAnimation="Fade">
+                                <Border Background="{DynamicResource Surface2}"
+                                        BorderBrush="{DynamicResource CardBorder}"
+                                        BorderThickness="1" CornerRadius="4"
+                                        MaxHeight="{Binding Path=MaxDropDownHeight, RelativeSource={RelativeSource TemplatedParent}}">
+                                    <ScrollViewer>
+                                        <ItemsPresenter/>
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource Accent}"/>
+                            </Trigger>
+                            <Trigger Property="IsDropDownOpen" Value="True">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource Accent}"/>
+                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource Surface}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBoxItem">
+                        <Border Background="{TemplateBinding Background}"
+                                Padding="{TemplateBinding Padding}"
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource RowHover}"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource Accent}"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CardTitle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondary}"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="6"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="6"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="6"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="{DynamicResource CardBg}"
+                BorderBrush="{DynamicResource CardBorder}" BorderThickness="1"
+                CornerRadius="6" Padding="10,6">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="ComboBox Operations Demo"
+                           Foreground="{DynamicResource TextPrimary}" FontSize="15"
+                           FontWeight="Bold" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="1" x:Name="LblThemeName" Text="Theme: Navy"
+                           Foreground="{DynamicResource TextMuted}" FontSize="11"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Button Grid.Column="2" x:Name="BtnTheme" Content="Theme"
+                        Style="{StaticResource ToolBtn}" Width="90"
+                        ToolTip="Cycle through available themes"/>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="2" Background="{DynamicResource CardBg}"
+                BorderBrush="{DynamicResource CardBorder}" BorderThickness="1"
+                CornerRadius="6" Padding="12,10">
+            <StackPanel>
+                <TextBlock Text="CONTROLS" Style="{StaticResource CardTitle}" Margin="0,0,0,6"/>
+                <WrapPanel>
+                    <Button x:Name="BtnGetSel" Content="Get All Selections" Style="{StaticResource ToolBtn}"
+                            ToolTip="Show selected values from all combos"/>
+                    <Button x:Name="BtnClearAll" Content="Clear All Selections" Style="{StaticResource ToolBtnRed}"
+                            ToolTip="Reset all combos to no selection"/>
+                </WrapPanel>
+            </StackPanel>
+        </Border>
+
+        <Grid Grid.Row="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="6"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="6"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Row="0" Grid.Column="0" Background="{DynamicResource CardBg}"
+                    BorderBrush="{DynamicResource CardBorder}" BorderThickness="1"
+                    CornerRadius="6" Padding="14,10">
+                <StackPanel>
+                    <TextBlock Text="STATIC COMBOBOX" Style="{StaticResource CardTitle}" Margin="0,0,0,8"/>
+                    <TextBlock Text="Items defined in XAML. Shows SelectionChanged."
+                               Foreground="{DynamicResource TextMuted}" FontSize="11" Margin="0,0,0,8"/>
+                    <ComboBox x:Name="ComboStatic" Style="{StaticResource DemoCombo}" SelectedIndex="0">
+                        <ComboBoxItem Content="Argentina"/>
+                        <ComboBoxItem Content="Brazil"/>
+                        <ComboBoxItem Content="Canada"/>
+                        <ComboBoxItem Content="Denmark"/>
+                        <ComboBoxItem Content="Egypt"/>
+                        <ComboBoxItem Content="France"/>
+                        <ComboBoxItem Content="Germany"/>
+                        <ComboBoxItem Content="Japan"/>
+                        <ComboBoxItem Content="Mexico"/>
+                        <ComboBoxItem Content="Spain"/>
+                    </ComboBox>
+                    <TextBlock x:Name="LblStatic" Text="Selected: Argentina"
+                               Foreground="{DynamicResource Success}" FontSize="12"
+                               Margin="0,8,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Row="0" Grid.Column="2" Background="{DynamicResource CardBg}"
+                    BorderBrush="{DynamicResource CardBorder}" BorderThickness="1"
+                    CornerRadius="6" Padding="14,10">
+                <StackPanel>
+                    <TextBlock Text="DYNAMIC COMBOBOX (AddItem)" Style="{StaticResource CardTitle}" Margin="0,0,0,8"/>
+                    <TextBlock Text="Populated from AHK via ui.Update. Shows AddItem + Clear."
+                               Foreground="{DynamicResource TextMuted}" FontSize="11" Margin="0,0,0,8"/>
+                    <ComboBox x:Name="ComboDynamic" Style="{StaticResource DemoCombo}"/>
+                    <WrapPanel Margin="0,6,0,0">
+                        <Button x:Name="BtnAddFruit" Content="Add Fruit" Style="{StaticResource ToolBtnGreen}"
+                                ToolTip="Add a fruit to the dynamic combo"/>
+                        <Button x:Name="BtnAddColor" Content="Add Color" Style="{StaticResource ToolBtn}"
+                                ToolTip="Add a color to the dynamic combo"/>
+                        <Button x:Name="BtnClearDyn" Content="Clear All" Style="{StaticResource ToolBtnRed}"
+                                ToolTip="Remove all items"/>
+                    </WrapPanel>
+                    <TextBlock x:Name="LblDynamic" Text="Selected: -"
+                               Foreground="{DynamicResource Success}" FontSize="12"
+                               Margin="0,6,0,0"/>
+                    <TextBlock x:Name="LblDynCount" Text="Items: 0"
+                               Foreground="{DynamicResource TextMuted}" FontSize="11"/>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Row="2" Grid.Column="0" Background="{DynamicResource CardBg}"
+                    BorderBrush="{DynamicResource CardBorder}" BorderThickness="1"
+                    CornerRadius="6" Padding="14,10">
+                <StackPanel>
+                    <TextBlock Text="FRUITS COMBOBOX" Style="{StaticResource CardTitle}" Margin="0,0,0,8"/>
+                    <TextBlock Text="Pre-populated with manual AddItem at startup."
+                               Foreground="{DynamicResource TextMuted}" FontSize="11" Margin="0,0,0,8"/>
+                    <ComboBox x:Name="ComboFruits" Style="{StaticResource DemoCombo}" SelectedIndex="0"/>
+                    <WrapPanel Margin="0,6,0,0">
+                        <Button x:Name="BtnAddFruitItem" Content="Add Fruit" Style="{StaticResource ToolBtnGreen}"
+                                ToolTip="Add a new fruit"/>
+                        <Button x:Name="BtnClearFruits" Content="Clear" Style="{StaticResource ToolBtnRed}"
+                                ToolTip="Remove all fruits"/>
+                        <Button x:Name="BtnSetIdx" Content="Set Index 2" Style="{StaticResource ToolBtn}"
+                                ToolTip="Set SelectedIndex to 2"/>
+                    </WrapPanel>
+                    <TextBlock x:Name="LblFruits" Text="Selected: -"
+                               Foreground="{DynamicResource Success}" FontSize="12"
+                               Margin="0,6,0,0"/>
+                    <TextBlock x:Name="LblFruitCount" Text="Items: 0"
+                               Foreground="{DynamicResource TextMuted}" FontSize="11"/>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Row="2" Grid.Column="2" Background="{DynamicResource CardBg}"
+                    BorderBrush="{DynamicResource CardBorder}" BorderThickness="1"
+                    CornerRadius="6" Padding="14,10">
+                <StackPanel>
+                    <TextBlock Text="FORMATTED VALUES" Style="{StaticResource CardTitle}" Margin="0,0,0,8"/>
+                    <TextBlock Text="State values read from all combos."
+                               Foreground="{DynamicResource TextMuted}" FontSize="11" Margin="0,0,0,8"/>
+                    <Border Background="#0A1628" CornerRadius="4" Padding="10" MinHeight="120">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel>
+                                <TextBlock x:Name="LblValStatic" Text="ComboStatic: -"
+                                           Foreground="{DynamicResource TextPrimary}" FontSize="12"
+                                           TextWrapping="Wrap" Margin="0,0,0,4"/>
+                                <TextBlock x:Name="LblValDynamic" Text="ComboDynamic: -"
+                                           Foreground="{DynamicResource TextPrimary}" FontSize="12"
+                                           TextWrapping="Wrap" Margin="0,0,0,4"/>
+                                <TextBlock x:Name="LblValFruits" Text="ComboFruits: -"
+                                           Foreground="{DynamicResource TextPrimary}" FontSize="12"
+                                           TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <Border Grid.Row="6" Background="{DynamicResource CardBg}"
+                BorderBrush="{DynamicResource CardBorder}" BorderThickness="1"
+                CornerRadius="6" Padding="12,8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="LblTotalItems" Text="Total Items: 13"
+                           Foreground="{DynamicResource TextSecondary}" FontSize="12"
+                           VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="1" x:Name="LblLastAction" Text="Ready"
+                           Foreground="{DynamicResource TextSecondary}" FontSize="12"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="2" x:Name="LblThemeStatus" Text="Navy"
+                           Foreground="{DynamicResource Accent}" FontSize="12"
+                           VerticalAlignment="Center" HorizontalAlignment="Right"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

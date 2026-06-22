@@ -1156,10 +1156,19 @@ public class WpfRunner
                 else if (ctrl is ComboBox)
                 {
                     ComboBox cob = (ComboBox)ctrl;
-                    if (cob.SelectedValue != null)
-                        val = cob.SelectedValue.ToString();
+                    var si = cob.SelectedItem;
+                    ComboBoxItem cbi = si as ComboBoxItem;
+                    if (cbi != null)
+                    {
+                        object content = cbi.Content;
+                        val = content != null ? content.ToString() : "";
+                    }
+                    else if (si != null)
+                        val = si.ToString();
                     else
                         val = cob.Text ?? "";
+                    state[name + "_SelectedIndex"] = cob.SelectedIndex.ToString();
+                    state[name + "_Text"] = val;
                 }
                 else if (ctrl is Slider)
                 {
@@ -1512,7 +1521,9 @@ public class WpfRunner
                 var dg = fe as DataGrid;
                 if (dg != null) { ClearDataGridItems(dg); break; }
                 var lv = fe as ListView;
-                if (lv != null) lv.Items.Clear();
+                if (lv != null) { lv.Items.Clear(); break; }
+                var cb = fe as ComboBox;
+                if (cb != null) { cb.Items.Clear(); cb.SelectedIndex = -1; break; }
                 break;
             }
 
