@@ -7,8 +7,6 @@
 
     <Window.Resources>
         <SolidColorBrush x:Key="WindowBg" Color="#0A1628"/>
-        <SolidColorBrush x:Key="CardBg" Color="#112236"/>
-        <SolidColorBrush x:Key="CardBorder" Color="#2A4A6B"/>
         <SolidColorBrush x:Key="Surface" Color="#112236"/>
         <SolidColorBrush x:Key="Surface2" Color="#1A3050"/>
         <SolidColorBrush x:Key="Accent" Color="#1A78C2"/>
@@ -23,10 +21,73 @@
         <SolidColorBrush x:Key="Danger" Color="#C0392B"/>
         <SolidColorBrush x:Key="DangerHover" Color="#A93226"/>
 
+        <Style x:Key="ScrollBarThumb" TargetType="Thumb">
+            <Setter Property="Background" Value="{DynamicResource ScrollThumb}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="MinWidth" Value="6"/>
+            <Setter Property="MinHeight" Value="20"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="3" Margin="1"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ScrollBarLineButton" TargetType="RepeatButton">
+            <Setter Property="Visibility" Value="Collapsed"/>
+        </Style>
+
+        <Style TargetType="ScrollBar">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Width" Value="8"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Grid Background="{TemplateBinding Background}">
+                            <Track x:Name="PART_Track" IsDirectionReversed="false">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Style="{StaticResource ScrollBarLineButton}"/>
+                                </Track.DecreaseRepeatButton>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Style="{StaticResource ScrollBarLineButton}"/>
+                                </Track.IncreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb Style="{StaticResource ScrollBarThumb}"/>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="VisibleScrollBar" TargetType="ScrollViewer">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollViewer">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <ScrollContentPresenter Grid.Column="0" CanContentScroll="{TemplateBinding CanContentScroll}"/>
+                            <ScrollBar Grid.Column="1" x:Name="PART_VerticalScrollBar" Orientation="Vertical"
+                                       Value="{TemplateBinding VerticalOffset}"
+                                       Maximum="{TemplateBinding ScrollableHeight}"
+                                       ViewportSize="{TemplateBinding ViewportHeight}"
+                                       Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <Style x:Key="ToolBtn" TargetType="Button">
             <Setter Property="Background" Value="{DynamicResource Surface2}"/>
             <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource Border}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="10,4"/>
             <Setter Property="FontSize" Value="12"/>
@@ -77,7 +138,7 @@
         <Style x:Key="DemoCombo" TargetType="ComboBox">
             <Setter Property="Background" Value="{DynamicResource Surface}"/>
             <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource Border}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="8,4"/>
             <Setter Property="FontSize" Value="13"/>
@@ -93,27 +154,20 @@
                                     BorderThickness="{TemplateBinding BorderThickness}"
                                     CornerRadius="4">
                                 <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <ContentPresenter Grid.Column="0" Margin="{TemplateBinding Padding}"
+                                    <ToggleButton x:Name="ToggleButton"
+                                                  IsChecked="{Binding Path=IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}"
+                                                  Background="Transparent" BorderThickness="0"
+                                                  Focusable="False" IsTabStop="False"
+                                                  Padding="0" Margin="0"
+                                                  Cursor="Hand"
+                                                  Template="{DynamicResource ComboBoxToggleButtonTemplate}"/>
+                                    <ContentPresenter Margin="{TemplateBinding Padding}"
                                                       Content="{TemplateBinding SelectionBoxItem}"
                                                       ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
                                                       ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
                                                       VerticalAlignment="Center"
-                                                      IsHitTestVisible="False"/>
-                                    <ToggleButton x:Name="ToggleButton" Grid.Column="1"
-                                                  IsChecked="{Binding Path=IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}"
-                                                  Background="Transparent" BorderThickness="0"
-                                                  Width="20" Height="20" Margin="0,0,4,0"
-                                                  IsHitTestVisible="False" Focusable="False" ClickMode="Press">
-                                        <Path Data="M 0,0 L 5,5 L 10,0"
-                                              Fill="{DynamicResource TextSecondary}"
-                                              Stroke="{DynamicResource TextSecondary}"
-                                              StrokeThickness="0.5"
-                                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    </ToggleButton>
+                                                      IsHitTestVisible="False"
+                                                      HorizontalAlignment="Left"/>
                                 </Grid>
                             </Border>
                             <Popup x:Name="Popup" IsOpen="{Binding Path=IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}"
@@ -121,10 +175,10 @@
                                    AllowsTransparency="True"
                                    PopupAnimation="Fade">
                                 <Border Background="{DynamicResource Surface2}"
-                                        BorderBrush="{DynamicResource CardBorder}"
+                                        BorderBrush="{DynamicResource Border}"
                                         BorderThickness="1" CornerRadius="4"
                                         MaxHeight="{Binding Path=MaxDropDownHeight, RelativeSource={RelativeSource TemplatedParent}}">
-                                    <ScrollViewer>
+                                    <ScrollViewer Style="{StaticResource VisibleScrollBar}">
                                         <ItemsPresenter/>
                                     </ScrollViewer>
                                 </Border>
@@ -143,6 +197,29 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <ControlTemplate x:Key="ComboBoxToggleButtonTemplate" TargetType="ToggleButton">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Rectangle Grid.Column="0" Fill="Transparent"/>
+                <Border Grid.Column="1" Background="Transparent" Width="24"
+                        BorderThickness="1,0,0,0" BorderBrush="{DynamicResource Border}">
+                    <Path Data="M 0,0 L 5,5 L 10,0"
+                          Fill="{DynamicResource TextSecondary}"
+                          Stroke="{DynamicResource TextSecondary}"
+                          StrokeThickness="0.5"
+                          HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource RowHover}"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
 
         <Style TargetType="ComboBoxItem">
             <Setter Property="Background" Value="Transparent"/>
@@ -189,8 +266,8 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Background="{DynamicResource CardBg}"
-                BorderBrush="{DynamicResource CardBorder}" BorderThickness="1"
+        <Border Grid.Row="0" Background="{DynamicResource Surface}"
+                BorderBrush="{DynamicResource Border}" BorderThickness="1"
                 CornerRadius="6" Padding="10,6">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -210,8 +287,8 @@
             </Grid>
         </Border>
 
-        <Border Grid.Row="2" Background="{DynamicResource CardBg}"
-                BorderBrush="{DynamicResource CardBorder}" BorderThickness="1"
+        <Border Grid.Row="2" Background="{DynamicResource Surface}"
+                BorderBrush="{DynamicResource Border}" BorderThickness="1"
                 CornerRadius="6" Padding="12,10">
             <StackPanel>
                 <TextBlock Text="CONTROLS" Style="{StaticResource CardTitle}" Margin="0,0,0,6"/>
@@ -236,8 +313,8 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Border Grid.Row="0" Grid.Column="0" Background="{DynamicResource CardBg}"
-                    BorderBrush="{DynamicResource CardBorder}" BorderThickness="1"
+            <Border Grid.Row="0" Grid.Column="0" Background="{DynamicResource Surface}"
+                    BorderBrush="{DynamicResource Border}" BorderThickness="1"
                     CornerRadius="6" Padding="14,10">
                 <StackPanel>
                     <TextBlock Text="STATIC COMBOBOX" Style="{StaticResource CardTitle}" Margin="0,0,0,8"/>
@@ -261,8 +338,8 @@
                 </StackPanel>
             </Border>
 
-            <Border Grid.Row="0" Grid.Column="2" Background="{DynamicResource CardBg}"
-                    BorderBrush="{DynamicResource CardBorder}" BorderThickness="1"
+            <Border Grid.Row="0" Grid.Column="2" Background="{DynamicResource Surface}"
+                    BorderBrush="{DynamicResource Border}" BorderThickness="1"
                     CornerRadius="6" Padding="14,10">
                 <StackPanel>
                     <TextBlock Text="DYNAMIC COMBOBOX (AddItem)" Style="{StaticResource CardTitle}" Margin="0,0,0,8"/>
@@ -285,8 +362,8 @@
                 </StackPanel>
             </Border>
 
-            <Border Grid.Row="2" Grid.Column="0" Background="{DynamicResource CardBg}"
-                    BorderBrush="{DynamicResource CardBorder}" BorderThickness="1"
+            <Border Grid.Row="2" Grid.Column="0" Background="{DynamicResource Surface}"
+                    BorderBrush="{DynamicResource Border}" BorderThickness="1"
                     CornerRadius="6" Padding="14,10">
                 <StackPanel>
                     <TextBlock Text="FRUITS COMBOBOX" Style="{StaticResource CardTitle}" Margin="0,0,0,8"/>
@@ -309,15 +386,15 @@
                 </StackPanel>
             </Border>
 
-            <Border Grid.Row="2" Grid.Column="2" Background="{DynamicResource CardBg}"
-                    BorderBrush="{DynamicResource CardBorder}" BorderThickness="1"
+            <Border Grid.Row="2" Grid.Column="2" Background="{DynamicResource Surface}"
+                    BorderBrush="{DynamicResource Border}" BorderThickness="1"
                     CornerRadius="6" Padding="14,10">
                 <StackPanel>
                     <TextBlock Text="FORMATTED VALUES" Style="{StaticResource CardTitle}" Margin="0,0,0,8"/>
                     <TextBlock Text="State values read from all combos."
                                Foreground="{DynamicResource TextMuted}" FontSize="11" Margin="0,0,0,8"/>
-                    <Border Background="#0A1628" CornerRadius="4" Padding="10" MinHeight="120">
-                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Border Background="{DynamicResource Surface2}" CornerRadius="4" Padding="10" MinHeight="120">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" Style="{DynamicResource VisibleScrollBar}">
                             <StackPanel>
                                 <TextBlock x:Name="LblValStatic" Text="ComboStatic: -"
                                            Foreground="{DynamicResource TextPrimary}" FontSize="12"
@@ -335,8 +412,8 @@
             </Border>
         </Grid>
 
-        <Border Grid.Row="6" Background="{DynamicResource CardBg}"
-                BorderBrush="{DynamicResource CardBorder}" BorderThickness="1"
+        <Border Grid.Row="6" Background="{DynamicResource Surface}"
+                BorderBrush="{DynamicResource Border}" BorderThickness="1"
                 CornerRadius="6" Padding="12,8">
             <Grid>
                 <Grid.ColumnDefinitions>
