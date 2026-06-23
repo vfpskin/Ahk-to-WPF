@@ -1,0 +1,175 @@
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ctrl="clr-namespace:AhkControls;assembly=WPF_Runner"
+        Title="Chart Demo 2 - All Chart Types"
+        Height="720" Width="1000"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        WindowStartupLocation="CenterScreen">
+    <Window.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#1C1C2E" Offset="0"/>
+            <GradientStop Color="#0A1628" Offset="1"/>
+        </LinearGradientBrush>
+    </Window.Background>
+    <Window.Resources>
+        <Style x:Key="BtnStyle" TargetType="Button">
+            <Setter Property="Background" Value="#334466"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#5588AA"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="14,6"/>
+            <Setter Property="FontFamily" Value="Consolas"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="4"/>
+        </Style>
+        <Style x:Key="BtnSmall" TargetType="Button">
+            <Setter Property="Background" Value="#445566"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#6688AA"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontFamily" Value="Consolas"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Padding" Value="8,2"/>
+            <Setter Property="Margin" Value="6,0,0,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style x:Key="CardBorder" TargetType="Border">
+            <Setter Property="Background" Value="#1E2A3A"/>
+            <Setter Property="BorderBrush" Value="#2A3F5A"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+        <Style x:Key="CardHeader" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#88BBDD"/>
+            <Setter Property="FontFamily" Value="Consolas"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="StatusStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#88BBCC"/>
+            <Setter Property="FontFamily" Value="Consolas"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="8,0"/>
+        </Style>
+    </Window.Resources>
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <!-- Toolbar -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,6">
+            <TextBlock Text="Chart Demo 2" Foreground="#AACCEE" FontFamily="Consolas" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" Margin="4,0,20,0"/>
+            <Button x:Name="BtnLoadAll" Content="Load All" Style="{StaticResource BtnStyle}"/>
+            <Button x:Name="BtnClose" Content="X" Style="{StaticResource BtnStyle}" Background="#993333"/>
+        </StackPanel>
+        <!-- Scrollable area with 6 charts: 2 columns x 3 rows -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <Grid Margin="0,0,0,4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="300"/>
+                    <RowDefinition Height="300"/>
+                    <RowDefinition Height="300"/>
+                </Grid.RowDefinitions>
+                <!-- Card 1: Column -->
+                <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource CardBorder}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" Margin="4">
+                            <TextBlock Text="[ Column ]" Style="{StaticResource CardHeader}"/>
+                            <Button x:Name="BtnRandCol" Content="Random" Style="{StaticResource BtnSmall}"/>
+                        </StackPanel>
+                        <ctrl:ChartControl Grid.Row="1" x:Name="ChartCol" Margin="4"/>
+                    </Grid>
+                </Border>
+                <!-- Card 2: Line -->
+                <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource CardBorder}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" Margin="4">
+                            <TextBlock Text="[ Line ]" Style="{StaticResource CardHeader}"/>
+                            <Button x:Name="BtnRandLine" Content="Random" Style="{StaticResource BtnSmall}"/>
+                        </StackPanel>
+                        <ctrl:ChartControl Grid.Row="1" x:Name="ChartLine" Margin="4"/>
+                    </Grid>
+                </Border>
+                <!-- Card 3: Pie -->
+                <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource CardBorder}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" Margin="4">
+                            <TextBlock Text="[ Pie ]" Style="{StaticResource CardHeader}"/>
+                            <Button x:Name="BtnRandPie" Content="Random" Style="{StaticResource BtnSmall}"/>
+                        </StackPanel>
+                        <ctrl:ChartControl Grid.Row="1" x:Name="ChartPie" Margin="4"/>
+                    </Grid>
+                </Border>
+                <!-- Card 4: Bar -->
+                <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource CardBorder}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" Margin="4">
+                            <TextBlock Text="[ Bar ]" Style="{StaticResource CardHeader}"/>
+                            <Button x:Name="BtnRandBar" Content="Random" Style="{StaticResource BtnSmall}"/>
+                        </StackPanel>
+                        <ctrl:ChartControl Grid.Row="1" x:Name="ChartBar" Margin="4"/>
+                    </Grid>
+                </Border>
+                <!-- Card 5: Area -->
+                <Border Grid.Row="2" Grid.Column="0" Style="{StaticResource CardBorder}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" Margin="4">
+                            <TextBlock Text="[ Area ]" Style="{StaticResource CardHeader}"/>
+                            <Button x:Name="BtnRandArea" Content="Random" Style="{StaticResource BtnSmall}"/>
+                        </StackPanel>
+                        <ctrl:ChartControl Grid.Row="1" x:Name="ChartArea" Margin="4"/>
+                    </Grid>
+                </Border>
+                <!-- Card 6: Scatter -->
+                <Border Grid.Row="2" Grid.Column="1" Style="{StaticResource CardBorder}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" Margin="4">
+                            <TextBlock Text="[ Scatter ]" Style="{StaticResource CardHeader}"/>
+                            <Button x:Name="BtnRandScatter" Content="Random" Style="{StaticResource BtnSmall}"/>
+                        </StackPanel>
+                        <ctrl:ChartControl Grid.Row="1" x:Name="ChartScatter" Margin="4"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </ScrollViewer>
+        <!-- Status -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal">
+            <TextBlock x:Name="LblStatus" Text="Ready" Style="{StaticResource StatusStyle}"/>
+        </StackPanel>
+    </Grid>
+</Window>

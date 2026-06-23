@@ -1,0 +1,106 @@
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ctrl="clr-namespace:AhkControls;assembly=WPF_Runner"
+        Title="QR / Barcode Demo"
+        Height="650" Width="750"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        WindowStartupLocation="CenterScreen">
+    <Window.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#1C1C2E" Offset="0"/>
+            <GradientStop Color="#0A1628" Offset="1"/>
+        </LinearGradientBrush>
+    </Window.Background>
+    <Window.Resources>
+        <Style x:Key="BtnStyle" TargetType="Button">
+            <Setter Property="Background" Value="#334466"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#5588AA"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="12,5"/>
+            <Setter Property="FontFamily" Value="Consolas"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="3"/>
+        </Style>
+        <Style x:Key="BtnFormat" TargetType="Button">
+            <Setter Property="Background" Value="#2A3F5A"/>
+            <Setter Property="Foreground" Value="#AACCEE"/>
+            <Setter Property="BorderBrush" Value="#3A5A7A"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,3"/>
+            <Setter Property="FontFamily" Value="Consolas"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="2"/>
+        </Style>
+        <Style x:Key="StatusStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#88BBCC"/>
+            <Setter Property="FontFamily" Value="Consolas"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="8,0"/>
+        </Style>
+        <Style x:Key="InputBox" TargetType="TextBox">
+            <Setter Property="Background" Value="#0D1A2A"/>
+            <Setter Property="Foreground" Value="#DDEEff"/>
+            <Setter Property="BorderBrush" Value="#2A3F5A"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontFamily" Value="Consolas"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="8,5"/>
+            <Setter Property="MinHeight" Value="36"/>
+            <Setter Property="AcceptsReturn" Value="False"/>
+        </Style>
+    </Window.Resources>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <!-- Title -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,8">
+            <TextBlock Text="QR / Barcode Generator" Foreground="#AACCEE" FontFamily="Consolas" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" Margin="4,0,16,0"/>
+            <Button x:Name="BtnClose" Content="X" Style="{StaticResource BtnStyle}" Background="#993333" HorizontalAlignment="Right"/>
+        </StackPanel>
+        <!-- Input area -->
+        <Border Grid.Row="1" Background="#152238" BorderBrush="#2A3F5A" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,8">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBox Grid.Row="0" x:Name="TxtInput" Text="https://github.com/bblanchon/pdfium-binaries" Style="{StaticResource InputBox}"/>
+                <!-- Format row -->
+                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,8,4,0">
+                    <TextBlock Text="Format:" Foreground="#88AACC" FontFamily="Consolas" FontSize="12" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <Button x:Name="BtnQR" Content="QR Code" Style="{StaticResource BtnStyle}" Background="#2E6DA4"/>
+                    <Button x:Name="BtnCode128" Content="Code 128" Style="{StaticResource BtnFormat}"/>
+                    <Button x:Name="BtnCode39" Content="Code 39" Style="{StaticResource BtnFormat}"/>
+                    <Button x:Name="BtnEAN13" Content="EAN-13" Style="{StaticResource BtnFormat}"/>
+                </StackPanel>
+                <!-- Export row -->
+                <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,6,0,0">
+                    <TextBlock Text="Export:" Foreground="#88AACC" FontFamily="Consolas" FontSize="12" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <Button x:Name="BtnExportPNG" Content="Save PNG" Style="{StaticResource BtnStyle}"/>
+                    <Button x:Name="BtnExportJPG" Content="Save JPG" Style="{StaticResource BtnStyle}"/>
+                    <Button x:Name="BtnExportBMP" Content="Save BMP" Style="{StaticResource BtnStyle}"/>
+                    <Separator Width="10" Opacity="0"/>
+                    <Button x:Name="BtnClear" Content="Clear" Style="{StaticResource BtnStyle}"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+        <!-- QR / Barcode display -->
+        <Border Grid.Row="2" Background="#152238" BorderBrush="#2A3F5A" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,6">
+            <ctrl:QrControl x:Name="QrDisplay" MinWidth="200" MinHeight="200"/>
+        </Border>
+        <!-- Status -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal">
+            <TextBlock x:Name="LblStatus" Text="Type text or select format" Style="{StaticResource StatusStyle}"/>
+        </StackPanel>
+    </Grid>
+</Window>

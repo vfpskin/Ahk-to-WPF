@@ -16,6 +16,7 @@ using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Effects;
 
 public class WpfRunner
 {
@@ -1302,16 +1303,15 @@ public class WpfRunner
             {
                 IntPtr pData  = Marshal.ReadIntPtr(lParam, IntPtr.Size * 2);
                 string packet = Marshal.PtrToStringUni(pData);
-                ProcessAhkCommand(packet);
                 handled = true;
-                return new IntPtr(1);
+                return ProcessAhkCommand(packet);
             }
             catch { }
         }
         return IntPtr.Zero;
     }
 
-    private static void ProcessAhkCommand(string packet)
+    private static IntPtr ProcessAhkCommand(string packet)
     {
         string cmd  = "";
         string ctrl = "";
@@ -1331,12 +1331,25 @@ public class WpfRunner
             else if (k == "Val")  val  = FromBase64(v);
         }
 
-        if (cmd != "Update") return;
+        if (cmd != "Update") return IntPtr.Zero;
 
-        bool isSpecial = ctrl == "_Resource" || ctrl == "_Theme" || ctrl == "_Window" || ctrl == "_Batch";
-        if (!isSpecial && !_controls.ContainsKey(ctrl)) return;
+        bool isSpecial = ctrl == "_Resource" || ctrl == "_Theme" || ctrl == "_Window" || ctrl == "_Batch" || ctrl == "_MsgBox" || ctrl == "_InputBox";
+        if (!isSpecial && !_controls.ContainsKey(ctrl)) return IntPtr.Zero;
+
+        if (ctrl == "_MsgBox")
+        {
+            int result = _window.Dispatcher.Invoke((Func<int>)(() => ShowMsgBox(prop, val)));
+            return new IntPtr(result);
+        }
+
+        if (ctrl == "_InputBox")
+        {
+            int result = _window.Dispatcher.Invoke((Func<int>)(() => ShowInputBox(prop, val)));
+            return new IntPtr(result);
+        }
 
         _window.Dispatcher.Invoke((Action)(() => ApplyUpdate(ctrl, prop, val)));
+        return new IntPtr(1);
     }
 
     private static void ApplyUpdate(string ctrl, string prop, string val)
@@ -1844,6 +1857,398 @@ public class WpfRunner
                         line.Substring(first + 1, second - first - 1),
                         line.Substring(second + 1));
         }
+    }
+
+    private static Panel FindRootPanel()
+    {
+        var content = _window.Content as Panel;
+        if (content != null) return content;
+        return _window.Content as Grid;
+    }
+
+    private static void InferContentShape(Panel root, out Thickness margin, out CornerRadius radius)
+    {
+        margin = new Thickness(0);
+        radius = new CornerRadius(0);
+        if (root == null) return;
+        foreach (UIElement child in root.Children)
+        {
+            var border = child as Border;
+            if (border != null && border.CornerRadius.TopLeft > 0)
+            {
+                margin = border.Margin;
+                radius = border.CornerRadius;
+                return;
+            }
+        }
+    }
+
+    private static Style MakeButtonStyle(Brush bg, Brush hoverBg, Brush fg, Brush hoverFg, Thickness borderThick, Brush borderBrush = null)
+    {
+        var style = new Style(typeof(Button));
+        var template = new ControlTemplate(typeof(Button));
+        var borderFactory = new FrameworkElementFactory(typeof(Border), "Bd");
+        borderFactory.SetValue(Border.BackgroundProperty, bg);
+        borderFactory.SetValue(Border.BorderBrushProperty, borderBrush ?? bg);
+        borderFactory.SetValue(Border.BorderThicknessProperty, borderThick);
+        borderFactory.SetValue(Border.CornerRadiusProperty, new CornerRadius(8));
+        var contentPresenter = new FrameworkElementFactory(typeof(ContentPresenter));
+        contentPresenter.SetValue(ContentPresenter.HorizontalAlignmentProperty, HorizontalAlignment.Center);
+        contentPresenter.SetValue(ContentPresenter.VerticalAlignmentProperty, VerticalAlignment.Center);
+        contentPresenter.SetValue(ContentPresenter.RecognizesAccessKeyProperty, true);
+        borderFactory.AppendChild(contentPresenter);
+        template.VisualTree = borderFactory;
+
+        var hoverTrigger = new Trigger { Property = UIElement.IsMouseOverProperty, Value = true };
+        hoverTrigger.Setters.Add(new Setter(Border.BackgroundProperty, hoverBg, "Bd"));
+        template.Triggers.Add(hoverTrigger);
+
+        style.Setters.Add(new Setter(Button.TemplateProperty, template));
+        style.Setters.Add(new Setter(Button.CursorProperty, Cursors.Hand));
+        style.Setters.Add(new Setter(Button.ForegroundProperty, fg));
+        style.Setters.Add(new Setter(Button.FontSizeProperty, 14.0));
+        return style;
+    }
+
+    private static UIElement MakeIcon(string type)
+    {
+        var grid = new Grid { Height = 70, Margin = new Thickness(0, 0, 0, 15), HorizontalAlignment = HorizontalAlignment.Center };
+        System.Windows.Shapes.Ellipse circle;
+        UIElement symbol;
+
+        switch (type)
+        {
+            case "success":
+                circle = new System.Windows.Shapes.Ellipse { Width = 60, Height = 60, Stroke = new SolidColorBrush(Color.FromRgb(0xA5, 0xDC, 0x86)), StrokeThickness = 3, Fill = Brushes.Transparent };
+                symbol = new System.Windows.Shapes.Path
+                {
+                    Data = Geometry.Parse("M 0,12 L 8,20 L 24,0"),
+                    Width = 24, Height = 20,
+                    Stroke = new SolidColorBrush(Color.FromRgb(0xA5, 0xDC, 0x86)),
+                    StrokeThickness = 4,
+                    StrokeStartLineCap = PenLineCap.Round,
+                    StrokeEndLineCap = PenLineCap.Round,
+                    StrokeLineJoin = PenLineJoin.Round,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Margin = new Thickness(0, 2, 0, 0)
+                };
+                break;
+            case "error":
+                circle = new System.Windows.Shapes.Ellipse { Width = 60, Height = 60, Stroke = new SolidColorBrush(Color.FromRgb(0xF2, 0x74, 0x74)), StrokeThickness = 3, Fill = Brushes.Transparent };
+                symbol = new System.Windows.Shapes.Path
+                {
+                    Data = Geometry.Parse("M 0,0 L 22,22 M 22,0 L 0,22"),
+                    Width = 22, Height = 22,
+                    Stroke = new SolidColorBrush(Color.FromRgb(0xF2, 0x74, 0x74)),
+                    StrokeThickness = 4,
+                    StrokeStartLineCap = PenLineCap.Round,
+                    StrokeEndLineCap = PenLineCap.Round,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center
+                };
+                break;
+            case "warning":
+                circle = new System.Windows.Shapes.Ellipse { Width = 60, Height = 60, Stroke = new SolidColorBrush(Color.FromRgb(0xF8, 0xBB, 0x86)), StrokeThickness = 3, Fill = Brushes.Transparent };
+                symbol = new TextBlock { Text = "!", Foreground = new SolidColorBrush(Color.FromRgb(0xF8, 0xBB, 0x86)), FontSize = 36, FontWeight = FontWeights.Bold, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, -2, 0, 0) };
+                break;
+            case "question":
+                circle = new System.Windows.Shapes.Ellipse { Width = 60, Height = 60, Stroke = new SolidColorBrush(Color.FromRgb(0x87, 0xAD, 0xBD)), StrokeThickness = 3, Fill = Brushes.Transparent };
+                symbol = new TextBlock { Text = "?", Foreground = new SolidColorBrush(Color.FromRgb(0x87, 0xAD, 0xBD)), FontSize = 36, FontWeight = FontWeights.Bold, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, -2, 0, 0) };
+                break;
+            default:
+                circle = new System.Windows.Shapes.Ellipse { Width = 60, Height = 60, Stroke = new SolidColorBrush(Color.FromRgb(0x3F, 0xC3, 0xEE)), StrokeThickness = 3, Fill = Brushes.Transparent };
+                symbol = new TextBlock { Text = "i", Foreground = new SolidColorBrush(Color.FromRgb(0x3F, 0xC3, 0xEE)), FontSize = 36, FontWeight = FontWeights.Bold, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, -2, 0, 0) };
+                break;
+        }
+
+        grid.Children.Add(circle);
+        grid.Children.Add(symbol);
+        return grid;
+    }
+
+    private static int ShowMsgBox(string prop, string val)
+    {
+        try
+        {
+            string[] parts = val.Split(new[] { '|' }, 4);
+            if (parts.Length < 3) return 0;
+
+            string title = parts[0];
+            string message = parts[1];
+            string type = parts[2].ToLower();
+            string buttonsStr = parts.Length > 3 ? parts[3] : "";
+            string[] customButtons = !string.IsNullOrEmpty(buttonsStr) ? buttonsStr.Split('|') : null;
+
+            var root = FindRootPanel();
+            if (root == null) return 0;
+
+            Thickness overlayMargin = new Thickness(0);
+            CornerRadius overlayRadius = new CornerRadius(0);
+            InferContentShape(root, out overlayMargin, out overlayRadius);
+
+            var overlay = new Border
+            {
+                Background = new SolidColorBrush(Color.FromArgb(178, 0, 0, 0)),
+                Margin = overlayMargin,
+                CornerRadius = overlayRadius,
+            };
+            Panel.SetZIndex(overlay, 500);
+            root.Children.Add(overlay);
+
+            Brush bgBrush = _window.Resources["Surface"] as Brush ?? new SolidColorBrush(Color.FromRgb(0x2D, 0x2D, 0x2D));
+            Brush textPrimary = _window.Resources["TextPrimary"] as Brush ?? Brushes.White;
+            Brush textSecondary = _window.Resources["TextSecondary"] as Brush ?? new SolidColorBrush(Color.FromRgb(0xAA, 0xAA, 0xAA));
+            Brush accent = _window.Resources["Accent"] as Brush ?? new SolidColorBrush(Color.FromRgb(0x5B, 0x9B, 0xD5));
+            Brush accentHover = _window.Resources["AccentHover"] as Brush ?? new SolidColorBrush(Color.FromRgb(0x4A, 0x87, 0xC0));
+            Brush border = _window.Resources["Border"] as Brush ?? new SolidColorBrush(Color.FromRgb(0x40, 0x40, 0x40));
+            Brush surface2 = _window.Resources["Surface2"] as Brush ?? new SolidColorBrush(Color.FromRgb(0x3A, 0x3A, 0x3A));
+
+            int buttonCount = (customButtons != null && customButtons.Length > 0) ? customButtons.Length : (type == "question" ? 2 : 1);
+            double cardMinWidth = 300;
+            double cardMaxWidth = 520;
+            if (buttonCount > 2)
+            {
+                double btnArea = buttonCount * 110 + 40;
+                cardMinWidth = Math.Max(300, btnArea);
+                cardMaxWidth = Math.Max(cardMinWidth, Math.Min(560, btnArea + 60));
+            }
+
+            var card = new Border
+            {
+                Background = bgBrush,
+                CornerRadius = new CornerRadius(15),
+                MinWidth = cardMinWidth,
+                MaxWidth = cardMaxWidth,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Effect = new DropShadowEffect { Color = Colors.Black, BlurRadius = 25, ShadowDepth = 5, Opacity = 0.5 }
+            };
+
+            var stack = new StackPanel { Margin = new Thickness(30, 35, 30, 30) };
+
+            stack.Children.Add(MakeIcon(type));
+
+            var txtTitle = new TextBlock { Text = title, FontSize = 22, FontWeight = FontWeights.SemiBold, Foreground = textPrimary, HorizontalAlignment = HorizontalAlignment.Center, TextAlignment = TextAlignment.Center, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 0, 0, 10) };
+            stack.Children.Add(txtTitle);
+
+            var txtMsg = new TextBlock { Text = message, FontSize = 14, Foreground = textSecondary, HorizontalAlignment = HorizontalAlignment.Center, TextAlignment = TextAlignment.Center, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 0, 0, 25) };
+            stack.Children.Add(txtMsg);
+
+            var btnPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Center };
+
+            int resultValue = 0;
+
+            Action<int, UIElement> closeAction = (res, el) =>
+            {
+                resultValue = res;
+                root.Children.Remove(overlay);
+                root.Children.Remove(card);
+            };
+
+            var btnStyleOk = MakeButtonStyle(accent, accentHover, Brushes.White, Brushes.White, new Thickness(0));
+            var btnStyleNo = MakeButtonStyle(surface2, border, textPrimary, textPrimary, new Thickness(1), border);
+
+            var frame = new System.Windows.Threading.DispatcherFrame();
+            RoutedEventHandler closer = (s, e) => { frame.Continue = false; };
+
+            if (customButtons != null && customButtons.Length > 0)
+            {
+                for (int i = 0; i < customButtons.Length; i++)
+                {
+                    int idx = i + 1;
+                    bool isFirst = (i == 0);
+                    var btn = new Button
+                    {
+                        Content = customButtons[i].Trim(),
+                        Width = 100,
+                        Height = 38,
+                        Margin = new Thickness(5),
+                        Style = isFirst ? btnStyleOk : btnStyleNo
+                    };
+                    int capturedIdx = idx;
+                    btn.Click += (s, e) => { closeAction(capturedIdx, card); frame.Continue = false; };
+                    btnPanel.Children.Add(btn);
+                }
+            }
+            else
+            {
+                bool isQuestion = type == "question";
+                Button btnOK = null, btnYes = null, btnNo = null;
+
+                if (!isQuestion)
+                {
+                    btnOK = new Button { Content = "OK", Width = 100, Height = 38, Margin = new Thickness(5), Style = btnStyleOk };
+                    btnOK.Click += (s, e) => { closeAction(1, card); frame.Continue = false; };
+                    btnPanel.Children.Add(btnOK);
+                }
+                else
+                {
+                    btnYes = new Button { Content = "Yes", Width = 100, Height = 38, Margin = new Thickness(5), Style = btnStyleOk };
+                    btnYes.Click += (s, e) => { closeAction(1, card); frame.Continue = false; };
+                    btnPanel.Children.Add(btnYes);
+
+                    btnNo = new Button { Content = "No", Width = 100, Height = 38, Margin = new Thickness(5), Style = btnStyleNo };
+                    btnNo.Click += (s, e) => { closeAction(0, card); frame.Continue = false; };
+                    btnPanel.Children.Add(btnNo);
+                }
+            }
+
+            stack.Children.Add(btnPanel);
+            card.Child = stack;
+
+            Panel.SetZIndex(card, 1000);
+            root.Children.Add(card);
+
+            System.Windows.Threading.Dispatcher.PushFrame(frame);
+
+            return resultValue;
+        }
+        catch { return 0; }
+    }
+
+    private static int ShowInputBox(string title, string val)
+    {
+        try
+        {
+            string[] parts = val.Split(new[] { '|' }, 2);
+            string message = parts.Length > 0 ? parts[0] : "";
+            string defaultText = parts.Length > 1 ? parts[1] : "";
+
+            var root = FindRootPanel();
+            if (root == null) return 0;
+
+            Thickness overlayMargin = new Thickness(0);
+            CornerRadius overlayRadius = new CornerRadius(0);
+            InferContentShape(root, out overlayMargin, out overlayRadius);
+
+            var overlay = new Border
+            {
+                Background = new SolidColorBrush(Color.FromArgb(178, 0, 0, 0)),
+                Margin = overlayMargin,
+                CornerRadius = overlayRadius,
+            };
+            Panel.SetZIndex(overlay, 500);
+            root.Children.Add(overlay);
+
+            Brush bgBrush = _window.Resources["Surface"] as Brush ?? new SolidColorBrush(Color.FromRgb(0x2D, 0x2D, 0x2D));
+            Brush textPrimary = _window.Resources["TextPrimary"] as Brush ?? Brushes.White;
+            Brush textSecondary = _window.Resources["TextSecondary"] as Brush ?? new SolidColorBrush(Color.FromRgb(0xAA, 0xAA, 0xAA));
+            Brush accent = _window.Resources["Accent"] as Brush ?? new SolidColorBrush(Color.FromRgb(0x5B, 0x9B, 0xD5));
+            Brush accentHover = _window.Resources["AccentHover"] as Brush ?? new SolidColorBrush(Color.FromRgb(0x4A, 0x87, 0xC0));
+            Brush border = _window.Resources["Border"] as Brush ?? new SolidColorBrush(Color.FromRgb(0x40, 0x40, 0x40));
+            Brush surface2 = _window.Resources["Surface2"] as Brush ?? new SolidColorBrush(Color.FromRgb(0x3A, 0x3A, 0x3A));
+            Brush inputBg = _window.Resources["Surface2"] as Brush ?? _window.Resources["Surface"] as Brush ?? new SolidColorBrush(Color.FromRgb(0x22, 0x22, 0x22));
+
+            var card = new Border
+            {
+                Background = bgBrush,
+                CornerRadius = new CornerRadius(15),
+                MinWidth = 320,
+                MaxWidth = 440,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Effect = new DropShadowEffect { Color = Colors.Black, BlurRadius = 25, ShadowDepth = 5, Opacity = 0.5 }
+            };
+
+            var stack = new StackPanel { Margin = new Thickness(30, 30, 30, 25) };
+
+            var txtTitle = new TextBlock
+            {
+                Text = title,
+                FontSize = 20,
+                FontWeight = FontWeights.SemiBold,
+                Foreground = textPrimary,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                TextAlignment = TextAlignment.Center,
+                TextWrapping = TextWrapping.Wrap,
+                Margin = new Thickness(0, 0, 0, 8)
+            };
+            stack.Children.Add(txtTitle);
+
+            var txtMsg = new TextBlock
+            {
+                Text = message,
+                FontSize = 13,
+                Foreground = textSecondary,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                TextAlignment = TextAlignment.Center,
+                TextWrapping = TextWrapping.Wrap,
+                Margin = new Thickness(0, 0, 0, 18)
+            };
+            stack.Children.Add(txtMsg);
+
+            var inputBox = new TextBox
+            {
+                Text = defaultText,
+                FontSize = 14,
+                Foreground = textPrimary,
+                Background = inputBg,
+                BorderBrush = border,
+                BorderThickness = new Thickness(1),
+                CaretBrush = textPrimary,
+                MinHeight = 36,
+                Padding = new Thickness(10, 6, 10, 6),
+                Margin = new Thickness(0, 0, 0, 20),
+                AcceptsReturn = false,
+                VerticalContentAlignment = VerticalAlignment.Center,
+                HorizontalContentAlignment = HorizontalAlignment.Left
+            };
+            inputBox.SelectAll();
+            stack.Children.Add(inputBox);
+
+            var btnPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Center };
+
+            string inputResult = "";
+            int resultValue = 0;
+
+            var btnOkStyle = MakeButtonStyle(accent, accentHover, Brushes.White, Brushes.White, new Thickness(0));
+            var btnCancelStyle = MakeButtonStyle(surface2, border, textPrimary, textPrimary, new Thickness(1), border);
+
+            Button btnOk = null, btnCancel = null;
+            Action<int, string, UIElement> closeAction = (res, text, el) =>
+            {
+                resultValue = res;
+                inputResult = text;
+                root.Children.Remove(overlay);
+                root.Children.Remove(card);
+            };
+
+            btnOk = new Button { Content = "OK", Width = 90, Height = 36, Margin = new Thickness(5), Style = btnOkStyle, IsDefault = true };
+            btnOk.Click += (s, e) => closeAction(1, inputBox.Text, card);
+            btnPanel.Children.Add(btnOk);
+
+            btnCancel = new Button { Content = "Cancel", Width = 90, Height = 36, Margin = new Thickness(5), Style = btnCancelStyle };
+            btnCancel.Click += (s, e) => closeAction(0, "", card);
+            btnPanel.Children.Add(btnCancel);
+
+            stack.Children.Add(btnPanel);
+            card.Child = stack;
+
+            Panel.SetZIndex(card, 1000);
+            root.Children.Add(card);
+
+            inputBox.Focus();
+            inputBox.SelectionStart = 0;
+            inputBox.SelectionLength = defaultText.Length;
+
+            var frame = new System.Windows.Threading.DispatcherFrame();
+            RoutedEventHandler closer = null;
+            closer = (s, e) => { frame.Continue = false; };
+            btnOk.Click += closer;
+            btnCancel.Click += closer;
+
+            System.Windows.Threading.Dispatcher.PushFrame(frame);
+
+            if (resultValue == 1)
+            {
+                string tempFile = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "AHK_WPF_Input_" + _instanceId + ".txt");
+                System.IO.File.WriteAllText(tempFile, inputResult ?? "", System.Text.Encoding.UTF8);
+            }
+
+            return resultValue;
+        }
+        catch { return 0; }
     }
 
     private static void ApplyResource(string resourceKey, string colorValue)

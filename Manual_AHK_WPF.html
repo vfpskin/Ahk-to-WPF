@@ -31,10 +31,59 @@
       line-height: 1.55;
     }
 
-    .wrap {
-      max-width: 1100px;
+    .layout {
+      display: flex;
+      gap: 24px;
+      max-width: 1300px;
       margin: 0 auto;
       padding: 32px 18px 56px;
+      align-items: flex-start;
+    }
+
+    .sidebar {
+      width: 240px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 24px;
+      max-height: calc(100vh - 48px);
+      overflow-y: auto;
+      background: rgba(23,26,34,0.92);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 14px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+    }
+    .sidebar h3 {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin: 0 0 12px;
+    }
+    .sidebar a {
+      display: block;
+      color: #b0bcca;
+      text-decoration: none;
+      font-size: 13px;
+      padding: 4px 0;
+      border-bottom: 1px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .sidebar a:hover {
+      color: #fff;
+    }
+    .sidebar .sep {
+      margin: 6px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .wrap {
+      max-width: 1100px;
     }
 
     header {
@@ -87,6 +136,7 @@
       border-radius: 16px;
       padding: 20px;
       box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+      margin-bottom: 16px;
     }
 
     h2, h3 {
@@ -180,206 +230,258 @@
     }
 
     a { color: #8fd3ff; }
+
+    @media (max-width: 800px) {
+      .layout { flex-direction: column; }
+      .sidebar {
+        width: 100%;
+        position: static;
+        max-height: none;
+      }
+    }
+
+    .section-link { scroll-margin-top: 20px; }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <h1>Quick Manual for AHK + WPF</h1>
-      <p class="subtitle">
-        Practical guide to controlling WPF controls from AutoHotkey 1.1 using the project engine.
-        The idea is simple: <code class="inline">AHK</code> handles the logic and <code class="inline">WPF</code> handles the UI.
-      </p>
-      <div class="pill-row">
-        <span class="pill">Events with <code>ui.OnEvent()</code></span>
-        <span class="pill">Updates with <code>ui.Update()</code></span>
-        <span class="pill">Rows with <code>AddItem</code> / <code>AddRow</code></span>
-        <span class="pill">Selection parsing in <code>ListView</code></span>
-        <span class="pill">Themes with <code>ui.SetTheme()</code></span>
-        <span class="pill">Focus with <code>ui.Focus()</code></span>
-      </div>
-    </header>
+  <div class="layout">
+    <nav class="sidebar" id="sidebar">
+      <h3>Index</h3>
+      <a href="#s1">1. Core Concept</a>
+      <a href="#s2">2. Main Syntax</a>
+      <a href="#s3">3. Methods Table</a>
+      <a href="#s4">4. Most Used Properties</a>
+      <a href="#s5">5. Common Controls</a>
+      <a href="#s6">6. Bridge Events</a>
+      <a href="#s7">7. ListView / DataGrid</a>
+      <a href="#s8">8. Callback Example</a>
+      <a href="#s9">9. Focus with Enter</a>
+      <a href="#s10">10. Changing States</a>
+      <a href="#s11">11. Themes &amp; Resources</a>
+      <a href="#s12">12. Custom Title Bar</a>
+      <a href="#s13">13. Mini Template</a>
+      <a href="#s14">14. DataGrid Details</a>
+      <a href="#s15">15. Theme System</a>
+      <a href="#s16">16. Title Bar System</a>
+      <a href="#s17">17. FIFA Dashboard</a>
+      <a href="#s18">18. SystemInfo Dashboard</a>
+      <a href="#s19">19. All Controls Demo</a>
+      <a href="#s20">20. DataGrid2 Demo</a>
+      <a href="#s21">21. ComboBox Demo</a>
+      <div class="sep"></div>
+      <a href="#s22" style="color:#8fd3ff;font-weight:600">22. MsgBox</a>
+      <a href="#s23" style="color:#8fd3ff;font-weight:600">23. InputBox</a>
+    </nav>
 
-    <div class="grid">
-      <section>
-        <h2>1. Core Concept</h2>
-        <p>
-          Every WPF control is identified by its <code class="inline">x:Name</code>. This is the name you use
-          from AHK to read states, change properties, or receive events.
+    <div class="content">
+      <header>
+        <h1>Quick Manual for AHK + WPF</h1>
+        <p class="subtitle">
+          Practical guide to controlling WPF controls from AutoHotkey 1.1 using the project engine.
+          The idea is simple: <code class="inline">AHK</code> handles the logic and <code class="inline">WPF</code> handles the UI.
         </p>
-        <pre><code>ui := new XAMLGUI("Demo_Login.xaml")
+        <div class="pill-row">
+          <span class="pill">Events with <code>ui.OnEvent()</code></span>
+          <span class="pill">Updates with <code>ui.Update()</code></span>
+          <span class="pill">Rows with <code>AddItem</code> / <code>AddRow</code></span>
+          <span class="pill">Selection parsing in <code>ListView</code></span>
+          <span class="pill">Themes with <code>ui.SetTheme()</code></span>
+          <span class="pill">Focus with <code>ui.Focus()</code></span>
+          <span class="pill"><code>ui.Msgbox()</code></span>
+          <span class="pill"><code>ui.InputBox()</code></span>
+        </div>
+      </header>
+
+      <div class="grid">
+        <section id="s1" class="section-link">
+          <h2>1. Core Concept</h2>
+          <p>
+            Every WPF control is identified by its <code class="inline">x:Name</code>. This is the name you use
+            from AHK to read states, change properties, or receive events.
+          </p>
+          <pre><code>ui := new XAMLGUI("Demo_Login.xaml")
 ui.OnEvent("BtnLogin", "Click", "Login_Event")
 ui.Show()</code></pre>
-      </section>
+        </section>
 
-      <section>
-        <h2>2. Main Syntax</h2>
-        <p>
-          The most important method is <code class="inline">ui.Update(control, property, value)</code>.
-          For lists, the engine understands actions like <code class="inline">AddItem</code>,
-          <code class="inline">ClearItems</code>, <code class="inline">RemoveSelected</code>, and <code class="inline">UpdateSelected</code>.
-        </p>
-        <pre><code>ui.Update("TxtUser", "Text", "admin")
+        <section id="s2" class="section-link">
+          <h2>2. Main Syntax</h2>
+          <p>
+            The most important method is <code class="inline">ui.Update(control, property, value)</code>.
+            For lists, the engine understands actions like <code class="inline">AddItem</code>,
+            <code class="inline">ClearItems</code>, <code class="inline">RemoveSelected</code>, and <code class="inline">UpdateSelected</code>.
+          </p>
+          <pre><code>ui.Update("TxtUser", "Text", "admin")
 ui.Update("BtnLogin", "Content", "Login")
 ui.Update("TxtStatus", "Foreground", "#00FF00")
 ui.Focus("TxtUser")
 ui.Update("LvTasks", "AddItem", "1|Task 1|Daily|08:00|Active|Yes")
 ui.Update("LvTasks", "UpdateSelected", "1|Task 1|Weekly|10:30|Active|Yes")</code></pre>
-      </section>
-    </div>
+        </section>
+      </div>
 
-    <section>
-      <h2>3. What Each Method Does</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Method</th>
-            <th>Usage</th>
-            <th>Example</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code>ui.OnEvent()</code></td>
-            <td>Registers an event for a control.</td>
-            <td><code>ui.OnEvent("BtnLogin", "Click", "Login_Event")</code></td>
-          </tr>
-          <tr>
-            <td><code>ui.Update()</code></td>
-            <td>Changes a property or state of the control.</td>
-            <td><code>ui.Update("TxtUser", "Text", "admin")</code></td>
-          </tr>
-          <tr>
-            <td><code>ui.AddRow()</code></td>
-            <td>Shortcut to add a row to a <code>ListView</code> without manually building the pipe-separated string.</td>
-            <td><code>ui.AddRow("LvTasks", "1", "Task 1", "Daily", "08:00")</code></td>
-          </tr>
-          <tr>
-            <td><code>ui.Focus()</code></td>
-            <td>Sets focus to a specific control.</td>
-            <td><code>ui.Focus("TxtPass")</code></td>
-          </tr>
-          <tr>
-            <td><code>ui.SetResource()</code></td>
-            <td>Changes a global color resource.</td>
-            <td><code>ui.SetResource("Accent", "#00A3FF")</code></td>
-          </tr>
-          <tr>
-            <td><code>ui.SetTheme()</code></td>
-            <td>Applies a complete theme (e.g., "Dark", "Light").</td>
-            <td><code>ui.SetTheme("Dark")</code></td>
-          </tr>
-           <tr>
-             <td><code>ui.SetWindowProp()</code></td>
-             <td>Modifies the main window properties.</td>
-             <td><code>ui.SetWindowProp("Title", "My App")</code></td>
-           </tr>
-           <tr>
-             <td><code>ui.Update("Grid", "AddColorItem", colors)</code></td>
-             <td>Applies per-cell background colors to the last added row in a DataGrid. Colors are pipe-separated (<code>"#RRGGBB|#RRGGBB|..."</code>), one per column.</td>
-             <td><code>ui.Update("GridData", "AddColorItem", "#1A4A2A|||#4A1A1A|||")</code></td>
-           </tr>
-           <tr>
-             <td><code>ui.Update("Grid", "SetColVisibility", col)</code></td>
-             <td>Shows or hides a DataGrid column. Value format: <code>"ColumnName|1"</code> (visible) or <code>"ColumnName|0"</code> (hidden).</td>
-             <td><code>ui.Update("GridData", "SetColVisibility", "ID|0")</code></td>
-           </tr>
-           <tr>
-             <td><code>ui.Update("Grid", "RefreshGrid", "")</code></td>
-             <td>Forces a full refresh of the DataGrid after all items and colors are added. Triggers <code>Items.Refresh()</code> + <code>UpdateLayout()</code> and reapplies all stored row styles.</td>
-             <td><code>ui.Update("GridData", "RefreshGrid", "")</code></td>
-           </tr>
-           <tr>
-             <td><code>ui.Update("_Batch", "Cells", batch)</code></td>
-             <td>Sends multiple commands in a single WM_COPYDATA message. Each line is <code>control|property|value\n</code>. Reduces IPC overhead for bulk operations.</td>
-             <td><code>ui.Update("_Batch", "Cells", "GridData|AddItem|1|Name...`nGridData|AddColorItem|...")</code></td>
-           </tr>
-         </tbody>
-      </table>
-    </section>
-
-    <div class="grid">
-      <section>
-        <h2>4. Most Used Properties</h2>
-        <ul>
-          <li><code class="inline">Text</code>: Text of a <code>TextBox</code> or textual content.</li>
-          <li><code class="inline">Content</code>: Text of buttons, labels, and other <code>ContentControl</code>s.</li>
-          <li><code class="inline">IsEnabled</code>: Enables or disables the control ("True" / "False").</li>
-          <li><code class="inline">Visibility</code>: <code>Visible</code>, <code>Hidden</code>, <code>Collapsed</code>.</li>
-          <li><code class="inline">Value</code>: For <code>Slider</code>, <code>ProgressBar</code>, and <code>ScrollBar</code>.</li>
-          <li><code class="inline">Margin</code>: Sets the outer margin as <code>"left,top"</code> or <code>"left,top,right,bottom"</code>.</li>
-          <li><code class="inline">SelectedIndex</code>: Selected index in lists and combos.</li>
-          <li><code class="inline">Background</code>, <code class="inline">Foreground</code>, <code class="inline">BorderBrush</code>.</li>
-          <li><code class="inline">FontSize</code>, <code class="inline">FontWeight</code>, <code class="inline">Opacity</code>.</li>
-          <li><code class="inline">Width</code>, <code class="inline">Height</code>, <code class="inline">ToolTip</code>.</li>
-        </ul>
+      <section id="s3" class="section-link">
+        <h2>3. What Each Method Does</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Usage</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>ui.OnEvent()</code></td>
+              <td>Registers an event for a control.</td>
+              <td><code>ui.OnEvent("BtnLogin", "Click", "Login_Event")</code></td>
+            </tr>
+            <tr>
+              <td><code>ui.Update()</code></td>
+              <td>Changes a property or state of the control.</td>
+              <td><code>ui.Update("TxtUser", "Text", "admin")</code></td>
+            </tr>
+            <tr>
+              <td><code>ui.AddRow()</code></td>
+              <td>Shortcut to add a row to a <code>ListView</code> without manually building the pipe-separated string.</td>
+              <td><code>ui.AddRow("LvTasks", "1", "Task 1", "Daily", "08:00")</code></td>
+            </tr>
+            <tr>
+              <td><code>ui.Focus()</code></td>
+              <td>Sets focus to a specific control.</td>
+              <td><code>ui.Focus("TxtPass")</code></td>
+            </tr>
+            <tr>
+              <td><code>ui.SetResource()</code></td>
+              <td>Changes a global color resource.</td>
+              <td><code>ui.SetResource("Accent", "#00A3FF")</code></td>
+            </tr>
+            <tr>
+              <td><code>ui.SetTheme()</code></td>
+              <td>Applies a complete theme (e.g., "Dark", "Light").</td>
+              <td><code>ui.SetTheme("Dark")</code></td>
+            </tr>
+            <tr>
+              <td><code>ui.SetWindowProp()</code></td>
+              <td>Modifies the main window properties.</td>
+              <td><code>ui.SetWindowProp("Title", "My App")</code></td>
+            </tr>
+            <tr>
+              <td><code>ui.Msgbox()</code></td>
+              <td>Shows a modal message box with themed icons (success, error, warning, info, question). Supports custom buttons.</td>
+              <td><code>ui.Msgbox("Title", "Message", "warning", "Yes|No|Cancel")</code></td>
+            </tr>
+            <tr>
+              <td><code>ui.InputBox()</code></td>
+              <td>Shows a modal input dialog for text entry. Returns the entered text.</td>
+              <td><code>name := ui.InputBox("Name", "Enter your name:", "Default")</code></td>
+            </tr>
+            <tr>
+              <td><code>ui.Update("Grid", "AddColorItem", colors)</code></td>
+              <td>Applies per-cell background colors to the last added row in a DataGrid. Colors are pipe-separated (<code>"#RRGGBB|#RRGGBB|..."</code>), one per column.</td>
+              <td><code>ui.Update("GridData", "AddColorItem", "#1A4A2A|||#4A1A1A|||")</code></td>
+            </tr>
+            <tr>
+              <td><code>ui.Update("Grid", "SetColVisibility", col)</code></td>
+              <td>Shows or hides a DataGrid column. Value format: <code>"ColumnName|1"</code> (visible) or <code>"ColumnName|0"</code> (hidden).</td>
+              <td><code>ui.Update("GridData", "SetColVisibility", "ID|0")</code></td>
+            </tr>
+            <tr>
+              <td><code>ui.Update("Grid", "RefreshGrid", "")</code></td>
+              <td>Forces a full refresh of the DataGrid after all items and colors are added. Triggers <code>Items.Refresh()</code> + <code>UpdateLayout()</code> and reapplies all stored row styles.</td>
+              <td><code>ui.Update("GridData", "RefreshGrid", "")</code></td>
+            </tr>
+            <tr>
+              <td><code>ui.Update("_Batch", "Cells", batch)</code></td>
+              <td>Sends multiple commands in a single WM_COPYDATA message. Each line is <code>control|property|value\n</code>. Reduces IPC overhead for bulk operations.</td>
+              <td><code>ui.Update("_Batch", "Cells", "GridData|AddItem|1|Name...`nGridData|AddColorItem|...")</code></td>
+            </tr>
+          </tbody>
+        </table>
       </section>
 
-      <section>
-        <h2>5. Common Controls</h2>
-        <ul>
-          <li><code class="inline">TextBox</code>: TextChanged, Enter, GotFocus, LostFocus. Read/write via <code>Text</code>.</li>
-          <li><code class="inline">PasswordBox</code>: PasswordChanged (mapped as TextChanged), Enter, GotFocus, LostFocus. Read via <code>state["Name"]</code>.</li>
-          <li><code class="inline">Button</code>: Click, Enter.</li>
-          <li><code class="inline">RepeatButton</code>: Click (fires repeatedly while held). Delay and Interval configurable.</li>
-          <li><code class="inline">ToggleButton</code>: Checked / Unchecked. Read IsChecked via <code>state["Name"]</code>.</li>
-          <li><code class="inline">CheckBox</code> / <code class="inline">RadioButton</code>: Checked / Unchecked.</li>
-          <li><code class="inline">ComboBox</code>: AddItem, SelectionChanged.</li>
-          <li><code class="inline">Slider</code>: ValueChanged (value 0-100).</li>
-          <li><code class="inline">ScrollBar</code>: ValueChanged (horizontal and vertical). Supports read/write Value.</li>
-          <li><code class="inline">ProgressBar</code>: Read/write Value (0-100).</li>
-          <li><code class="inline">DatePicker</code>: DateChanged. Read SelectedDate from state.</li>
-          <li><code class="inline">Calendar</code>: DateChanged (on selection). Read SelectedDate from state.</li>
-            <li><code class="inline">ListView</code>: AddItem, AddRow, ClearItems, RemoveSelected, UpdateSelected, SelectionChanged, MouseDoubleClick.</li>
-           <li><code class="inline">DataGrid</code>: AddItem, AddColorItem, Clear, RefreshGrid, SetColVisibility. Events: SelectionChanged, Click, MouseDoubleClick, RightClick, SelectedCellsChanged, CurrentCellChanged, BeginningEdit, CellEditEnding, RowEditEnding.</li>
-        </ul>
-      </section>
-    </div>
-
-    <section>
-      <h2>6. Bridge Events Reference</h2>
-      <p class="muted">
-        Complete list of events fired by each WPF control and mapped to AHK via <code class="inline">ui.OnEvent()</code>.
-      </p>
-      <table>
-        <thead>
-          <tr><th>Control</th><th>Event Name</th><th>Fires When</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Button</td><td><code>Click</code>, <code>Enter</code></td><td>Click or Enter key</td></tr>
-          <tr><td>RepeatButton</td><td><code>Click</code></td><td>Repeatedly while held (Delay/Interval in XAML)</td></tr>
-          <tr><td>TextBox</td><td><code>TextChanged</code>, <code>Enter</code>, <code>GotFocus</code>, <code>LostFocus</code></td><td>Text changes, Enter key, focus events</td></tr>
-          <tr><td>PasswordBox</td><td><code>TextChanged</code>, <code>Enter</code>, <code>GotFocus</code>, <code>LostFocus</code></td><td>Password changes, Enter key, focus events</td></tr>
-          <tr><td>CheckBox</td><td><code>Checked</code>, <code>Unchecked</code></td><td>Toggled on/off</td></tr>
-          <tr><td>RadioButton</td><td><code>Checked</code>, <code>Unchecked</code></td><td>Selection changes</td></tr>
-          <tr><td>ToggleButton</td><td><code>Checked</code>, <code>Unchecked</code></td><td>Switch toggled on/off</td></tr>
-          <tr><td>Slider</td><td><code>ValueChanged</code></td><td>Thumb dragged or track clicked</td></tr>
-          <tr><td>ScrollBar</td><td><code>ValueChanged</code></td><td>Thumb dragged or arrows clicked (H + V)</td></tr>
-          <tr><td>DatePicker</td><td><code>DateChanged</code></td><td>Date selected or typed</td></tr>
-          <tr><td>Calendar</td><td><code>DateChanged</code></td><td>Date clicked in the calendar grid</td></tr>
-          <tr><td>ComboBox</td><td><code>SelectionChanged</code>, <code>Enter</code></td><td>Item selected, Enter key</td></tr>
-          <tr><td>TabControl</td><td><code>TabChanged</code></td><td>Tab selected</td></tr>
-          <tr><td>ListView</td><td><code>SelectionChanged</code>, <code>MouseDoubleClick</code>, <code>Click</code>, <code>RightClick</code></td><td>Row selection, double-click, click, right-click</td></tr>
-           <tr><td>DataGrid</td><td><code>SelectionChanged</code>, <code>Click</code>, <code>MouseDoubleClick</code>, <code>RightClick</code>, <code>Enter</code>, <code>SelectedCellsChanged</code>, <code>CurrentCellChanged</code>, <code>BeginningEdit</code>, <code>CellEditEnding</code>, <code>RowEditEnding</code></td><td>Row/selection change, mouse events, enter, cell editing lifecycle</td></tr>
-          <tr><td>Hyperlink (styled as Button)</td><td><code>Click</code></td><td>Click (use Button with underlined TextBlock template)</td></tr>
-        </tbody>
-      </table>
-      <p class="note" style="margin-top:12px">
-        All events send a <code>state</code> dictionary containing the current value of every named control in the window.
-        Use <code>state["ControlName"]</code> inside your callback to read the control's current value.
-      </p>
-    </section>
-
-    <section>
-      <h2>7. ListView and DataGrid in Practice</h2>
       <div class="grid">
-        <div class="card">
-          <h3>ListView: Full CRUD Cycle (Add, Edit, Delete)</h3>
-          <p class="muted">
-            The most robust way to manage a ListView is to maintain an array of objects in AHK and rebuild the list when changes occur.
-            Use <code class="inline">ClearItems</code> followed by <code class="inline">AddItem</code> with pipe-separated values.
-          </p>
-          <pre><code>; 1. REBUILD LIST (Call after Add, Edit, or Delete)
+        <section id="s4" class="section-link">
+          <h2>4. Most Used Properties</h2>
+          <ul>
+            <li><code class="inline">Text</code>: Text of a <code>TextBox</code> or textual content.</li>
+            <li><code class="inline">Content</code>: Text of buttons, labels, and other <code>ContentControl</code>s.</li>
+            <li><code class="inline">IsEnabled</code>: Enables or disables the control ("True" / "False").</li>
+            <li><code class="inline">Visibility</code>: <code>Visible</code>, <code>Hidden</code>, <code>Collapsed</code>.</li>
+            <li><code class="inline">Value</code>: For <code>Slider</code>, <code>ProgressBar</code>, and <code>ScrollBar</code>.</li>
+            <li><code class="inline">Margin</code>: Sets the outer margin as <code>"left,top"</code> or <code>"left,top,right,bottom"</code>.</li>
+            <li><code class="inline">SelectedIndex</code>: Selected index in lists and combos.</li>
+            <li><code class="inline">Background</code>, <code class="inline">Foreground</code>, <code class="inline">BorderBrush</code>.</li>
+            <li><code class="inline">FontSize</code>, <code class="inline">FontWeight</code>, <code class="inline">Opacity</code>.</li>
+            <li><code class="inline">Width</code>, <code class="inline">Height</code>, <code class="inline">ToolTip</code>.</li>
+          </ul>
+        </section>
+
+        <section id="s5" class="section-link">
+          <h2>5. Common Controls</h2>
+          <ul>
+            <li><code class="inline">TextBox</code>: TextChanged, Enter, GotFocus, LostFocus. Read/write via <code>Text</code>.</li>
+            <li><code class="inline">PasswordBox</code>: PasswordChanged (mapped as TextChanged), Enter, GotFocus, LostFocus. Read via <code>state["Name"]</code>.</li>
+            <li><code class="inline">Button</code>: Click, Enter.</li>
+            <li><code class="inline">RepeatButton</code>: Click (fires repeatedly while held). Delay and Interval configurable.</li>
+            <li><code class="inline">ToggleButton</code>: Checked / Unchecked. Read IsChecked via <code>state["Name"]</code>.</li>
+            <li><code class="inline">CheckBox</code> / <code class="inline">RadioButton</code>: Checked / Unchecked.</li>
+            <li><code class="inline">ComboBox</code>: AddItem, SelectionChanged.</li>
+            <li><code class="inline">Slider</code>: ValueChanged (value 0-100).</li>
+            <li><code class="inline">ScrollBar</code>: ValueChanged (horizontal and vertical). Supports read/write Value.</li>
+            <li><code class="inline">ProgressBar</code>: Read/write Value (0-100).</li>
+            <li><code class="inline">DatePicker</code>: DateChanged. Read SelectedDate from state.</li>
+            <li><code class="inline">Calendar</code>: DateChanged (on selection). Read SelectedDate from state.</li>
+            <li><code class="inline">ListView</code>: AddItem, AddRow, ClearItems, RemoveSelected, UpdateSelected, SelectionChanged, MouseDoubleClick.</li>
+            <li><code class="inline">DataGrid</code>: AddItem, AddColorItem, Clear, RefreshGrid, SetColVisibility. Events: SelectionChanged, Click, MouseDoubleClick, RightClick, SelectedCellsChanged, CurrentCellChanged, BeginningEdit, CellEditEnding, RowEditEnding.</li>
+          </ul>
+        </section>
+      </div>
+
+      <section id="s6" class="section-link">
+        <h2>6. Bridge Events Reference</h2>
+        <p class="muted">
+          Complete list of events fired by each WPF control and mapped to AHK via <code class="inline">ui.OnEvent()</code>.
+        </p>
+        <table>
+          <thead>
+            <tr><th>Control</th><th>Event Name</th><th>Fires When</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Button</td><td><code>Click</code>, <code>Enter</code></td><td>Click or Enter key</td></tr>
+            <tr><td>RepeatButton</td><td><code>Click</code></td><td>Repeatedly while held (Delay/Interval in XAML)</td></tr>
+            <tr><td>TextBox</td><td><code>TextChanged</code>, <code>Enter</code>, <code>GotFocus</code>, <code>LostFocus</code></td><td>Text changes, Enter key, focus events</td></tr>
+            <tr><td>PasswordBox</td><td><code>TextChanged</code>, <code>Enter</code>, <code>GotFocus</code>, <code>LostFocus</code></td><td>Password changes, Enter key, focus events</td></tr>
+            <tr><td>CheckBox</td><td><code>Checked</code>, <code>Unchecked</code></td><td>Toggled on/off</td></tr>
+            <tr><td>RadioButton</td><td><code>Checked</code>, <code>Unchecked</code></td><td>Selection changes</td></tr>
+            <tr><td>ToggleButton</td><td><code>Checked</code>, <code>Unchecked</code></td><td>Switch toggled on/off</td></tr>
+            <tr><td>Slider</td><td><code>ValueChanged</code></td><td>Thumb dragged or track clicked</td></tr>
+            <tr><td>ScrollBar</td><td><code>ValueChanged</code></td><td>Thumb dragged or arrows clicked (H + V)</td></tr>
+            <tr><td>DatePicker</td><td><code>DateChanged</code></td><td>Date selected or typed</td></tr>
+            <tr><td>Calendar</td><td><code>DateChanged</code></td><td>Date clicked in the calendar grid</td></tr>
+            <tr><td>ComboBox</td><td><code>SelectionChanged</code>, <code>Enter</code></td><td>Item selected, Enter key</td></tr>
+            <tr><td>TabControl</td><td><code>TabChanged</code></td><td>Tab selected</td></tr>
+            <tr><td>ListView</td><td><code>SelectionChanged</code>, <code>MouseDoubleClick</code>, <code>Click</code>, <code>RightClick</code></td><td>Row selection, double-click, click, right-click</td></tr>
+            <tr><td>DataGrid</td><td><code>SelectionChanged</code>, <code>Click</code>, <code>MouseDoubleClick</code>, <code>RightClick</code>, <code>Enter</code>, <code>SelectedCellsChanged</code>, <code>CurrentCellChanged</code>, <code>BeginningEdit</code>, <code>CellEditEnding</code>, <code>RowEditEnding</code></td><td>Row/selection change, mouse events, enter, cell editing lifecycle</td></tr>
+            <tr><td>Hyperlink (styled as Button)</td><td><code>Click</code></td><td>Click (use Button with underlined TextBlock template)</td></tr>
+          </tbody>
+        </table>
+        <p class="note" style="margin-top:12px">
+          All events send a <code>state</code> dictionary containing the current value of every named control in the window.
+          Use <code>state["ControlName"]</code> inside your callback to read the control's current value.
+        </p>
+      </section>
+
+      <section id="s7" class="section-link">
+        <h2>7. ListView and DataGrid in Practice</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>ListView: Full CRUD Cycle (Add, Edit, Delete)</h3>
+            <p class="muted">
+              The most robust way to manage a ListView is to maintain an array of objects in AHK and rebuild the list when changes occur.
+              Use <code class="inline">ClearItems</code> followed by <code class="inline">AddItem</code> with pipe-separated values.
+            </p>
+            <pre><code>; 1. REBUILD LIST (Call after Add, Edit, or Delete)
 RebuildList() {
     global ui, Contacts
     ui.Update("ListaContactos", "ClearItems", "")
@@ -410,15 +512,15 @@ Delete_Click(state, ctrl, event) {
         RebuildList()
     }
 }</code></pre>
-        </div>
+          </div>
 
-        <div class="card">
-          <h3>ListView: Handling Selection & Parsing</h3>
-          <p class="muted">
-            When <code class="inline">SelectionChanged</code> triggers, <code class="inline">state["ListaContactos"]</code> returns the entire row as a pipe-separated string (e.g., <code>"1|John|555-1234|john@test.com"</code>).
-            Use <code class="inline">StrSplit</code> to extract the index or specific columns.
-          </p>
-          <pre><code>Lista_SelectionChanged(state, ctrl, event) {
+          <div class="card">
+            <h3>ListView: Handling Selection &amp; Parsing</h3>
+            <p class="muted">
+              When <code class="inline">SelectionChanged</code> triggers, <code class="inline">state["ListaContactos"]</code> returns the entire row as a pipe-separated string (e.g., <code>"1|John|555-1234|john@test.com"</code>).
+              Use <code class="inline">StrSplit</code> to extract the index or specific columns.
+            </p>
+            <pre><code>Lista_SelectionChanged(state, ctrl, event) {
     global ui, SelectedIdx, EditingIdx
     raw := state["ListaContactos"]
 
@@ -439,16 +541,16 @@ Delete_Click(state, ctrl, event) {
         ui.Update("BtnDelete", "IsEnabled", "True")
     }
 }</code></pre>
+          </div>
         </div>
-      </div>
 
-      <div class="card" style="margin-top:16px">
-        <h3>DataGrid: CRUD Pattern (Demo_DataGrid2)</h3>
-        <p class="muted">
-          The DataGrid does <em>not</em> include row data in the state dictionary. Use <code class="inline">state["GridData_SelectedIndex"]</code>
-          to get the 0-based index and index into your AHK array. Maintain a parallel array of records in AHK.
-        </p>
-        <pre><code>; Maintain array of records
+        <div class="card" style="margin-top:16px">
+          <h3>DataGrid: CRUD Pattern (Demo_DataGrid2)</h3>
+          <p class="muted">
+            The DataGrid does <em>not</em> include row data in the state dictionary. Use <code class="inline">state["GridData_SelectedIndex"]</code>
+            to get the 0-based index and index into your AHK array. Maintain a parallel array of records in AHK.
+          </p>
+          <pre><code>; Maintain array of records
 global Records := []
 
 ; Add records (AHK-side)
@@ -480,16 +582,16 @@ RenderGrid() {
 OnDelSel(state, ctrl, event) {
     idx := state["GridData_SelectedIndex"]
     if (idx = "" || idx < 0) return
-    Records.RemoveAt(idx + 1)  ; 0-based → 1-based
+    Records.RemoveAt(idx + 1)  ; 0-based &rarr; 1-based
     RenderGrid()
 }</code></pre>
-      </div>
-    </section>
+        </div>
+      </section>
 
-    <section>
-      <h2>8. Callback Example</h2>
-      <p class="muted">In callbacks, <code class="inline">state</code> contains the current state of all controls.</p>
-      <pre><code>Login_Event(state, ctrl, event)
+      <section id="s8" class="section-link">
+        <h2>8. Callback Example</h2>
+        <p class="muted">In callbacks, <code class="inline">state</code> contains the current state of all controls.</p>
+        <pre><code>Login_Event(state, ctrl, event)
 {
     user := state["TxtUser"]
     pass := state["TxtPass"]
@@ -505,16 +607,16 @@ OnDelSel(state, ctrl, event) {
         MsgBox, 16, Error, Incorrect credentials
     }
 }</code></pre>
-    </section>
+      </section>
 
-    <section>
-      <h2>9. Moving Focus with Enter</h2>
-      <p>
-        The WPF engine automatically sends the <code class="inline">Enter</code> event when you press Enter in a
-        <code class="inline">TextBox</code>, <code class="inline">PasswordBox</code>, or <code class="inline">Button</code>.
-        You can use it to navigate forms like this:
-      </p>
-      <pre><code>ui.OnEvent("TxtUser", "Enter", "Login_Enter")
+      <section id="s9" class="section-link">
+        <h2>9. Moving Focus with Enter</h2>
+        <p>
+          The WPF engine automatically sends the <code class="inline">Enter</code> event when you press Enter in a
+          <code class="inline">TextBox</code>, <code class="inline">PasswordBox</code>, or <code class="inline">Button</code>.
+          You can use it to navigate forms like this:
+        </p>
+        <pre><code>ui.OnEvent("TxtUser", "Enter", "Login_Enter")
 ui.OnEvent("TxtPass", "Enter", "Login_Enter")
 
 Login_Enter(state, ctrl, event)
@@ -525,91 +627,91 @@ Login_Enter(state, ctrl, event)
     else if (ctrl = "TxtPass")
         ui.Focus("BtnLogin")
 }</code></pre>
-    </section>
+      </section>
 
-    <div class="grid">
-      <section>
-        <h2>10. Changing Control States</h2>
-        <pre><code>ui.Update("TxtUser", "Text", "admin")
+      <div class="grid">
+        <section id="s10" class="section-link">
+          <h2>10. Changing Control States</h2>
+          <pre><code>ui.Update("TxtUser", "Text", "admin")
 ui.Update("TxtPass", "Text", "1234")
 ui.Update("BtnLogin", "IsEnabled", "True")
 ui.Update("BtnLogin", "Visibility", "Visible")
 ui.Update("BtnLogin", "Background", "#00A3FF")
 ui.Update("TxtStatus", "Foreground", "#00E676")
 ui.Update("ProgCPU", "Value", 75)</code></pre>
-      </section>
+        </section>
 
-      <section>
-        <h2>11. Themes, Resources, and Window</h2>
-        <pre><code>ui.SetResource("Accent", "#00A3FF")
+        <section id="s11" class="section-link">
+          <h2>11. Themes, Resources, and Window</h2>
+          <pre><code>ui.SetResource("Accent", "#00A3FF")
 ui.SetResource("BgCard", "#1E1E28")
 ui.SetTheme("Dark")
 ui.SetWindowProp("Title", "My App")
 ui.SetWindowProp("Opacity", "0.95")
 ui.SetWindowProp("WindowStyle", "None")
 ui.SetWindowProp("ResizeMode", "NoResize")</code></pre>
-      </section>
-    </div>
+        </section>
+      </div>
 
-    <section>
-      <h2>12. Custom Dashboard-Style Window</h2>
-      <p>
-        If you want a look like the <code class="inline">Dashboard_FIFA</code>, you can remove the native title bar and draw your own header
-        with minimize, maximize, and close buttons. The idea is to use <code class="inline">WindowStyle="None"</code> and
-        <code class="inline">ResizeMode="NoResize"</code> in the XAML, and then connect buttons like <code class="inline">BtnMinimize</code>,
-        <code class="inline">BtnMaximize</code>, and <code class="inline">BtnClose</code> from AHK.
-      </p>
-      <pre><code>&lt;Window WindowStyle="None" ResizeMode="NoResize" Padding="0,1,0,0"&gt;
+      <section id="s12" class="section-link">
+        <h2>12. Custom Dashboard-Style Window</h2>
+        <p>
+          If you want a look like the <code class="inline">Dashboard_FIFA</code>, you can remove the native title bar and draw your own header
+          with minimize, maximize, and close buttons. The idea is to use <code class="inline">WindowStyle="None"</code> and
+          <code class="inline">ResizeMode="NoResize"</code> in the XAML, and then connect buttons like <code class="inline">BtnMinimize</code>,
+          <code class="inline">BtnMaximize</code>, and <code class="inline">BtnClose</code> from AHK.
+        </p>
+        <pre><code>&lt;Window WindowStyle="None" ResizeMode="NoResize" Padding="0,1,0,0"&gt;
   &lt;Border x:Name="TitleBar"&gt;
     &lt;Button x:Name="BtnMinimize" /&gt;
     &lt;Button x:Name="BtnMaximize" /&gt;
     &lt;Button x:Name="BtnClose" /&gt;
   &lt;/Border&gt;
 &lt;/Window&gt;</code></pre>
-    </section>
+      </section>
 
-    <section>
-      <h2>13. Mental Mini-Template</h2>
-      <p class="note">
-        <strong>Read</strong> the state with <code class="inline">state["Control"]</code>, <strong>react</strong> in the callback,
-        and <strong>update</strong> the view with <code class="inline">ui.Update()</code>. If you want to move the focus cursor,
-        use <code class="inline">ui.Focus()</code>.
-      </p>
-      <ul>
-        <li><span class="ok">Read:</span> <code>state["TxtUser"]</code>, <code>state["TxtPass"]</code></li>
-        <li><span class="ok">Write:</span> <code>ui.Update("TxtStatus", "Text", "OK")</code></li>
-        <li><span class="ok">Move focus:</span> <code>ui.Focus("TxtPass")</code></li>
-        <li><span class="warn">Hide:</span> <code>ui.Update("BtnLogin", "Visibility", "Collapsed")</code></li>
-      </ul>
-    </section>
+      <section id="s13" class="section-link">
+        <h2>13. Mental Mini-Template</h2>
+        <p class="note">
+          <strong>Read</strong> the state with <code class="inline">state["Control"]</code>, <strong>react</strong> in the callback,
+          and <strong>update</strong> the view with <code class="inline">ui.Update()</code>. If you want to move the focus cursor,
+          use <code class="inline">ui.Focus()</code>.
+        </p>
+        <ul>
+          <li><span class="ok">Read:</span> <code>state["TxtUser"]</code>, <code>state["TxtPass"]</code></li>
+          <li><span class="ok">Write:</span> <code>ui.Update("TxtStatus", "Text", "OK")</code></li>
+          <li><span class="ok">Move focus:</span> <code>ui.Focus("TxtPass")</code></li>
+          <li><span class="warn">Hide:</span> <code>ui.Update("BtnLogin", "Visibility", "Collapsed")</code></li>
+        </ul>
+      </section>
 
-    <section>
-      <h2>14. DataGrid: Commands, Colors, Column Visibility, and Bulk Operations</h2>
-      <p>
-        The <code class="inline">DataGrid</code> supports selection tracking (via <code>SelectedIndex</code>), per-cell color rules,
-        column visibility toggling, and bulk operations through the <code>_Batch/Cells</code> mechanism.
-        The <code class="inline">Demo_DataGrid2.ahk</code> demo showcases a performance-testing UI with 100&ndash;1000 records, CRUD, filtering, and three color modes.
-      </p>
+      <section id="s14" class="section-link">
+        <h2>14. DataGrid: Commands, Colors, Column Visibility, and Bulk Operations</h2>
+        <p>
+          The <code class="inline">DataGrid</code> supports selection tracking (via <code>SelectedIndex</code>), per-cell color rules,
+          column visibility toggling, and bulk operations through the <code>_Batch/Cells</code> mechanism.
+          The <code class="inline">Demo_DataGrid2.ahk</code> demo showcases a performance-testing UI with 100&ndash;1000 records, CRUD, filtering, and three color modes.
+        </p>
 
-      <h3>14.1 DataGrid Commands</h3>
-      <table>
-        <thead><tr><th>Command</th><th>Description</th><th>Value Format</th></tr></thead>
-        <tbody>
-          <tr><td><code>Clear</code></td><td>Removes all rows from the grid.</td><td><code>""</code></td></tr>
-          <tr><td><code>AddItem</code></td><td>Adds a row. Each column separated by <code>|</code>.</td><td><code>"1|Name|email@ex.com|Dept|50000|City|Active"</code></td></tr>
-          <tr><td><code>AddColorItem</code></td><td>Sets per-column background colors for the <em>last added row</em>. Empty strings leave the default color. Must be called immediately after <code>AddItem</code>.</td><td><code>"#1A4A2A|||#4A1A1A|||"</code> (one per column)</td></tr>
-          <tr><td><code>RefreshGrid</code></td><td>Forces a full <code>Items.Refresh()</code> + <code>UpdateLayout()</code> pass and reapplies all stored row/cell styles. Call once after all items and colors are added.</td><td><code>""</code></td></tr>
-          <tr><td><code>SetColVisibility</code></td><td>Shows or hides a column by binding property name. Value is <code>"ColumnName|1"</code> (visible) or <code>"ColumnName|0"</code> (hidden).</td><td><code>"ID|0"</code> or <code>"Salary|1"</code></td></tr>
-        </tbody>
-      </table>
+        <h3>14.1 DataGrid Commands</h3>
+        <table>
+          <thead><tr><th>Command</th><th>Description</th><th>Value Format</th></tr></thead>
+          <tbody>
+            <tr><td><code>Clear</code></td><td>Removes all rows from the grid.</td><td><code>""</code></td></tr>
+            <tr><td><code>AddItem</code></td><td>Adds a row. Each column separated by <code>|</code>.</td><td><code>"1|Name|email@ex.com|Dept|50000|City|Active"</code></td></tr>
+            <tr><td><code>AddColorItem</code></td><td>Sets per-column background colors for the <em>last added row</em>. Empty strings leave the default color. Must be called immediately after <code>AddItem</code>.</td><td><code>"#1A4A2A|||#4A1A1A|||"</code> (one per column)</td></tr>
+            <tr><td><code>RefreshGrid</code></td><td>Forces a full <code>Items.Refresh()</code> + <code>UpdateLayout()</code> pass and reapplies all stored row/cell styles. Call once after all items and colors are added.</td><td><code>""</code></td></tr>
+            <tr><td><code>SetColVisibility</code></td><td>Shows or hides a column by binding property name. Value is <code>"ColumnName|1"</code> (visible) or <code>"ColumnName|0"</code> (hidden).</td><td><code>"ID|0"</code> or <code>"Salary|1"</code></td></tr>
+          </tbody>
+        </table>
 
-      <h3>14.2 Selection Handling</h3>
-      <p>
-        <code class="inline">SelectionChanged</code> sends the full <code>state</code> dictionary.
-        The DataGrid adds <code class="inline">state["GridData_SelectedIndex"]</code> (0-based integer index, <code>-1</code> if no selection).
-        Unlike ListView, the grid does not include the row data in <code>state["GridData"]</code> &mdash; use <code>SelectedIndex</code> to index your AHK array.
-      </p>
-      <pre><code>ui.OnEvent("GridData", "SelectionChanged", "OnSelChg")
+        <h3>14.2 Selection Handling</h3>
+        <p>
+          <code class="inline">SelectionChanged</code> sends the full <code>state</code> dictionary.
+          The DataGrid adds <code class="inline">state["GridData_SelectedIndex"]</code> (0-based integer index, <code>-1</code> if no selection).
+          Unlike ListView, the grid does not include the row data in <code>state["GridData"]</code> &mdash; use <code>SelectedIndex</code> to index your AHK array.
+        </p>
+        <pre><code>ui.OnEvent("GridData", "SelectionChanged", "OnSelChg")
 
 OnSelChg(state, ctrl, event) {
     global ui
@@ -620,16 +722,16 @@ OnSelChg(state, ctrl, event) {
         ui.Update("LblSelected", "Text", "Selected: row " . idx)
 }</code></pre>
 
-      <h3>14.3 Color Modes</h3>
-      <p>
-        The demo supports three color modes applied during grid rendering:
-      </p>
-      <ul>
-        <li><strong>Random Rows:</strong> Each cell gets a random RGB color via <code>Format("#{:02X}{:02X}{:02X}", r, g, b)</code>.</li>
-        <li><strong>By Value:</strong> Conditional highlighting &mdash; high salary (&gt;120k) gets green, low (&lt;40k) red; Active status green, Suspended/Disabled red.</li>
-        <li><strong>Column Colors:</strong> Each column gets a fixed tint.</li>
-      </ul>
-      <pre><code>; RenderGrid sends AddItem + AddColorItem for each row
+        <h3>14.3 Color Modes</h3>
+        <p>
+          The demo supports three color modes applied during grid rendering:
+        </p>
+        <ul>
+          <li><strong>Random Rows:</strong> Each cell gets a random RGB color via <code>Format("#{:02X}{:02X}{:02X}", r, g, b)</code>.</li>
+          <li><strong>By Value:</strong> Conditional highlighting &mdash; high salary (&gt;120k) gets green, low (&lt;40k) red; Active status green, Suspended/Disabled red.</li>
+          <li><strong>Column Colors:</strong> Each column gets a fixed tint.</li>
+        </ul>
+        <pre><code>; RenderGrid sends AddItem + AddColorItem for each row
 Loop % data.Length() {
     r := data[A_Index]
     ui.Update("GridData", "AddItem", RecToStr(r))
@@ -639,11 +741,11 @@ Loop % data.Length() {
 if (ColorMode != "none")
     ui.Update("GridData", "RefreshGrid", "")  ; final style pass</code></pre>
 
-      <h3>14.4 Column Visibility Toggling</h3>
-      <p>
-        Each column button toggles its column's visibility. The button's opacity dims when the column is hidden.
-      </p>
-      <pre><code>OnToggleCol(state, ctrl, event) {
+        <h3>14.4 Column Visibility Toggling</h3>
+        <p>
+          Each column button toggles its column's visibility. The button's opacity dims when the column is hidden.
+        </p>
+        <pre><code>OnToggleCol(state, ctrl, event) {
     ; event argument contains the button name (e.g. "BtnColID")
     key := ColKeys[idx]         ; e.g. "ID"
     ColVis[key] := !ColVis[key]
@@ -652,13 +754,13 @@ if (ColorMode != "none")
     ui.Update(ctrl, "Opacity", ColVis[key] ? "1" : "0.4")
 }</code></pre>
 
-      <h3>14.5 Bulk Operations via _Batch/Cells</h3>
-      <p>
-        To avoid hundreds of individual <code>SendMessage</code> calls, you can pack multiple commands into a single <code>_Batch/Cells</code> update.
-        Each line in the value has the format <code>control|property|value\n</code>.
-        All lines are processed atomically in a single <code>Dispatcher.Invoke</code> call on the WPF UI thread.
-      </p>
-      <pre><code>BatchRender() {
+        <h3>14.5 Bulk Operations via _Batch/Cells</h3>
+        <p>
+          To avoid hundreds of individual <code>SendMessage</code> calls, you can pack multiple commands into a single <code>_Batch/Cells</code> update.
+          Each line in the value has the format <code>control|property|value\n</code>.
+          All lines are processed atomically in a single <code>Dispatcher.Invoke</code> call on the WPF UI thread.
+        </p>
+        <pre><code>BatchRender() {
     batch := ""
     Loop % data.Length() {
         r := data[A_Index]
@@ -671,35 +773,35 @@ if (ColorMode != "none")
     if (batch != "")
         ui.Update("_Batch", "Cells", batch)
 }</code></pre>
-      <p class="note">
-        <strong>Pipe-safe parsing:</strong> The C# engine uses <code>IndexOf</code> to find the first two <code>|</code> separators,
-        so values can contain pipe characters. The format is <code>control|property|value\n</code> where <code>value</code> is everything after the second <code>|</code>.
-      </p>
+        <p class="note">
+          <strong>Pipe-safe parsing:</strong> The C# engine uses <code>IndexOf</code> to find the first two <code>|</code> separators,
+          so values can contain pipe characters. The format is <code>control|property|value\n</code> where <code>value</code> is everything after the second <code>|</code>.
+        </p>
 
-      <h3>14.6 Performance Optimization (AddColorItem)</h3>
-      <p>
-        The original <code>AddColorItem</code> implementation iterated all rows and called <code>Items.Refresh()</code> + <code>UpdateLayout()</code> on every call,
-        producing <strong>O(n&sup2;)</strong> behaviour. The optimized version:
-      </p>
-      <ul>
-        <li>Stores the style in a <code>Tag</code> dictionary keyed by row index.</li>
-        <li>Applies the style only to the <strong>last added row</strong> (the row just inserted by the preceding <code>AddItem</code>).</li>
-        <li>Defers the full style pass to a single <code>RefreshGrid</code> call after all items are added.</li>
-      </ul>
-      <p>Result: <strong>O(1)</strong> per <code>AddColorItem</code> call instead of O(n&sup2;). Loading 1000 records with per-cell colors completes in seconds instead of hanging.</p>
-    </section>
+        <h3>14.6 Performance Optimization (AddColorItem)</h3>
+        <p>
+          The original <code>AddColorItem</code> implementation iterated all rows and called <code>Items.Refresh()</code> + <code>UpdateLayout()</code> on every call,
+          producing <strong>O(n&sup2;)</strong> behaviour. The optimized version:
+        </p>
+        <ul>
+          <li>Stores the style in a <code>Tag</code> dictionary keyed by row index.</li>
+          <li>Applies the style only to the <strong>last added row</strong> (the row just inserted by the preceding <code>AddItem</code>).</li>
+          <li>Defers the full style pass to a single <code>RefreshGrid</code> call after all items are added.</li>
+        </ul>
+        <p>Result: <strong>O(1)</strong> per <code>AddColorItem</code> call instead of O(n&sup2;). Loading 1000 records with per-cell colors completes in seconds instead of hanging.</p>
+      </section>
 
-    <section>
-      <h2>15. Centralized Theme System</h2>
-      <p>
-        The project provides a reusable theme system with two files: <code class="inline">themes.ahk</code> (defines all color palettes)
-        and <code class="inline">ThemeManager.ahk</code> (manages applying and cycling themes). Add new themes by editing only
-        <code class="inline">themes.ahk</code> &mdash; no code changes needed.
-      </p>
-      <div class="grid">
-        <div class="card">
-          <h3>Setup and Usage</h3>
-          <pre><code>; 1. Include files
+      <section id="s15" class="section-link">
+        <h2>15. Centralized Theme System</h2>
+        <p>
+          The project provides a reusable theme system with two files: <code class="inline">themes.ahk</code> (defines all color palettes)
+          and <code class="inline">ThemeManager.ahk</code> (manages applying and cycling themes). Add new themes by editing only
+          <code class="inline">themes.ahk</code> &mdash; no code changes needed.
+        </p>
+        <div class="grid">
+          <div class="card">
+            <h3>Setup and Usage</h3>
+            <pre><code>; 1. Include files
 #Include %A_ScriptDir%\..\themes.ahk
 #Include %A_ScriptDir%\..\ThemeManager.ahk
 
@@ -726,34 +828,34 @@ LoadData() {
     FileRead, t, %config%
     ApplyTheme(Trim(t))
 }</code></pre>
-        </div>
+          </div>
 
-        <div class="card">
-          <h3>Available Themes (9)</h3>
-          <p class="muted">
-            Each theme defines 19 color properties: WindowBg, SidebarBg, Surface, Surface2,
-            Border, Accent, AccentHover, AccentGlow, TextPrimary, TextSecondary, TextMuted,
-            RowHover, ScrollThumb, Success, SuccessHover, Danger, DangerHover, and the base fallback.
-          </p>
-          <table>
-            <thead><tr><th>Theme</th><th>Base</th><th>Style</th></tr></thead>
-            <tbody>
-              <tr><td>Navy</td><td>Dark</td><td>Dark blue, professional</td></tr>
-              <tr><td>Dark</td><td>Dark</td><td>Neutral dark, code-editor style</td></tr>
-              <tr><td>Light</td><td>Light</td><td>Clean white background</td></tr>
-              <tr><td>Blue</td><td>Blue</td><td>Light blue, fresh</td></tr>
-              <tr><td>Green</td><td>Green</td><td>Light green, natural</td></tr>
-              <tr><td>Purple</td><td>Purple</td><td>Light purple, creative</td></tr>
-              <tr><td>Red</td><td>Dark</td><td>Dark red, alert style</td></tr>
-              <tr><td>Orange</td><td>Dark</td><td>Dark orange, warm</td></tr>
-              <tr><td>Teal</td><td>Teal</td><td>Light teal, modern</td></tr>
-            </tbody>
-          </table>
+          <div class="card">
+            <h3>Available Themes (9)</h3>
+            <p class="muted">
+              Each theme defines 19 color properties: WindowBg, SidebarBg, Surface, Surface2,
+              Border, Accent, AccentHover, AccentGlow, TextPrimary, TextSecondary, TextMuted,
+              RowHover, ScrollThumb, Success, SuccessHover, Danger, DangerHover, and the base fallback.
+            </p>
+            <table>
+              <thead><tr><th>Theme</th><th>Base</th><th>Style</th></tr></thead>
+              <tbody>
+                <tr><td>Navy</td><td>Dark</td><td>Dark blue, professional</td></tr>
+                <tr><td>Dark</td><td>Dark</td><td>Neutral dark, code-editor style</td></tr>
+                <tr><td>Light</td><td>Light</td><td>Clean white background</td></tr>
+                <tr><td>Blue</td><td>Blue</td><td>Light blue, fresh</td></tr>
+                <tr><td>Green</td><td>Green</td><td>Light green, natural</td></tr>
+                <tr><td>Purple</td><td>Purple</td><td>Light purple, creative</td></tr>
+                <tr><td>Red</td><td>Dark</td><td>Dark red, alert style</td></tr>
+                <tr><td>Orange</td><td>Dark</td><td>Dark orange, warm</td></tr>
+                <tr><td>Teal</td><td>Teal</td><td>Light teal, modern</td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
-      <div class="card">
-        <h3>Adding a New Theme</h3>
-        <pre><code>; 1. Add name to ThemeOrder (controls cycle order)
+        <div class="card">
+          <h3>Adding a New Theme</h3>
+          <pre><code>; 1. Add name to ThemeOrder (controls cycle order)
 ThemeOrder := ["Navy", "Dark", ..., "MyTheme"]
 
 ; 2. Add color dictionary to ThemeDefs
@@ -764,20 +866,20 @@ ThemeDefs["MyTheme"] := {base:"Dark"
     , TextPrimary:"#E5F0F7", TextSecondary:"#97BCE1", TextMuted:"#6B8FB5"
     , RowHover:"#152A45", ScrollThumb:"#2A4A6B"
     , Success:"#1A7A4A", SuccessHover:"#166040", Danger:"#C0392B", DangerHover:"#A93226"}</code></pre>
-      </div>
-    </section>
+        </div>
+      </section>
 
-    <section>
-      <h2>16. Centralized Title Bar System</h2>
-      <p>
-        The <code class="inline">TitleBar.ahk</code> module provides a reusable title bar with Minimize, Maximize/Restore,
-        and Close buttons across all demos. Drag-to-move is enabled automatically by placing
-        <code class="inline">x:Name="TitleBar"</code> on the title bar <code class="inline">Border</code> in XAML.
-      </p>
-      <div class="grid">
-        <div class="card">
-          <h3>AHK API</h3>
-          <pre><code>#Include %A_ScriptDir%\..\TitleBar.ahk
+      <section id="s16" class="section-link">
+        <h2>16. Centralized Title Bar System</h2>
+        <p>
+          The <code class="inline">TitleBar.ahk</code> module provides a reusable title bar with Minimize, Maximize/Restore,
+          and Close buttons across all demos. Drag-to-move is enabled automatically by placing
+          <code class="inline">x:Name="TitleBar"</code> on the title bar <code class="inline">Border</code> in XAML.
+        </p>
+        <div class="grid">
+          <div class="card">
+            <h3>AHK API</h3>
+            <pre><code>#Include %A_ScriptDir%\..\TitleBar.ahk
 
 ; Minimal setup
 InitTitleBar(ui, {title: "My App"})
@@ -803,15 +905,15 @@ MySaveAndClose(state, ctrl, event) {
 ; TitleBar_OnClose   -> ui.Close() + ExitApp
 ; TitleBar_OnMinimize -> PostMessage SC_MINIMIZE
 ; TitleBar_OnMaximize -> toggle maximize/restore</code></pre>
-        </div>
+          </div>
 
-        <div class="card">
-          <h3>XAML Requirements</h3>
-          <p class="muted">
-            Each demo must define these named elements in the title bar. Buttons you don't need can be hidden
-            via <code class="inline">Visibility="Collapsed"</code> &mdash; the AHK module shows them based on config.
-          </p>
-          <pre><code>&lt;!-- Standard title bar structure --&gt;
+          <div class="card">
+            <h3>XAML Requirements</h3>
+            <p class="muted">
+              Each demo must define these named elements in the title bar. Buttons you don't need can be hidden
+              via <code class="inline">Visibility="Collapsed"</code> &mdash; the AHK module shows them based on config.
+            </p>
+            <pre><code>&lt;!-- Standard title bar structure --&gt;
 &lt;Border x:Name="TitleBar" Height="40"
         Background="{DynamicResource SidebarBg}"
         BorderBrush="{DynamicResource Border}"
@@ -834,14 +936,14 @@ MySaveAndClose(state, ctrl, event) {
         &lt;/StackPanel&gt;
     &lt;/Grid&gt;
 &lt;/Border&gt;</code></pre>
+          </div>
         </div>
-      </div>
-      <div class="card">
-        <h3>Required WPF Styles</h3>
-        <p class="muted">
-          Add these styles to <code class="inline">Window.Resources</code> in each XAML file that uses the title bar system.
-        </p>
-        <pre><code>&lt;!-- TitleBar buttons --&gt;
+        <div class="card">
+          <h3>Required WPF Styles</h3>
+          <p class="muted">
+            Add these styles to <code class="inline">Window.Resources</code> in each XAML file that uses the title bar system.
+          </p>
+          <pre><code>&lt;!-- TitleBar buttons --&gt;
 &lt;Style x:Key="TitleBarButton" TargetType="Button"&gt;
     &lt;Setter Property="Width" Value="36"/&gt;
     &lt;Setter Property="Height" Value="36"/&gt;
@@ -897,204 +999,203 @@ MySaveAndClose(state, ctrl, event) {
         &lt;/Setter.Value&gt;
     &lt;/Setter&gt;
 &lt;/Style&gt;</code></pre>
-        <p class="note">
-          <strong>Drag-to-move:</strong> The C# engine automatically walks the visual tree looking for a
-          <code class="inline">Border</code> with <code class="inline">x:Name="TitleBar"</code>. If found,
-          it attaches a <code class="inline">MouseLeftButtonDown</code> handler that calls
-          <code class="inline">DragMove()</code>. No additional code is needed.
-        </p>
-      </div>
-    </section>
-
-    <section>
-      <h2>17. FIFA Dashboard (<code>Demo_Dashboard_FIFA.ahk</code>)</h2>
-      <p>
-        A full-featured sports dashboard that connects to a local SQLite database (<code>FIFA.db</code>) and displays
-        teams, stadiums, match schedules, and statistics through a WPF interface.
-      </p>
-      <div class="grid">
-        <div class="card">
-          <h3>Architecture</h3>
-          <p class="muted">
-            The demo lives in <code>demos/FIFA/</code> and uses three layers:
+          <p class="note">
+            <strong>Drag-to-move:</strong> The C# engine automatically walks the visual tree looking for a
+            <code class="inline">Border</code> with <code class="inline">x:Name="TitleBar"</code>. If found,
+            it attaches a <code class="inline">MouseLeftButtonDown</code> handler that calls
+            <code class="inline">DragMove()</code>. No additional code is needed.
           </p>
-          <ul>
-            <li><strong>Data:</strong> <code>FIFA.db</code> (SQLite) &mdash; contains teams, stadiums, and match data</li>
-            <li><strong>Logic:</strong> <code>FIFA_DB.ahk</code> + <code>Class_SQLiteDB.ahk</code> &mdash; SQL queries and data processing</li>
-            <li><strong>UI:</strong> <code>Dashboard_FIFA.xaml</code> &mdash; modern dark WPF layout with navigation sidebar</li>
-          </ul>
         </div>
-        <div class="card">
-          <h3>Key Features</h3>
-          <ul>
-            <li>7 navigation tabs (Home, Countries, Groups, Fixture, Stats, Stadiums)</li>
-            <li>Live countdown to next match</li>
-            <li>Country search/filter</li>
-            <li>7 custom color themes (dashboard-specific, not using the centralized theme system)</li>
-            <li>Integrated <code>TitleBar</code> with <code>BtnTheme</code> (theme cycle), close/minimize buttons</li>
-            <li>Images from <code>demos/FIFA/Assets/</code></li>
-          </ul>
-        </div>
-      </div>
-      <div class="card">
-        <h3>Technical Notes</h3>
-        <ul>
-          <li><strong>32-bit SQLite DLL is required</strong> &mdash; AHK 1.1 Unicode is 32-bit and cannot load a 64-bit <code>sqlite3.dll</code>. The correct DLL is at <code>demos/FIFA/Lib/sqlite3.dll</code>.</li>
-          <li><strong>#Include without explicit path fails</strong> when the working directory differs from the script directory. Always use <code>#Include %A_ScriptDir%\Lib\Class_SQLiteDB.ahk</code>.</li>
-          <li><strong>exePath depth:</strong> Since the script is in <code>demos/FIFA/</code>, pass <code>A_ScriptDir "\..\..\WPF_Runner.exe"</code> to the XAMLGUI constructor.</li>
-          <li>The FIFA themes are self-contained (7 entries in <code>Dashboard_FIFA.xaml</code>) and incompatible with the 19-key centralized palette.</li>
-        </ul>
-      </div>
-    </section>
+      </section>
 
-    <section>
-      <h2>18. SystemInfo Dashboard (<code>Demo_SystemInfo.ahk</code>)</h2>
-      <p>
-        A system diagnostic dashboard that runs <code>systeminfo</code> and displays the results in a modern card-based
-        WPF layout with per-card PNG icons.
-      </p>
-      <div class="grid">
-        <div class="card">
-          <h3>How It Works</h3>
-          <ul>
-            <li>AHK runs <code>systeminfo &gt; file.txt</code> via <code>RunWait</code></li>
-            <li>Output is read with the <strong>OEM code page</strong> (<code>DllCall("GetOEMCP")</code>) to correctly decode accented characters from <code>cmd.exe</code> redirection</li>
-            <li>Spanish field names are mapped to English keys using <code>Chr()</code> for accented characters (<code>Chr(0xED)</code> for <code>í</code>, <code>Chr(0xF3)</code> for <code>ó</code>)</li>
-            <li>12 key fields populate dedicated cards; all remaining fields appear in the &quot;Extra Info&quot; card</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3>Layout</h3>
-          <ul>
-            <li><strong>6 cards:</strong> System, Processor, Memory, Storage, Network, Extra Info</li>
-            <li>Each card has a <strong>72&times;72 PNG icon</strong> on a white rounded square, with a <strong>26pt title</strong> to the right</li>
-            <li>Loading panel with detail text while <code>systeminfo</code> runs</li>
-            <li>Refresh button to re-run the command</li>
-            <li>Navy theme defaults defined in XAML <code>Window.Resources</code> (required because <code>ApplyTheme()</code> before <code>Show()</code> silently fails)</li>
-          </ul>
-        </div>
-      </div>
-      <div class="card">
-        <h3>Technical Notes</h3>
-        <ul>
-          <li><strong>OEM vs ANSI code page:</strong> <code>cmd.exe &gt;</code> writes using the OEM code page (CP437 on this system), but <code>FileRead</code> defaults to ANSI (Windows-1252). This corrupts accented characters like <code>&oacute;</code> &rarr; <code>&cent;</code>. Fix: use <code>FileRead, *P%oemCP% %file%</code>.</li>
-          <li><strong>Spanish field names:</strong> On Spanish Windows, <code>systeminfo</code> outputs &quot;Nombre de host&quot;, &quot;Versi&oacute;n del sistema operativo&quot;, &quot;Memoria f&iacute;sica total&quot;, etc. A mapping table normalizes them to English keys.</li>
-          <li>Icons are loaded from <code>C:\AHK_WPF\Assets\</code> via relative path <code>../Assets/</code> from the XAML file.</li>
-          <li>JSON-like values from WPF events use <strong>Base64 encoding</strong> for safe transmission over <code>WM_COPYDATA</code>.</li>
-        </ul>
-      </div>
-    </section>
-
-    <section>
-      <h2>19. All Controls Demo (<code>Demo_AllControls.ahk</code>)</h2>
-      <p>
-        A comprehensive 5-tab demonstration showcasing 15+ WPF controls with bidirectional AHK &harr; WPF communication.
-        Every interaction updates a live status bar showing exactly what the AHK callback received and what it updated.
-      </p>
-      <div class="grid">
-        <div class="card">
-          <h3>Tab 1 &mdash; Buttons &amp; Toggles</h3>
-          <ul>
-            <li><strong>ToggleButton</strong> switch-style (track + thumb, accent color). Fires Checked/Unchecked.</li>
-            <li><strong>RepeatButton</strong> with configurable Delay/Interval. Counts clicks in AHK.</li>
-            <li><strong>CheckBox</strong> with modern rounded-square template and white checkmark path.</li>
-            <li><strong>RadioButtons</strong> (3 options, grouped) with dot-in-circle template.</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3>Tab 2 &mdash; Input &amp; Text</h3>
-          <ul>
-            <li><strong>RichTextBox</strong> (read-only) with multi-color formatted FlowDocument.</li>
-            <li><strong>Hyperlink</strong> styled as a button with underlined text; opens URL in browser via AHK.</li>
-            <li><strong>TextBox</strong> with live TextChanged status reading.</li>
-            <li><strong>PasswordBox</strong> with char-count display on PasswordChanged.</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3>Tab 3 &mdash; Tabs &amp; Nav</h3>
-          <ul>
-            <li><strong>Inner TabControl</strong> with distinct Settings (checkboxes) and Info (version/status) tabs.</li>
-            <li><strong>Page Navigation</strong> via &quot;Dashboard&quot; / &quot;Reports&quot; buttons toggling Visibility.</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3>Tab 4 &mdash; Progress &amp; Values</h3>
-          <ul>
-            <li><strong>ProgressBar</strong> with Set 75%, +10, -10 buttons. Syncs with Slider.</li>
-            <li><strong>Slider</strong> with modern thin-track + round-thumb template.</li>
-            <li><strong>ScrollBar + Circle Position</strong>: H + V scrollbars move a circle inside a 220x220 box.</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3>Tab 5 &mdash; Dates &amp; Status</h3>
-          <ul>
-            <li><strong>DatePicker</strong> (left) and <strong>Calendar</strong> (right) side by side.</li>
-            <li>Selected date shown in the tab's built-in StatusBar.</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3>Theme System</h3>
-          <ul>
-            <li>9 themes: Navy, Dark, Light, Blue, Green, Purple, Red, Orange, Teal.</li>
-            <li>All color references use <code class="inline">DynamicResource</code> for live switching.</li>
-            <li>Modern templates for ToggleButton, CheckBox, RadioButton, ProgressBar, Slider, ScrollBar.</li>
-          </ul>
-        </div>
-      </div>
-      <div class="card">
-        <h3>Technical Notes</h3>
-        <ul>
-          <li>Uses <code class="inline">DynamicResource</code> for all theme colors (Foreground, Background, Border, Accent, etc.)</li>
-          <li>WindowStyle=&quot;None&quot; + AllowsTransparency with custom title bar and drag-to-move.</li>
-          <li>Bridge supports Margin updates (<code class="inline">"left,top"</code> or <code class="inline">"left,top,right,bottom"</code>) for dynamic positioning.</li>
-          <li>All Unicode characters in XAML must use ASCII equivalents to avoid encoding corruption with non-UTF8-BOM writes.</li>
-        </ul>
-      </div>
-    </section>
-
-    <section>
-      <h2>20. DataGrid Operations Demo (<code>Demo_DataGrid2.ahk</code>)</h2>
-      <p>
-        A performance-testing demo focused on bulk DataGrid operations with 100&ndash;1000+ records.
-        Lives at <code>C:\AHK_WPF\demos\Demo_DataGrid2.ahk</code> + <code>Demo_DataGrid2.xaml</code>.
-      </p>
-      <div class="grid">
-        <div class="card">
-          <h3>Controls</h3>
-          <ul>
-            <li><strong>Load 100 / 200 / 500 / 1000:</strong> Adds records individually via separate <code>AddItem</code> calls. The UI thread stays responsive because events are dispatched asynchronously.</li>
-            <li><strong>Batch 500:</strong> Sends all 500 records in a single <code>_Batch/Cells</code> message. All items arrive in one <code>SendMessage</code> and are processed atomically.</li>
-            <li><strong>Clear All:</strong> Resets the record array and clears the grid.</li>
-            <li><strong>Delete Sel / Delete Rnd:</strong> Deletes the selected row via <code>SelectedIndex</code> or a random row.</li>
-            <li><strong>Random Rows / By Value / Column Colors:</strong> Three colouring modes applied during <code>RenderGrid()</code>.</li>
-            <li><strong>Filter:</strong> Filters all columns by text match. Rebuilds the grid with only matching records.</li>
-            <li><strong>7 Toggle Col buttons:</strong> Shows/hides each column via <code>SetColVisibility</code>.</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3>Key Implementation Details</h3>
-          <ul>
-            <li><strong>ShowProc / HideProc:</strong> All operations start with <code>ShowProc()</code> (sets status to &quot;Processing...&quot;) and end with <code>HideProc()</code> (restores &quot;Ready&quot; or record count).</li>
-            <li><strong>Color modes</strong> are applied inline during item addition; <code>RefreshGrid</code> is called once at the end.</li>
-            <li><strong>Column visibility</strong> is tracked in an AHK associative array (<code>ColVis</code>). Toggle buttons dim to 0.4 opacity when hidden.</li>
-            <li><strong>Filtering</strong> rebuilds the grid with only matching records; the original array is preserved.</li>
-            <li>The <code>AsyncSendEventToAhk</code> mechanism in <code>Program_WPF.cs</code> delegates <code>SendMessage</code> to a thread-pool thread, keeping the WPF UI thread responsive.</li>
-          </ul>
-        </div>
-      </div>
-      <div class="card">
-        <h3>Window Layout</h3>
-        <p class="muted">
-          1150&times;780 dark-themed window with a toolbar row (load, clear, delete, colour, filter, column toggle),
-          a full-height 7-column DataGrid (ID / Name / Email / Department / Salary / City / Status), and a bottom status bar
-          showing record count, selected row, and processing status.
+      <section id="s17" class="section-link">
+        <h2>17. FIFA Dashboard (<code>Demo_Dashboard_FIFA.ahk</code>)</h2>
+        <p>
+          A full-featured sports dashboard that connects to a local SQLite database (<code>FIFA.db</code>) and displays
+          teams, stadiums, match schedules, and statistics through a WPF interface.
         </p>
-      </div>
-    </section>
+        <div class="grid">
+          <div class="card">
+            <h3>Architecture</h3>
+            <p class="muted">
+              The demo lives in <code>demos/FIFA/</code> and uses three layers:
+            </p>
+            <ul>
+              <li><strong>Data:</strong> <code>FIFA.db</code> (SQLite) &mdash; contains teams, stadiums, and match data</li>
+              <li><strong>Logic:</strong> <code>FIFA_DB.ahk</code> + <code>Class_SQLiteDB.ahk</code> &mdash; SQL queries and data processing</li>
+              <li><strong>UI:</strong> <code>Dashboard_FIFA.xaml</code> &mdash; modern dark WPF layout with navigation sidebar</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Key Features</h3>
+            <ul>
+              <li>7 navigation tabs (Home, Countries, Groups, Fixture, Stats, Stadiums)</li>
+              <li>Live countdown to next match</li>
+              <li>Country search/filter</li>
+              <li>7 custom color themes (dashboard-specific, not using the centralized theme system)</li>
+              <li>Integrated <code>TitleBar</code> with <code>BtnTheme</code> (theme cycle), close/minimize buttons</li>
+              <li>Images from <code>demos/FIFA/Assets/</code></li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Technical Notes</h3>
+          <ul>
+            <li><strong>32-bit SQLite DLL is required</strong> &mdash; AHK 1.1 Unicode is 32-bit and cannot load a 64-bit <code>sqlite3.dll</code>. The correct DLL is at <code>demos/FIFA/Lib/sqlite3.dll</code>.</li>
+            <li><strong>#Include without explicit path fails</strong> when the working directory differs from the script directory. Always use <code>#Include %A_ScriptDir%\Lib\Class_SQLiteDB.ahk</code>.</li>
+            <li><strong>exePath depth:</strong> Since the script is in <code>demos/FIFA/</code>, pass <code>A_ScriptDir "\..\..\WPF_Runner.exe"</code> to the XAMLGUI constructor.</li>
+            <li>The FIFA themes are self-contained (7 entries in <code>Dashboard_FIFA.xaml</code>) and incompatible with the 19-key centralized palette.</li>
+          </ul>
+        </div>
+      </section>
 
-    <section>
-      <h2>21. ComboBox Demo (<code>Demo_ComboBox.ahk</code>)</h2>
-      <div class="card-grid" style="grid-template-columns:1fr">
+      <section id="s18" class="section-link">
+        <h2>18. SystemInfo Dashboard (<code>Demo_SystemInfo.ahk</code>)</h2>
+        <p>
+          A system diagnostic dashboard that runs <code>systeminfo</code> and displays the results in a modern card-based
+          WPF layout with per-card PNG icons.
+        </p>
+        <div class="grid">
+          <div class="card">
+            <h3>How It Works</h3>
+            <ul>
+              <li>AHK runs <code>systeminfo &gt; file.txt</code> via <code>RunWait</code></li>
+              <li>Output is read with the <strong>OEM code page</strong> (<code>DllCall("GetOEMCP")</code>) to correctly decode accented characters from <code>cmd.exe</code> redirection</li>
+              <li>Spanish field names are mapped to English keys using <code>Chr()</code> for accented characters (<code>Chr(0xED)</code> for <code>í</code>, <code>Chr(0xF3)</code> for <code>ó</code>)</li>
+              <li>12 key fields populate dedicated cards; all remaining fields appear in the &quot;Extra Info&quot; card</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Layout</h3>
+            <ul>
+              <li><strong>6 cards:</strong> System, Processor, Memory, Storage, Network, Extra Info</li>
+              <li>Each card has a <strong>72&times;72 PNG icon</strong> on a white rounded square, with a <strong>26pt title</strong> to the right</li>
+              <li>Loading panel with detail text while <code>systeminfo</code> runs</li>
+              <li>Refresh button to re-run the command</li>
+              <li>Navy theme defaults defined in XAML <code>Window.Resources</code> (required because <code>ApplyTheme()</code> before <code>Show()</code> silently fails)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Technical Notes</h3>
+          <ul>
+            <li><strong>OEM vs ANSI code page:</strong> <code>cmd.exe &gt;</code> writes using the OEM code page (CP437 on this system), but <code>FileRead</code> defaults to ANSI (Windows-1252). This corrupts accented characters like <code>&oacute;</code> &rarr; <code>&cent;</code>. Fix: use <code>FileRead, *P%oemCP% %file%</code>.</li>
+            <li><strong>Spanish field names:</strong> On Spanish Windows, <code>systeminfo</code> outputs &quot;Nombre de host&quot;, &quot;Versi&oacute;n del sistema operativo&quot;, &quot;Memoria f&iacute;sica total&quot;, etc. A mapping table normalizes them to English keys.</li>
+            <li>Icons are loaded from <code>C:\AHK_WPF\Assets\</code> via relative path <code>../Assets/</code> from the XAML file.</li>
+            <li>JSON-like values from WPF events use <strong>Base64 encoding</strong> for safe transmission over <code>WM_COPYDATA</code>.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="s19" class="section-link">
+        <h2>19. All Controls Demo (<code>Demo_AllControls.ahk</code>)</h2>
+        <p>
+          A comprehensive 5-tab demonstration showcasing 15+ WPF controls with bidirectional AHK &harr; WPF communication.
+          Every interaction updates a live status bar showing exactly what the AHK callback received and what it updated.
+        </p>
+        <div class="grid">
+          <div class="card">
+            <h3>Tab 1 &mdash; Buttons &amp; Toggles</h3>
+            <ul>
+              <li><strong>ToggleButton</strong> switch-style (track + thumb, accent color). Fires Checked/Unchecked.</li>
+              <li><strong>RepeatButton</strong> with configurable Delay/Interval. Counts clicks in AHK.</li>
+              <li><strong>CheckBox</strong> with modern rounded-square template and white checkmark path.</li>
+              <li><strong>RadioButtons</strong> (3 options, grouped) with dot-in-circle template.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Tab 2 &mdash; Input &amp; Text</h3>
+            <ul>
+              <li><strong>RichTextBox</strong> (read-only) with multi-color formatted FlowDocument.</li>
+              <li><strong>Hyperlink</strong> styled as a button with underlined text; opens URL in browser via AHK.</li>
+              <li><strong>TextBox</strong> with live TextChanged status reading.</li>
+              <li><strong>PasswordBox</strong> with char-count display on PasswordChanged.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Tab 3 &mdash; Tabs &amp; Nav</h3>
+            <ul>
+              <li><strong>Inner TabControl</strong> with distinct Settings (checkboxes) and Info (version/status) tabs.</li>
+              <li><strong>Page Navigation</strong> via &quot;Dashboard&quot; / &quot;Reports&quot; buttons toggling Visibility.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Tab 4 &mdash; Progress &amp; Values</h3>
+            <ul>
+              <li><strong>ProgressBar</strong> with Set 75%, +10, -10 buttons. Syncs with Slider.</li>
+              <li><strong>Slider</strong> with modern thin-track + round-thumb template.</li>
+              <li><strong>ScrollBar + Circle Position</strong>: H + V scrollbars move a circle inside a 220x220 box.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Tab 5 &mdash; Dates &amp; Status</h3>
+            <ul>
+              <li><strong>DatePicker</strong> (left) and <strong>Calendar</strong> (right) side by side.</li>
+              <li>Selected date shown in the tab's built-in StatusBar.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Theme System</h3>
+            <ul>
+              <li>9 themes: Navy, Dark, Light, Blue, Green, Purple, Red, Orange, Teal.</li>
+              <li>All color references use <code class="inline">DynamicResource</code> for live switching.</li>
+              <li>Modern templates for ToggleButton, CheckBox, RadioButton, ProgressBar, Slider, ScrollBar.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Technical Notes</h3>
+          <ul>
+            <li>Uses <code class="inline">DynamicResource</code> for all theme colors (Foreground, Background, Border, Accent, etc.)</li>
+            <li>WindowStyle=&quot;None&quot; + AllowsTransparency with custom title bar and drag-to-move.</li>
+            <li>Bridge supports Margin updates (<code class="inline">"left,top"</code> or <code class="inline">"left,top,right,bottom"</code>) for dynamic positioning.</li>
+            <li>All Unicode characters in XAML must use ASCII equivalents to avoid encoding corruption with non-UTF8-BOM writes.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="s20" class="section-link">
+        <h2>20. DataGrid Operations Demo (<code>Demo_DataGrid2.ahk</code>)</h2>
+        <p>
+          A performance-testing demo focused on bulk DataGrid operations with 100&ndash;1000+ records.
+          Lives at <code>C:\AHK_WPF\demos\Demo_DataGrid2.ahk</code> + <code>Demo_DataGrid2.xaml</code>.
+        </p>
+        <div class="grid">
+          <div class="card">
+            <h3>Controls</h3>
+            <ul>
+              <li><strong>Load 100 / 200 / 500 / 1000:</strong> Adds records individually via separate <code>AddItem</code> calls. The UI thread stays responsive because events are dispatched asynchronously.</li>
+              <li><strong>Batch 500:</strong> Sends all 500 records in a single <code>_Batch/Cells</code> message. All items arrive in one <code>SendMessage</code> and are processed atomically.</li>
+              <li><strong>Clear All:</strong> Resets the record array and clears the grid.</li>
+              <li><strong>Delete Sel / Delete Rnd:</strong> Deletes the selected row via <code>SelectedIndex</code> or a random row.</li>
+              <li><strong>Random Rows / By Value / Column Colors:</strong> Three colouring modes applied during <code>RenderGrid()</code>.</li>
+              <li><strong>Filter:</strong> Filters all columns by text match. Rebuilds the grid with only matching records.</li>
+              <li><strong>7 Toggle Col buttons:</strong> Shows/hides each column via <code>SetColVisibility</code>.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Key Implementation Details</h3>
+            <ul>
+              <li><strong>ShowProc / HideProc:</strong> All operations start with <code>ShowProc()</code> (sets status to &quot;Processing...&quot;) and end with <code>HideProc()</code> (restores &quot;Ready&quot; or record count).</li>
+              <li><strong>Color modes</strong> are applied inline during item addition; <code>RefreshGrid</code> is called once at the end.</li>
+              <li><strong>Column visibility</strong> is tracked in an AHK associative array (<code>ColVis</code>). Toggle buttons dim to 0.4 opacity when hidden.</li>
+              <li><strong>Filtering</strong> rebuilds the grid with only matching records; the original array is preserved.</li>
+              <li>The <code>AsyncSendEventToAhk</code> mechanism in <code>Program_WPF.cs</code> delegates <code>SendMessage</code> to a thread-pool thread, keeping the WPF UI thread responsive.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Window Layout</h3>
+          <p class="muted">
+            1150&times;780 dark-themed window with a toolbar row (load, clear, delete, colour, filter, column toggle),
+            a full-height 7-column DataGrid (ID / Name / Email / Department / Salary / City / Status), and a bottom status bar
+            showing record count, selected row, and processing status.
+          </p>
+        </div>
+      </section>
+
+      <section id="s21" class="section-link">
+        <h2>21. ComboBox Demo (<code>Demo_ComboBox.ahk</code>)</h2>
         <div class="card">
           <h3>Controls Overview</h3>
           <p>Lives at <code>C:\AHK_WPF\demos\Demo_ComboBox.ahk</code> + <code>Demo_ComboBox.xaml</code>.</p>
@@ -1133,12 +1234,123 @@ MySaveAndClose(state, ctrl, event) {
             <li><strong>ClearItems engine support:</strong> <code>Program_WPF.cs</code> handles <code>ClearItems</code> on ComboBox by calling <code>Items.Clear()</code> + <code>SelectedIndex = -1</code>.</li>
           </ul>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <p class="footer">
-      Saved for the project at <code>C:\AHK_WPF</code>. Open this file in your browser to consult it whenever needed.
-    </p>
+      <!-- NEW: MsgBox Section -->
+      <section id="s22" class="section-link">
+        <h2>22. MsgBox — Modal Message Box</h2>
+        <p>
+          <code class="inline">ui.Msgbox()</code> shows a themed modal dialog with icons and customizable buttons.
+          The dialog inherits the current theme (colors, font, accent) and supports 5 icon types plus custom button labels.
+        </p>
+
+        <div class="grid">
+          <div class="card">
+            <h3>Basic Usage</h3>
+            <pre><code>; success — green checkmark, OK button
+r := ui.Msgbox("Great job!", "Operation completed.", "success")
+; Result: r = 1
+
+; error — red X, OK button
+r := ui.Msgbox("Oops...", "Something went wrong.", "error")
+
+; warning — orange exclamation, OK button
+r := ui.Msgbox("Caution!", "Be careful.", "warning")
+
+; info — blue "i", OK button
+r := ui.Msgbox("Notification", "You have 3 messages.", "info")
+
+; question — blue "?", Yes/No buttons. r = 1 (Yes) or 0 (No)
+r := ui.Msgbox("Confirm", "Save changes?", "question")
+if (r = 1)
+    MsgBox User clicked Yes</code></pre>
+          </div>
+
+          <div class="card">
+            <h3>Custom Buttons</h3>
+            <p>Pass a <code class="inline">"|"</code>-separated list as the 4th parameter to create custom button layouts.</p>
+            <pre><code>; 2 buttons
+r := ui.Msgbox("Question", "Continue?", "question", "Continue|Abort")
+; r = 1 (Continue), r = 2 (Abort)
+
+; 3 buttons
+r := ui.Msgbox("Save Changes?", "You have unsaved changes.", "warning", "Save|Don't Save|Cancel")
+if (r = 1)      MsgBox Save
+else if (r = 2) MsgBox Don't Save
+else            MsgBox Cancel
+
+; 4 buttons
+r := ui.Msgbox("Help Needed", "Select an option:", "question", "Save|Discard|Cancel|Help")
+; r = 1, 2, 3, or 4
+
+; 5 buttons
+r := ui.Msgbox("Rate", "Rate your experience:", "info", "1|2|3|4|5")</code></pre>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Return Value</h3>
+          <table>
+            <thead><tr><th>Mode</th><th>Return Values</th></tr></thead>
+            <tbody>
+              <tr><td>Default (single OK button)</td><td><code>1</code> (user clicked OK)</td></tr>
+              <tr><td><code>type = "question"</code></td><td><code>1</code> (Yes), <code>0</code> (No)</td></tr>
+              <tr><td>Custom buttons</td><td><code>1, 2, 3, ...</code> (1-based index of the clicked button)</td></tr>
+            </tbody>
+          </table>
+          <p class="note" style="margin-top:12px">
+            The first custom button uses the accent style (highlighted); subsequent buttons use the secondary style.
+            The card width adjusts automatically to fit all buttons.
+          </p>
+        </div>
+      </section>
+
+      <!-- NEW: InputBox Section -->
+      <section id="s23" class="section-link">
+        <h2>23. InputBox — Modal Text Input</h2>
+        <p>
+          <code class="inline">ui.InputBox()</code> shows a themed modal dialog with a text field for user input.
+          It works like MsgBox but returns the entered text instead of a numeric code.
+        </p>
+
+        <div class="grid">
+          <div class="card">
+            <h3>Basic Usage</h3>
+            <pre><code>; Simple input (no default text)
+name := ui.InputBox("Name", "What is your name?")
+if (name != "")
+    MsgBox Hello, %name%
+else
+    MsgBox You cancelled
+
+; With default text
+city := ui.InputBox("City", "Enter your city:", "Buenos Aires")
+
+; Cancel returns empty string
+result := ui.InputBox("Search", "Search term:")
+if (result = "")
+    MsgBox Cancelled or empty
+else
+    MsgBox Searching for "%result%"</code></pre>
+          </div>
+
+          <div class="card">
+            <h3>Technical Details</h3>
+            <ul>
+              <li>The dialog is fully themed (uses <code>Surface</code> for the card, <code>Surface2</code> for the input background).</li>
+              <li>Press <strong>Enter</strong> to confirm, <strong>Esc</strong> or click Cancel to dismiss.</li>
+              <li>The input field receives focus automatically with all text pre-selected for easy replacement.</li>
+              <li>OK button is styled with accent color; Cancel uses the secondary surface color.</li>
+              <li>Both buttons have <code>CornerRadius="8"</code> matching the modal card style.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <p class="footer">
+        Saved for the project at <code>C:\AHK_WPF</code>. Open this file in your browser to consult it whenever needed.
+      </p>
+    </div>
   </div>
 </body>
 </html>

@@ -58,6 +58,16 @@
 ;       Ej: ui.Focus("TxtPass")
 ;           ui.Focus("BtnLogin")
 ;
+;   .Msgbox(title, message, type, buttons := "")
+;       Muestra un MsgBox modal estilo SweetAlert.
+;       type: success, error, warning, info, question
+;       buttons (opcional): "Yes|No|Cancel" para botones personalizados.
+;       Retorna 1 si OK/Yes, 0 si No/Cancel. Con botones personalizados retorna 1, 2, 3...
+;
+;   .InputBox(title, message, defaultText := "")
+;       Muestra un InputBox modal para ingreso de texto.
+;       Retorna el texto ingresado, o cadena vacía si canceló.
+;
 ;   .Close()
 ;       Cierra la ventana WPF.
 ;
@@ -325,6 +335,39 @@ class XAMLGUI
     UpdateSelected(ctrlName, rowText)
     {
         return this.Update(ctrlName, "UpdateSelected", rowText)
+    }
+
+    ; ── MSGBOX ──
+    ; Muestra un MsgBox modal estilo SweetAlert integrado en el tema actual.
+    ;   title   - Título del mensaje
+    ;   message - Texto del mensaje
+    ;   type    - "success", "error", "warning", "info", "question"
+    ;   buttons - (opcional) Lista de botones separados por |, ej: "Yes|No|Cancel"
+    ;             Si se omite: type="question" muestra Yes/No, otros tipos muestran OK.
+    ; Retorna 1 si el usuario presionó OK/Yes, 0 si No/Cancel.
+    ; Con buttons personalizados retorna 1, 2, 3... según el índice del botón.
+    Msgbox(title, message, type, buttons="")
+    {
+        if (buttons != "")
+            return this.Update("_MsgBox", type, title "|" message "|" type "|" buttons)
+        else
+            return this.Update("_MsgBox", type, title "|" message "|" type)
+    }
+
+    ; ── INPUTBOX ──
+    ; Muestra un InputBox modal integrado en el tema actual.
+    ;   title       - Título del mensaje
+    ;   message     - Texto descriptivo
+    ;   defaultText - Texto por defecto en el campo (opcional)
+    ; Retorna el texto ingresado, o cadena vacía si el usuario canceló.
+    InputBox(title, message, defaultText="")
+    {
+        ret := this.Update("_InputBox", title, message "|" defaultText)
+        if (ret = 0)
+            return ""
+        FileRead, result, % A_Temp "\AHK_WPF_Input_" this.id ".txt"
+        FileDelete, % A_Temp "\AHK_WPF_Input_" this.id ".txt"
+        return result
     }
 
     ; ─────────────────────────────────────────────────────────────────────
