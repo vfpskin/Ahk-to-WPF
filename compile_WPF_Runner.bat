@@ -18,7 +18,7 @@ if not exist "!CSC_PATH!" (
 
 set REFS=/reference:"!WPFPATH!\PresentationFramework.dll" /reference:"!WPFPATH!\PresentationCore.dll" /reference:"!WPFPATH!\WindowsBase.dll" /reference:"!FWPATH!\System.Xaml.dll" /reference:"!FWPATH!\System.Drawing.dll"
 
-set SOURCES=Program_WPF.cs AhkControlBase.cs HelloControl.cs
+set SOURCES=Program_WPF.cs
 
 if exist "System.Windows.Controls.DataVisualization.Toolkit.dll" set REFS=!REFS! /reference:System.Windows.Controls.DataVisualization.Toolkit.dll
 if exist "System.Windows.Controls.DataVisualization.Toolkit.dll" set SOURCES=!SOURCES! ChartControl.cs
@@ -45,7 +45,6 @@ if %ERRORLEVEL% equ 0 (
     echo   - ComboBox: AddItem, ClearItems, _SelectedIndex, _Text
     echo   - MsgBox: overlay, SweetAlert-style icons, custom buttons
     echo   - InputBox: modal text input with theme support
-    echo   - Custom controls: AhkControlBase, HelloControl
     if exist "System.Windows.Controls.DataVisualization.Toolkit.dll" echo   - ChartControl
     if exist "Tesseract.dll" echo   - OcrControl (Tesseract)
     if exist "PDFiumSharp.dll" echo   - PdfiumEngine (PDF)
