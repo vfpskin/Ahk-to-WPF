@@ -20,6 +20,8 @@ It allows you to build modern Windows interfaces while keeping the simplicity an
 - **All Controls Demo** — comprehensive 5-tab demo covering 15+ controls with bidirectional AHK ↔ WPF communication
 - **FIFA Dashboard** — 7-tab management interface with SQLite database, custom themes, and player/stadium/match CRUD via DataGrid
 - **SystemInfo Dashboard** — Real-time system information reader parsing `systeminfo` with a 6-card modern layout (System, Processor, Memory, Storage, Network, Extra Info)
+- **MsgBox overlay** — modal SweetAlert-style dialog (`ui.Msgbox()`) with success/error/warning/info/question icons, custom buttons support, return value 1, 2, 3...
+- **InputBox overlay** — modal text input (`ui.InputBox()`) with theme-aware styling, result read via temp file
 
 ---
 
@@ -88,7 +90,7 @@ It allows you to build modern Windows interfaces while keeping the simplicity an
 ## 📦 Precompiled Executable
 For users who prefer not to compile the project manually, a precompiled executable is provided in a `.zip` archive inside the `release/` folder:
 
-➡️ **[Download WPF_Runner.zip](https://github.com/vfpskin/Ahk-to-WPF/releases/tag/v1.0.0)**
+➡️ **[Download WPF_Runner.zip](https://github.com/vfpskin/Ahk-to-WPF/tree/main/release)**
 
 It contains the compiled WPF runner (`WPF_Runner.exe`) built from `Program_WPF.cs`, so you can run the demos without configuring `csc.exe` or editing the batch script.
 
@@ -105,7 +107,7 @@ All demos are in the `demos/` folder. Run any `.ahk` file to launch its WPF inte
 | **Modern Login** | `Demo_Login.ahk` | User/password validation, themed card UI, PasswordBox support |
 | **Modern Login (Gradient)** | `Demo_Login_Gradient.ahk` | Login with gradient background and icon |
 | **Animation Login** | `Demo_Animation_Login.ahk` | Animated gradient login with smooth transitions |
-| **Alerts Showcase** | `Demo_Alerts.ahk` | SweetAlert-style notifications (success, error, warning, info, confirm) |
+| **MsgBox Showcase** | `NewDemoAlert.ahk` | SweetAlert-style modal MsgBox (success, error, warning, info, question), custom buttons, InputBox with native overlay |
 | **Contact List** | `Demo_Contactos.ahk` | CRUD ListView with inline edit, search, and real-time clock widget |
 | **Inventory DataGrid** | `Demo_DataGrid.ahk` | Full CRUD DataGrid with products, categories, stock control |
 | **All Controls** | `Demo_AllControls.ahk` | Interactive showcase of every supported WPF control |
