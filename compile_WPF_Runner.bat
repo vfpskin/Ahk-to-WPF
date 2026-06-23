@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 cd /d "%~dp0"
 
-echo Compilando WPF_Runner.exe con soporte para Enter event, TextBlock Click, DataGrid ComboBox...
+echo Building WPF_Runner.exe with MsgBox, InputBox, ComboBox, DataGrid, ListView, Enter event...
 echo.
 
 set CSC_PATH=C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe
@@ -16,7 +16,7 @@ if not exist "!CSC_PATH!" (
     exit /b 1
 )
 
-echo Compilando...
+echo Compiling...
 "!CSC_PATH!" /target:winexe /out:WPF_Runner.exe Program_WPF.cs ^
     /reference:"!WPFPATH!\PresentationFramework.dll" ^
     /reference:"!WPFPATH!\PresentationCore.dll" ^
@@ -28,21 +28,23 @@ if %ERRORLEVEL% equ 0 (
     del "!LOG_PATH!" 2>nul
     echo.
     echo ========================================
-    echo   Compilacion EXITOSA
+    echo   BUILD SUCCESSFUL
     echo ========================================
-    echo Funcionalidades incluidas:
-    echo   - Eventos: Click, TextChanged, SelectionChanged, Enter, etc.
+    echo Features included:
+    echo   - Events: Click, TextChanged, SelectionChanged, Enter, etc.
     echo   - DataGrid: AddItem, AddColorItem, Clear, RefreshGrid, SetColVisibility
     echo   - ListView: AddItem, AddRow, ClearItems, RemoveSelected, UpdateSelected
     echo   - ComboBox: AddItem, ClearItems, _SelectedIndex, _Text
+    echo   - MsgBox: overlay, SweetAlert-style icons, custom buttons
+    echo   - InputBox: modal text input with theme support
     echo.
     dir WPF_Runner.exe
 ) else (
     echo.
     echo ========================================
-    echo   ERROR en compilacion (Codigo: %ERRORLEVEL%)
+    echo   BUILD ERROR (Code: %ERRORLEVEL%)
     echo ========================================
-    echo Log guardado en: !LOG_PATH!
+    echo Log saved to: !LOG_PATH!
     echo.
     echo --- Primeras lineas del error ---
     type "!LOG_PATH!"

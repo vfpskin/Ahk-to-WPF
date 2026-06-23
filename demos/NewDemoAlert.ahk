@@ -87,8 +87,7 @@ OnAlert(state, ctrl, event)
     }
     else if (ctrl = "BtnAlert4Btns")
     {
-        ;r := ui.Msgbox("Help Needed", "Select an option to continue:", "question", "Save|Discard|Cancel|Help")
-        r := ui.Msgbox("Help Needed", "Select an option to continue:", "question", "Guardar|Descartar|Cancelar|Ayuda")
+        r := ui.Msgbox("Help Needed", "Select an option to continue:", "question", "Save|Discard|Cancel|Help")        
         ui.Update("LblResult", "Text", "Result: " r " (button " r ")")
     }
 }
