@@ -70,7 +70,7 @@ Login_Event(state, ctrl, event)
         {
             ui.Update("TxtStatus", "Foreground", "#00FF00")
             ui.Update("TxtStatus", "Text", "Login successful! Welcome.")
-            MsgBox, 64, Login successful, Access was authorized successfully.
+            ui.Msgbox("Login successful", "Access was authorized successfully.", "success")
             
             Sleep, 1500
             ui.Close()
@@ -80,13 +80,13 @@ Login_Event(state, ctrl, event)
         {
             ui.Update("TxtStatus", "Foreground", "#FF4D4D")
             ui.Update("TxtStatus", "Text", "Please enter username and password.")
-            MsgBox, 48, Login error, You must enter username and password.
+            ui.Msgbox("Login error", "You must enter username and password.", "warning")
         }
         else
         {
             ui.Update("TxtStatus", "Foreground", "#FF4D4D")
             ui.Update("TxtStatus", "Text", "Invalid credentials (Use admin / 1234).")
-            MsgBox, 16, Login error, Invalid username or password.
+            ui.Msgbox("Login error", "Invalid username or password.", "error")
         }
     }
 }

@@ -18,7 +18,6 @@ It allows you to build modern Windows interfaces while keeping the simplicity an
 - Custom window styling (Dashboard-style header, drag-to-move, minimize/maximize/close)
 - Modern control templates for ToggleButton (switch), CheckBox, RadioButton, ProgressBar, Slider, ScrollBar
 - **All Controls Demo** — comprehensive 5-tab demo covering 15+ controls with bidirectional AHK ↔ WPF communication
-- **FIFA Dashboard** — 7-tab management interface with SQLite database, custom themes, and player/stadium/match CRUD via DataGrid
 - **SystemInfo Dashboard** — Real-time system information reader parsing `systeminfo` with a 6-card modern layout (System, Processor, Memory, Storage, Network, Extra Info)
 - **MsgBox overlay** — modal SweetAlert-style dialog (`ui.Msgbox()`) with success/error/warning/info/question icons, custom buttons support, return value 1, 2, 3...
 - **InputBox overlay** — modal text input (`ui.InputBox()`) with theme-aware styling, result read via temp file
@@ -116,8 +115,7 @@ All demos are in the `demos/` folder. Run any `.ahk` file to launch its WPF inte
 | **SystemInfo Dashboard** | `Demo_SystemInfo.ahk` | Real-time system info (processor, memory, storage, network) in a 6-card layout |
 | **Tetris** | `Tetris.ahk` | Classic Tetris game with ghost piece, line-clear flash, keyboard controls |
 | **HeatMap** | `HeatMap.ahk` | Interactive heatmap visualization |
-| **FIFA Dashboard** | `FIFA/Demo_Dashboard_FIFA.ahk` | 7-tab tournament manager with SQLite database, custom themes, full CRUD |
-
+ 
 ## **Credits**
 Created (vibe coded) by Vfpskin (Pablo Molina) 
 Logo and diagrams designed with Microsoft Copilot© 2026 — All rights reserved

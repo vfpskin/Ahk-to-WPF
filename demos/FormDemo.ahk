@@ -45,7 +45,8 @@ OnFormSubmit(state, ctrl, event)
     msg .= "Terms accepted: " terms "`n"
     msg .= "Start: " startDate "`n"
     msg .= "Notes: " notes
-    MsgBox % msg
+    global ui
+    ui.Msgbox("Form Submitted", msg, "info")
 }
 
 OnClose(state, ctrl, event)
